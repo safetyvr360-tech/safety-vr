@@ -5,6 +5,21 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (7) — publicado
+
+- Respaldo: `main` en GitHub estaba en `967c36b`. Se subieron 7 commits hasta
+  `e8d879b` (herramientas, bugs de la plataforma, app Next.js, página
+  comercial, SEO).
+- GitHub Actions, run 42707865148: **verificar y publicar en verde**, incluida
+  la prueba en navegador real (`probar-visor.mjs`, con las 2 comprobaciones
+  nuevas de la plataforma), que aquí no se pudo correr.
+- En línea y comprobado (200, título nuevo): `/` (página comercial es-CO),
+  `/en/`, `/demo/`, `/avance/`, `sitemap.xml`, `share.jpg`, `favicon.svg`,
+  `credits.html`. Sin errores en consola.
+- El repositorio sigue público (Pages gratis no publica repositorios privados).
+
+---
+
 ## 9 de noviembre de 2026 (6) — SEO de la página comercial (la lista del video)
 
 El usuario pasó la transcripción de un video con lo que le falta a una web para
