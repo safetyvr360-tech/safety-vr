@@ -5,6 +5,61 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (8) — página de inversión y precios en pesos y dólares
+
+El usuario necesita mostrar la web para buscar financiamiento: que se vea como
+una startup, con planes en pesos y dólares y una página de entrada que explique
+el modelo de negocio y las suscripciones.
+
+**Una sola fuente de cifras** (`src/negocio/`, puro, con pruebas):
+- `precios.ts`: los planes (Piloto $450.000, Planta $1.350.000, Corporativo
+  $3.600.000 al mes), marca blanca, a medida, la TRM de referencia del modelo
+  financiero ($4.360) y el formato por idioma: «$450.000» en español y
+  «COP 450,000» en inglés (un «$» solo se leería como dólar). Los dólares se
+  calculan, nunca se escriben.
+- `modelo.ts`: metas del año 1, capital semilla y su uso, el calendario de
+  entrada de clientes, el ingreso recurrente mes a mes, los ingresos por línea,
+  el EBITDA y el mercado direccionable. **Las pruebas exigen las cifras del
+  documento**: el calendario da los $31,5 M de suscripción directa, $2,25 M de
+  recurrente en el mes 7 y $10,8 M en el mes 12, el fijo cubierto en el mes 7,
+  $118,9 M de ingresos, 32,9 % de margen, el uso de fondos suma $20 M, y el
+  mercado da 700 × $16,2 M = $11.340 M con meta de 0,7 %.
+- Una prueba exige que ningún texto del catálogo traiga un precio escrito a
+  mano: todos llegan como variables desde esos módulos.
+
+**Página comercial:** cada plan muestra pesos y dólares al mes y al año, y la
+TRM de referencia. El menú y el pie enlazan «Inversión».
+
+**Página de inversión** (`comercial/inversion.html` → `sitio/inversion/` y
+`sitio/en/investors/`), con el mismo sistema y la marca:
+hero centrado con el ingreso recurrente meta del año 1 mes a mes (el fragmento
+`stat`, barras calculadas del modelo) · las 3 líneas de ingreso · suscripciones
+en COP y USD · mercado de Barranquilla (foto aérea del puerto, Wikimedia) ·
+proyección del año 1 en franja clara con su gráfico y el momento
+`line-carries-colour` · uso del capital semilla con barras por rubro ·
+cronograma por trimestre y lo ya construido · cierre «Pedir el plan de negocio».
+Las 700 empresas se presentan como estimación por sustentar con la Cámara de
+Comercio, como dice el documento; el margen, con su advertencia (fundadores
+fuera de nómina).
+
+**Verificación (corrida aquí).**
+- Node: **218/218**. Ruptura: **109 de 109** (nuevas: precios 5, modelo 6,
+  armador 3, SEO 2).
+- copy-lint: 0 FAIL y 0 WARN en las cuatro páginas.
+- `check.mjs` a 1440, 1024, 820, 768 y 390: sin hallazgos en las cuatro.
+- Compuerta de la skill en la página de inversión: **GATE: PASS**, con una
+  exención: `copy-headings` (el verificador solo reconoce sustantivos de sección
+  en inglés).
+- Capturas revisadas a ojo: se corrigieron barras invisibles en el hero, dos
+  barras negras iguales en el gráfico (el acento de la franja clara es el
+  oscuro) y una lista de «ya construido» que salía tachada.
+
+**Por confirmar con el usuario:** el monto del capital semilla ($20 M; el
+documento dice que el monto pasó de $12 M a $20 M «en conversación»), y que se
+quieran publicar la proyección y el EBITDA.
+
+---
+
 ## 9 de noviembre de 2026 (7) — publicado
 
 - Respaldo: `main` en GitHub estaba en `967c36b`. Se subieron 7 commits hasta

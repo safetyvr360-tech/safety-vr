@@ -10,7 +10,7 @@ import { llenar, escapar } from '../../tools/construir-comercial.mjs';
 import { traducir } from '../motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('../..', import.meta.url));
-const plantilla = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+const plantilla = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8') + readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
 const leer = (i: string): Record<string, string> => JSON.parse(readFileSync(`${raiz}mensajes/${i}.json`, 'utf8'));
 const CATALOGOS = { 'es-CO': leer('es-CO'), en: leer('en') };
 
@@ -63,22 +63,22 @@ test('las variables llegan al texto, también las que toma del armador', () => {
 });
 
 // ---- SEO (tools/seo-comercial.mjs)
-import { PRECIOS, URLS, datosEstructurados, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from '../../tools/seo-comercial.mjs';
+import { PRECIOS, URLS, URLS_INVERSION, datosEstructurados, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from '../../tools/seo-comercial.mjs';
 import { datosDe } from '../../tools/construir-comercial.mjs';
 
 const tDe = (i: 'es-CO' | 'en') => (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS[i], k, v);
 
-test('los precios de los datos estructurados son los mismos que muestra la página', () => {
+test('ningún texto del catálogo trae un precio o una cifra de negocio escrita a mano', () => {
   for (const i of ['es-CO', 'en'] as const) {
-    for (const [plan, precio] of Object.entries(PRECIOS)) {
-      const texto = CATALOGOS[i][`venta.plan.${plan}.precio`]!;
-      assert.equal(Number(texto.replace(/\D/g, '')), precio, `${i} ${plan}: «${texto}»`);
+    for (const [k, v] of Object.entries(CATALOGOS[i])) {
+      if (!k.startsWith('venta.') && !k.startsWith('inv.')) continue;
+      assert.ok(!/(\$|COP )\d/.test(v), `${i} ${k}: «${v}»`);
     }
   }
 });
 
 test('los datos estructurados describen el servicio, sus 3 planes y las preguntas en el idioma de la página', () => {
-  const j = datosEstructurados('en', tDe('en')) as { '@graph': Array<Record<string, any>> };
+  const j = datosEstructurados('en', tDe('en'), 'COP 450,000') as { '@graph': Array<Record<string, any>> };
   const tipo = (t: string) => j['@graph'].find((x) => x['@type'] === t)!;
   assert.deepEqual(tipo('Service').offers.map((o: any) => [o.name, o.price, o.priceCurrency]), [['Pilot', '450000', 'COP'], ['Plant', '1350000', 'COP'], ['Corporate', '3600000', 'COP']]);
   assert.equal(tipo('FAQPage').mainEntity.length, 5);
@@ -97,10 +97,28 @@ test('cada idioma se declara canónico a sí mismo', () => {
   assert.equal(datosDe('en', tDe('en'), extra).canonica, URLS.en);
 });
 
+test('la página de inversión encuentra sus recursos y enlaza su otro idioma y la comercial', () => {
+  const extra = { videos: { youtube: null, poster: 'p.jpg' }, config: { google_analytics: null, search_console: null } };
+  const es = datosDe('es-CO', tDe('es-CO'), extra, 'inversion');
+  const en = datosDe('en', tDe('en'), extra, 'inversion');
+  assert.equal(es.raiz, '../');
+  assert.equal(en.raiz, '../../');
+  assert.equal(es.url_otro, '../en/investors/');
+  assert.equal(en.url_otro, '../../inversion/');
+  assert.equal(en.url_comercial, '../../en/');
+  assert.equal(en.canonica, URLS_INVERSION.en);
+});
+
+test('el precio «desde» de la página es el del plan Piloto, en el formato del idioma', () => {
+  const extra = { videos: { youtube: null, poster: 'p.jpg' }, config: { google_analytics: null, search_console: null } };
+  assert.equal(datosDe('es-CO', tDe('es-CO'), extra).piloto_desde, '$450.000');
+  assert.equal(datosDe('en', tDe('en'), extra).piloto_desde, 'COP 450,000');
+});
+
 test('el sitemap enlaza las dos versiones entre sí y la demo', () => {
   const x = sitemap('2026-11-09');
-  for (const u of [URLS['es-CO'], URLS.en, `${URLS['es-CO']}demo/`]) assert.ok(x.includes(`<loc>${u}</loc>`), u);
-  assert.equal(x.match(/hreflang="x-default"/g)?.length, 2);
+  for (const u of [URLS['es-CO'], URLS.en, URLS_INVERSION['es-CO'], URLS_INVERSION.en, `${URLS['es-CO']}demo/`]) assert.ok(x.includes(`<loc>${u}</loc>`), u);
+  assert.equal(x.match(/hreflang="x-default"/g)?.length, 4);
   assert.ok(x.includes('<lastmod>2026-11-09</lastmod>'));
 });
 

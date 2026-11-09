@@ -1,38 +1,45 @@
-// SEO de la página comercial: lo que Google necesita para encontrarla y
-// mostrarla bien. Funciones puras (las prueba src/i18n/comercial.test.ts).
+// SEO de las páginas públicas: lo que Google necesita para encontrarlas y
+// mostrarlas bien. Funciones puras (las prueba src/i18n/comercial.test.ts).
 //
-// - Datos estructurados (JSON-LD): la organización, el sitio, el servicio con
-//   sus tres planes en pesos y las preguntas frecuentes. Los textos salen del
-//   catálogo del idioma; los precios, de PRECIOS (y una prueba exige que
-//   coincidan con los del catálogo, para que nunca digan cosas distintas).
-// - sitemap.xml con las dos versiones enlazadas entre sí (hreflang).
+// - Datos estructurados (JSON-LD): en la página comercial, la organización, el
+//   sitio, el servicio con sus tres planes en pesos y las preguntas frecuentes;
+//   en la de inversión, la organización y la página. Los textos salen del
+//   catálogo del idioma; los precios, de src/negocio/precios.ts.
+// - sitemap.xml con cada página en sus dos idiomas enlazados (hreflang).
 // - Google Analytics y la verificación de Search Console: solo si
 //   comercial/sitio.json trae el id; si no, no se carga nada.
 
+// Los precios salen de la única fuente.
+import { PLANES as PRECIOS } from '../src/negocio/precios.ts';
+export { PRECIOS };
+
 export const PUBLICA = 'https://safetyvr360-tech.github.io/safety-vr/';
 export const URLS = { 'es-CO': PUBLICA, en: `${PUBLICA}en/` };
+export const URLS_INVERSION = { 'es-CO': `${PUBLICA}inversion/`, en: `${PUBLICA}en/investors/` };
 
-export const PRECIOS = { piloto: 450000, planta: 1350000, corporativo: 3600000 }; // COP al mes (modelo financiero)
-const PREGUNTAS = [1, 2, 3, 4, 6]; // las que muestra la página
+const PREGUNTAS = [1, 2, 3, 4, 6]; // las que muestra la página comercial
 
 // Dentro de <script> un "</script>" en un texto cerraría la etiqueta: se escapa «<».
 export const jsonEnScript = (obj) => JSON.stringify(obj).replace(/</g, '\\u003c');
 
-export function datosEstructurados(idioma, t) {
+const organizacion = () => ({
+  '@type': 'Organization', '@id': `${PUBLICA}#organizacion`, name: 'SAFETY VR', url: PUBLICA, logo: `${PUBLICA}favicon.svg`,
+  parentOrganization: { '@type': 'Organization', name: 'ULTRAMEDIA COMPANY' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Barranquilla', addressCountry: 'CO' },
+});
+
+export function datosEstructurados(idioma, t, desde) {
   const url = URLS[idioma];
   const org = { '@id': `${PUBLICA}#organizacion` };
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      {
-        '@type': 'Organization', ...org, name: 'SAFETY VR', url: PUBLICA, logo: `${PUBLICA}favicon.svg`,
-        parentOrganization: { '@type': 'Organization', name: 'ULTRAMEDIA COMPANY' },
-        address: { '@type': 'PostalAddress', addressLocality: 'Barranquilla', addressCountry: 'CO' },
-      },
+      organizacion(),
       { '@type': 'WebSite', '@id': `${url}#sitio`, url, name: 'SAFETY VR', inLanguage: idioma, publisher: org },
       {
         '@type': 'Service', '@id': `${url}#servicio`, name: t('venta.seo.servicio'), serviceType: t('venta.seo.tipo'),
-        description: t('venta.meta.descripcion'), provider: org, areaServed: { '@type': 'Country', name: 'Colombia' },
+        description: t('venta.meta.descripcion', { piloto: desde }), provider: org,
+        areaServed: { '@type': 'Country', name: 'Colombia' },
         offers: Object.entries(PRECIOS).map(([plan, precio]) => ({
           '@type': 'Offer', name: t(`venta.plan.${plan}`), description: t(`venta.plan.${plan}.para`),
           price: String(precio), priceCurrency: 'COP',
@@ -50,17 +57,30 @@ export function datosEstructurados(idioma, t) {
   };
 }
 
+// La página de inversión: la organización y la página, sin servicio ni preguntas (no las muestra).
+export function datosInversion(idioma, t, url) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      organizacion(),
+      {
+        '@type': 'WebPage', '@id': `${url}#pagina`, url, name: t('inv.meta.titulo'), description: t('inv.meta.descripcion'),
+        inLanguage: idioma, about: { '@id': `${PUBLICA}#organizacion` },
+      },
+    ],
+  };
+}
+
 export function sitemap(fecha) {
-  const alternos = Object.entries(URLS)
+  const alternos = (urls) => Object.entries(urls)
     .map(([lang, href]) => `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`)
-    .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${URLS['es-CO']}"/>`)
+    .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${urls['es-CO']}"/>`)
     .join('\n');
   const url = (loc, extra = '') => `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${fecha}</lastmod>\n${extra}  </url>`;
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
-    url(URLS['es-CO'], `${alternos}\n`),
-    url(URLS.en, `${alternos}\n`),
+    ...[URLS, URLS_INVERSION].flatMap((u) => [url(u['es-CO'], `${alternos(u)}\n`), url(u.en, `${alternos(u)}\n`)]),
     url(`${PUBLICA}demo/`),
     '</urlset>',
     '',

@@ -8,7 +8,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{{venta.meta.titulo}}</title>
-<meta name="description" content="{{venta.meta.descripcion}}">
+<meta name="description" content="{{venta.meta.descripcion|piloto=@piloto_desde}}">
 <link rel="canonical" href="{{@canonica}}">
 <link rel="alternate" hreflang="es-CO" href="{{@url_es}}">
 <link rel="alternate" hreflang="en" href="{{@url_en}}">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="{{@og_locale}}">
 <meta property="og:locale:alternate" content="{{@og_locale_otro}}">
 <meta property="og:title" content="{{venta.meta.titulo}}">
-<meta property="og:description" content="{{venta.meta.descripcion}}">
+<meta property="og:description" content="{{venta.meta.descripcion|piloto=@piloto_desde}}">
 <meta property="og:image" content="{{@og_imagen}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{{venta.hero.arte}}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{venta.meta.titulo}}">
-<meta name="twitter:description" content="{{venta.meta.descripcion}}">
+<meta name="twitter:description" content="{{venta.meta.descripcion|piloto=@piloto_desde}}">
 <link rel="icon" href="{{@raiz}}favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0d1217">
 <script type="application/ld+json">{{@json_ld}}</script>
@@ -124,12 +124,17 @@
     .wall > img { aspect-ratio: 1; }
   }
   /* teléfono: los planes sin la línea anual, para caber en dos pantallas */
-  @media (max-width: 639px) { #planes .card--plan > .t-small { display: none; } }
+  #planes .otros { margin-top: var(--s-5); }
+  @media (max-width: 639px) { #planes .card--plan > .anual { display: none; } #planes .otros { margin-top: var(--s-3); } }
   @media (max-width: 639px) { main > #pasos[data-moment]:not(.is-live) { height: auto; min-height: calc(2 * 100lvh); } #pasos:not(.is-live) .mo-pc__visual > img { aspect-ratio: 5 / 4; max-height: none; } }
   /* preguntas: la foto del visor bajo el texto, 3:2 */
   #preguntas .frame { --ratio: 66.6%; }
+  @media (max-width: 639px) { #preguntas .frame { --ratio: 125%; } }
   /* el nombre del cierre: con su interlineado completo para que el recorte no corte las mayúsculas */
   #contact .close__word { line-height: 1; }
+  .card--plan.is-featured { position: relative; }
+  .badge--esquina { position: absolute; top: var(--s-6); right: var(--s-6); margin: 0; }
+  .card--plan .price .t-stat { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -168,6 +173,7 @@
       <div class="nav__item"><a class="nav__link" href="#simuladores">{{venta.nav.simuladores}}</a></div>
       <div class="nav__item"><a class="nav__link" href="#planes">{{venta.nav.planes}}</a></div>
       <div class="nav__item"><a class="nav__link" href="#preguntas">{{venta.nav.preguntas}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{@url_inversion}}">{{venta.nav.inversion}}</a></div>
       <div class="nav__item"><a class="nav__link" href="{{@url_otro}}" hreflang="{{@otro_lang}}" lang="{{@otro_lang}}" aria-label="{{venta.nav.otro_idioma.nombre}}">{{venta.nav.otro_idioma}}</a></div>
     </nav>
     <div class="nav__actions">
@@ -182,7 +188,7 @@
     <div class="wrap"><div class="hero-text grid hero__grid">
       <div class="hero__text span-5">
         <h1 id="hero-h">{{venta.hero.titulo}}</h1>
-        <p class="hero__lead">{{venta.hero.bajada}}</p>
+        <p class="hero__lead">{{venta.hero.bajada|piloto=@piloto_desde}}</p>
         <div class="btn-row"><a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="{{@raiz}}demo/">{{venta.hero.secundaria}}</a></div>
         <p class="hero__proof">{{venta.hero.prueba}}</p>
       </div>
@@ -368,35 +374,39 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="planes-h">{{venta.planes.titulo}}</h2>
-        <p>{{venta.planes.texto}} {{venta.planes.incluye}}</p>
+        <p>{{venta.planes.texto|trm=@trm}} {{venta.planes.incluye}}</p>
       </div>
       <div class="grid">
         <article class="card card--plan span-4">
           <h3>{{venta.plan.piloto}}</h3>
           <p class="muted">{{venta.plan.piloto.para}}</p>
-          <p class="price"><span class="t-stat">{{venta.plan.piloto.precio}}</span><span class="muted">{{venta.planes.mes}}</span></p>
-          <p class="t-small muted">{{venta.plan.piloto.anual}}</p>
+          <p class="price"><span class="t-stat">{{@piloto_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@piloto_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@piloto_anio_cop|usd=@piloto_anio_usd}}</p>
           <a class="btn btn--secondary" href="{{@mailto_piloto}}">{{venta.planes.pedir|plan=@piloto}}</a>
           <ul class="checks"><li>{{venta.plan.piloto.1}}</li><li>{{venta.plan.piloto.2}}</li></ul>
         </article>
         <article class="card card--plan span-4 is-featured">
+          <span class="badge badge--esquina">{{venta.planes.recomendado}}</span>
           <h3>{{venta.plan.planta}}</h3>
           <p class="muted">{{venta.plan.planta.para}}</p>
-          <p class="price"><span class="t-stat">{{venta.plan.planta.precio}}</span><span class="muted">{{venta.planes.mes}}</span><span class="badge">{{venta.planes.recomendado}}</span></p>
-          <p class="t-small muted">{{venta.plan.planta.anual}}</p>
+          <p class="price"><span class="t-stat">{{@planta_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@planta_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@planta_anio_cop|usd=@planta_anio_usd}}</p>
           <a class="btn btn--secondary" href="{{@mailto_planta}}">{{venta.planes.pedir|plan=@planta}}</a>
           <ul class="checks"><li>{{venta.plan.planta.1}}</li><li>{{venta.plan.planta.2}}</li></ul>
         </article>
         <article class="card card--plan span-4">
           <h3>{{venta.plan.corporativo}}</h3>
           <p class="muted">{{venta.plan.corporativo.para}}</p>
-          <p class="price"><span class="t-stat">{{venta.plan.corporativo.precio}}</span><span class="muted">{{venta.planes.mes}}</span></p>
-          <p class="t-small muted">{{venta.plan.corporativo.anual}}</p>
+          <p class="price"><span class="t-stat">{{@corporativo_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@corporativo_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@corporativo_anio_cop|usd=@corporativo_anio_usd}}</p>
           <a class="btn btn--secondary" href="{{@mailto_corporativo}}">{{venta.planes.pedir|plan=@corporativo}}</a>
           <ul class="checks"><li>{{venta.plan.corporativo.1}}</li><li>{{venta.plan.corporativo.2}}</li></ul>
         </article>
       </div>
-      <p class="muted" style="margin-top: var(--s-5)">{{venta.planes.otros}}</p>
+      <p class="muted otros">{{venta.planes.otros|base=@marca_base|base_usd=@marca_base_usd}}</p>
     </div>
   </section>
 
@@ -431,7 +441,7 @@
   <div class="wrap">
     <div class="closing__cta close--word">
       <div class="section-head--split">
-        <div><h2 id="close-h">{{venta.cierre.titulo}}</h2><p class="t-lead">{{venta.cierre.texto}}</p></div>
+        <div><h2 id="close-h">{{venta.cierre.titulo}}</h2><p class="t-lead">{{venta.cierre.texto|piloto=@piloto_desde}}</p></div>
         <a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
       </div>
       <p class="close__word" aria-hidden="true">SAFETY VR</p>
@@ -442,7 +452,7 @@
           <p class="footer__lede">{{venta.pie.lema}}</p>
         </div>
         <div class="span-2 footer__col"><h3>{{venta.pie.producto}}</h3><ul><li><a href="#plataforma">{{venta.pie.plataforma}}</a></li><li><a href="#simuladores">{{venta.nav.simuladores}}</a></li><li><a href="#pasos">{{venta.pie.como}}</a></li></ul></div>
-        <div class="span-2 footer__col"><h3>{{venta.pie.precios}}</h3><ul><li><a href="#planes">{{venta.nav.planes}}</a></li><li><a href="#preguntas">{{venta.nav.preguntas}}</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>{{venta.pie.precios}}</h3><ul><li><a href="#planes">{{venta.nav.planes}}</a></li><li><a href="#preguntas">{{venta.nav.preguntas}}</a></li><li><a href="{{@url_inversion}}">{{venta.nav.inversion}}</a></li></ul></div>
         <div class="span-2 footer__col"><h3>{{venta.pie.demo}}</h3><ul><li><a href="{{@raiz}}demo/">{{venta.pie.probar}}</a></li><li><a href="{{@raiz}}demo/#verificar">{{venta.pie.verificar}}</a></li><li><a href="{{@raiz}}avance/">{{venta.pie.avance}}</a></li></ul></div>
       </div>
       <div class="footer__legal">

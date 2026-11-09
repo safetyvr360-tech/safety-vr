@@ -186,6 +186,51 @@
    "licenceUrl": "https://creativecommons.org/licenses/by/3.0",
    "page": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_2852_Dump_Truck_Drives_Through_an_Open_cut_Mine.jpg",
    "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f4043184.jpg",
+   "files": [
+    "photo-f4043184-500.jpg",
+    "photo-f4043184-960.jpg",
+    "photo-f4043184.jpg"
+   ],
+   "id": "f4043184",
+   "alt": "Puerto de Barranquilla 2",
+   "by": "-- F3rn4nd0 06:17, 27 March 2007 (UTC)",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Puerto_de_Barranquilla_2.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f12146844.jpg",
+   "files": [
+    "photo-f12146844-500.jpg",
+    "photo-f12146844-960.jpg",
+    "photo-f12146844.jpg"
+   ],
+   "id": "f12146844",
+   "alt": "Ptobaq",
+   "by": "Jdvillalobos",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Ptobaq.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f461194.jpg",
+   "files": [
+    "photo-f461194-500.jpg",
+    "photo-f461194-960.jpg",
+    "photo-f461194.jpg"
+   ],
+   "id": "f461194",
+   "alt": "Barranquilla Zona Industrial",
+   "by": "Jesús González",
+   "licence": "Public domain",
+   "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Barranquilla_Zona_Industrial.jpg",
+   "source": "Wikimedia Commons"
   }
  ]
 }

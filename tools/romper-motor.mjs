@@ -209,9 +209,10 @@ const GRUPOS = [
     archivo: 'tools/seo-comercial.mjs',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
-      ['Google ve un precio distinto al de la página', 'Google sees a different price from the page', 'planta: 1350000', 'planta: 1300000'],
+      ['Google ve los planes en otra moneda', 'Google sees the plans in another currency', "price: String(precio), priceCurrency: 'COP',\n", "price: String(precio), priceCurrency: 'USD',\n"],
       ['el JSON-LD puede cerrar su etiqueta', 'the JSON-LD can close its tag', ".replace(/</g, '\\\\u003c')", ''],
-      ['el sitemap pierde la versión por omisión', 'the sitemap drops the default version', "    .concat(`    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"${URLS['es-CO']}\"/>`)\n", ''],
+      ['el sitemap pierde la versión por omisión', 'the sitemap drops the default version', "    .concat(`    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"${urls['es-CO']}\"/>`)\n", ''],
+      ['el sitemap olvida la página de inversión', 'the sitemap forgets the investor page', '...[URLS, URLS_INVERSION].flatMap', '...[URLS].flatMap'],
       ['Analytics carga sin id', 'Analytics loads with no id', '  if (c.google_analytics) {', '  if (true) {'],
       ['se acepta un id de Analytics inválido', 'an invalid Analytics id is accepted', "if (c.google_analytics !== null && !/^G-[A-Z0-9]{6,12}$/.test(c.google_analytics))", 'if (false)'],
       ['las preguntas no llegan a Google', 'the questions do not reach Google', 'const PREGUNTAS = [1, 2, 3, 4, 6];', 'const PREGUNTAS = [];'],
@@ -221,7 +222,32 @@ const GRUPOS = [
     archivo: 'tools/construir-comercial.mjs',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
-      ['la versión en inglés se declara canónica la española', 'the English page claims the Spanish one as canonical', '    canonica: URLS[idioma],', "    canonica: URLS['es-CO'],"],
+      ['la versión en inglés se declara canónica la española', 'the English page claims the Spanish one as canonical', '    canonica: `${PUBLICA}${ruta}`,', "    canonica: `${PUBLICA}${rutas['es-CO']}`,"],
+      ['las páginas internas pierden la raíz de los recursos', 'inner pages lose the path to the assets', "const profundidad = (ruta) => '../'.repeat(ruta.split('/').filter(Boolean).length);", "const profundidad = () => '';"],
+      ['el precio «desde» no es el del plan Piloto', 'the «from» price is not the Pilot plan', '  d.piloto_desde = d.piloto_mes_cop;', '  d.piloto_desde = d.planta_mes_cop;'],
+    ],
+  },
+  {
+    archivo: 'src/negocio/precios.ts',
+    prueba: 'src/negocio/precios.test.ts',
+    rupturas: [
+      ['cambia el precio de un plan', 'a plan price changes', 'planta: 1_350_000', 'planta: 1_300_000'],
+      ['otra TRM de referencia', 'another reference exchange rate', 'export const TRM_REFERENCIA = 4360;', 'export const TRM_REFERENCIA = 4000;'],
+      ['los dólares se truncan en vez de redondear', 'dollars are truncated instead of rounded', 'Math.round(cop / TRM_REFERENCIA)', 'Math.floor(cop / TRM_REFERENCIA)'],
+      ['en inglés los pesos llevan «$»', 'in English pesos carry a «$»', "idioma === 'en' ? `COP ${miles(cop, idioma)}` : `$${miles(cop, idioma)}`", '`$${miles(cop, idioma)}`'],
+      ['el año no son doce meses', 'a year is not twelve months', 'anio = mes * 12;', 'anio = mes * 10;'],
+    ],
+  },
+  {
+    archivo: 'src/negocio/modelo.ts',
+    prueba: 'src/negocio/modelo.test.ts',
+    rupturas: [
+      ['un cliente entra un mes antes', 'a client starts a month early', "{ mes: 6, tipo: 'piloto' }", "{ mes: 5, tipo: 'piloto' }"],
+      ['el mes de entrada no se cobra', 'the starting month is not billed', 'ENTRADAS.filter((e) => e.mes <= i + 1).reduce', 'ENTRADAS.filter((e) => e.mes < i + 1).reduce'],
+      ['el uso de fondos no suma el capital', 'the use of funds does not add up', "['hardware', 4_700_000]", "['hardware', 4_500_000]"],
+      ['otra cifra de ingresos por marca blanca', 'another white-label revenue figure', 'marca_blanca: 17_400_000', 'marca_blanca: 17_000_000'],
+      ['otro tamaño de mercado', 'another market size', 'EMPRESAS_OBJETIVO_ESTIMADAS = 700;', 'EMPRESAS_OBJETIVO_ESTIMADAS = 800;'],
+      ['el mes que cubre el fijo se cuenta desde cero', 'the break-even month is counted from zero', 'findIndex((m) => m > COSTO_FIJO_MES) + 1;', 'findIndex((m) => m > COSTO_FIJO_MES);'],
     ],
   },
   {

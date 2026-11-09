@@ -1,0 +1,360 @@
+<!doctype html>
+<!-- Página de inversión de SAFETY VR. tools/construir-comercial.mjs la arma una vez por idioma
+     (sitio/inversion/ y sitio/en/investors/): cada marcador entre llaves dobles es una clave de
+     mensajes/<idioma>.json (escapada), con variables tras «|», o un dato del armador si empieza por
+     «@». Las cifras salen de src/negocio/ (precios y modelo del año 1): ninguna se escribe aquí. -->
+<html lang="{{@lang}}" data-type="software" data-radius="soft" data-ground="sky" data-buttons="tonal" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{inv.meta.titulo}}</title>
+<meta name="description" content="{{inv.meta.descripcion}}">
+<link rel="canonical" href="{{@canonica}}">
+<link rel="alternate" hreflang="es-CO" href="{{@url_es}}">
+<link rel="alternate" hreflang="en" href="{{@url_en}}">
+<link rel="alternate" hreflang="x-default" href="{{@url_es}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SAFETY VR">
+<meta property="og:url" content="{{@canonica}}">
+<meta property="og:locale" content="{{@og_locale}}">
+<meta property="og:locale:alternate" content="{{@og_locale_otro}}">
+<meta property="og:title" content="{{inv.meta.titulo}}">
+<meta property="og:description" content="{{inv.meta.descripcion}}">
+<meta property="og:image" content="{{@og_imagen}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{inv.meta.titulo}}">
+<meta name="twitter:description" content="{{inv.meta.descripcion}}">
+<link rel="icon" href="{{@raiz}}favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1217">
+<script type="application/ld+json">{{@json_ld}}</script>
+{{@google}}
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{@raiz}}assets/system.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/cards.css">
+<link rel="stylesheet" href="{{@raiz}}assets/motion/motion.css">
+<link rel="stylesheet" href="{{@raiz}}assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="{{@raiz}}assets/layout/layout.css">
+<link rel="stylesheet" href="{{@raiz}}assets/icons/icon.css">
+<!-- los colores de la marca (start.mjs brand), los mismos de la página comercial -->
+<style>
+:root {
+  --p-bg: #0d1217; --p-surface: #18222b; --p-ink: #eef2f5; --p-muted: #9aa7b4;
+  --p-accent: #f2bb1d; --p-accent-ink: #0d1217; --p-action: #f2bb1d; --p-action-ink: #0d1217;
+  --p-inv-bg: #eef2f5; --p-inv-surface: #dce0e3; --p-inv-ink: #0d1217; --p-inv-muted: #585d62;
+  --p-inv-accent: #0d1217; --p-inv-accent-ink: #eef2f5; --p-inv-action: #0d1217; --p-inv-action-ink: #eef2f5;
+  --font-display: "Reddit Sans", system-ui, sans-serif;
+  --font-text: "Reddit Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="{{@raiz}}assets/ui/base.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/stat/fragment.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="{{@raiz}}assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="{{@raiz}}assets/moments/moments.js">
+<link rel="modulepreload" href="{{@raiz}}assets/moments/lib.js">
+<link rel="modulepreload" href="{{@raiz}}assets/moments/line-carries-colour/moment.js">
+<!-- CSS de la página: solo lo que va dentro de un visual -->
+<style>
+  /* hero centrado: el marco con el fondo iluminado y la ventana de la cifra */
+  .hero__window { background:
+      radial-gradient(70% 60% at 18% 12%, color-mix(in oklab, var(--ground-surface) 80%, white), transparent 70%),
+      radial-gradient(60% 50% at 90% 100%, color-mix(in oklab, var(--ground-bg) 80%, var(--ground-accent)), transparent 70%),
+      var(--ground-bg); }
+  .hero--centred .hero__window > .ly-piece { width: min(620px, calc(100% - 2 * var(--s-4))); }
+  .hero--centred .hero__window > .ly-piece > .ui-panel { width: 100%; }
+  /* el botón de pausa sobre el fondo claro: su foco en la tinta oscura, no en el amarillo */
+  .hero__window .ui-pause:focus-visible { outline: 2px solid #0d1217; outline-offset: 2px; }
+  /* el nombre del cierre con su interlineado completo, para que el recorte no corte las mayúsculas */
+  #contact .close__word { line-height: 1; }
+  .grafico--fondos { gap: var(--s-5); }
+  .rubro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-1) var(--s-4); }
+  .rubro b { font-weight: 500; }
+  .rubro i { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--accent) var(--w), color-mix(in oklab, var(--ink) 12%, transparent) var(--w)); }
+  .rubro small { grid-column: 1 / -1; color: var(--muted); font-size: var(--t-small); }
+  @media (max-width: 639px) { .rubro small { display: none; } #proyeccion .grafico-ingresos { height: 400px; } }
+  /* las filas con su cifra a la derecha */
+  .rows > li > p { margin: 0; grid-column: 1; color: var(--ink); }
+  /* el mercado: tres cifras grandes en filas */
+  .cifras { display: grid; gap: var(--s-5); margin: var(--s-6) 0 0; }
+  .cifras > div { display: grid; gap: var(--s-1); padding-bottom: var(--s-4); border-bottom: 1px solid var(--line); }
+  .cifras dt { font: var(--display-weight) var(--t-stat)/1.1 var(--font-display); letter-spacing: var(--display-tracking); }
+  .cifras dd { margin: 0; color: var(--ink); }
+  /* la proyección: el gráfico de ingresos por línea, en un marco */
+  .grafico { display: grid; gap: var(--s-4); padding: var(--s-7); border-radius: var(--r-lg); background: var(--surface); }
+  .grafico-ingresos { width: 100%; height: 160px; display: block; }
+  .grafico-ingresos .barra { fill: var(--ink); }
+  .grafico-ingresos .barra--2 { fill: var(--p-accent); }
+  .grafico-ingresos .barra--3 { fill: color-mix(in oklab, var(--ink) 45%, transparent); }
+  .grafico ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .grafico ol li { display: flex; align-items: center; gap: var(--s-3); }
+  .grafico ol li i { width: 14px; height: 14px; border-radius: 3px; background: var(--ink); flex: none; }
+  .grafico ol li:nth-child(2) i { background: var(--p-accent); }
+  .grafico ol li:nth-child(3) i { background: color-mix(in oklab, var(--ink) 45%, transparent); }
+  /* el cronograma: la lista de lo ya construido sobre el fondo iluminado */
+  .hecho { display: grid; place-items: center; padding: var(--s-7); border-radius: var(--r-lg); background:
+      radial-gradient(70% 60% at 18% 12%, color-mix(in oklab, var(--ground-surface) 80%, white), transparent 70%), var(--ground-bg); }
+  .hecho__panel { width: min(100%, 420px); display: grid; gap: var(--s-5); padding: var(--s-7); border-radius: var(--r-md); background: var(--p-bg); color: var(--p-ink); }
+  @media (max-width: 639px) { .hecho { padding: var(--s-4); } .hecho__panel { padding: var(--s-5); gap: var(--s-3); } #ruta .rows > li { padding-block: var(--s-3); } }
+  .hecho__titulo { font: var(--display-weight) var(--t-card)/1.3 var(--font-display); }
+  @media (max-width: 639px) { .card--plan > .anual { display: none; } }
+  /* tableta: las secciones apiladas ocupan dos pantallas (layout-v4.md) */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    #modelo, #suscripciones, #mercado, #proyeccion { --h: 2; }
+    #modelo .frame { --ratio: 120% !important; }
+    #mercado .frame { --ratio: 120% !important; }
+  }
+  .card--plan.is-featured { position: relative; }
+  .badge--esquina { position: absolute; top: var(--s-6); right: var(--s-6); margin: 0; }
+  .card--plan .price .t-stat { white-space: nowrap; }
+</style>
+</head>
+<body>
+<!-- tipo: software · página de inversión de SAFETY VR
+     reparto: hero centred, nav nav-cards (sin panel: menú de palabras), cierre close-word, pie footer-columns,
+     ritmo dark-band (#proyeccion en ground-inverse), botones tonal, fuente reddit, colores de la marca
+     momento: line-carries-colour (#proyeccion) -->
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">{{venta.saltar}}</a>
+    <a class="nav__logo" href="#top">SAFETY VR</a>
+    <nav class="nav__links" aria-label="{{venta.nav.principal}}">
+      <div class="nav__item"><a class="nav__link" href="#modelo">{{inv.nav.modelo}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#suscripciones">{{inv.nav.suscripciones}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#mercado">{{inv.nav.mercado}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#proyeccion">{{inv.nav.proyeccion}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#fondos">{{inv.nav.fondos}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{@url_otro}}" hreflang="{{@otro_lang}}" lang="{{@otro_lang}}" aria-label="{{venta.nav.otro_idioma.nombre}}">{{venta.nav.otro_idioma}}</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="{{@mailto_inversion}}">{{inv.accion}}</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="{{venta.nav.menu}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--centred" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text">
+      <div class="hero__c">
+        <a class="pill" href="#fondos"><span>{{inv.hero.pill|cop=@capital_cop|usd=@capital_usd}}</span></a>
+        <h1 id="hero-h">{{inv.hero.titulo}}</h1>
+        <p class="hero__lead">{{inv.hero.bajada|mrr=@mrr}}</p>
+        <div class="btn-row"><a class="btn btn--primary" href="{{@mailto_inversion}}">{{inv.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="{{@url_comercial}}">{{inv.hero.secundaria}}</a></div>
+      </div>
+      <div class="hero__window" role="img" aria-label="{{inv.hero.arte|mrr=@mrr}}" data-ui-pause-host>
+        <div class="ly-piece" aria-hidden="true" data-ui-loop>
+          <div class="ui ui-panel ui-stat" data-ui="stat" data-values="{{@mrr_valores}}" data-prev="{{@mrr_previo}}">
+            <div class="ui-stat__head">
+              <div class="ui-stat__top">
+                <span class="ui-stat__label">{{inv.stat.etiqueta}}</span>
+                <span class="ui-stat__range">{{inv.stat.rango}}</span>
+              </div>
+              <div class="ui-stat__line">
+                <span class="ui-stat__num" data-stat-num>{{@mrr}}</span>
+                <span class="ui-stat__sub">{{inv.stat.sub|usd=@mrr_usd}}</span>
+              </div>
+            </div>
+            <div class="ui-stat__chart">
+              <svg class="ui-stat__svg" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+                <path class="ui-stat__grid" d="M0 30.5H400M0 60.5H400M0 90.5H400"/>
+                <path class="ui-stat__cover" fill-rule="evenodd" d=""/>
+                <g class="ui-stat__bars">{{@mrr_barras}}</g>
+              </svg>
+              <div class="ui-stat__axis" aria-hidden="true"><span>{{inv.stat.mes|n=1}}</span><span>{{inv.stat.mes|n=6}}</span><span>{{inv.stat.mes|n=12}}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="modelo" aria-labelledby="modelo-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="modelo-h">{{inv.modelo.titulo}}</h2>
+          <p>{{inv.modelo.texto}}</p>
+          <ul class="rows">
+            <li><span class="rows__name">{{inv.linea.suscripcion}}</span><span class="rows__value">{{inv.linea.suscripcion.valor}}</span><p>{{inv.linea.suscripcion.texto}}</p></li>
+            <li><span class="rows__name">{{inv.linea.medida}}</span><span class="rows__value">{{inv.linea.medida.valor}}</span><p>{{inv.linea.medida.texto}}</p></li>
+            <li><span class="rows__name">{{inv.linea.marca}}</span><span class="rows__value">{{inv.linea.marca.valor|base=@marca_base}}</span><p>{{inv.linea.marca.texto}}</p></li>
+          </ul>
+        </div>
+        <div class="frame frame--photo span-6 start-7" style="--ratio: 75%">
+          <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg" width="1146" height="624" alt="{{inv.modelo.alt}}" loading="lazy" decoding="async" data-source="client" data-subject="visor EC-01">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pricing ground-surface" id="suscripciones" style="--hm: 2" aria-labelledby="suscripciones-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="suscripciones-h">{{inv.suscripciones.titulo}}</h2>
+        <p>{{inv.suscripciones.texto|trm=@trm}}</p>
+      </div>
+      <div class="grid">
+        <article class="card card--plan span-4">
+          <h3>{{venta.plan.piloto}}</h3>
+          <p class="muted">{{venta.plan.piloto.para}}</p>
+          <p class="price"><span class="t-stat">{{@piloto_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@piloto_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@piloto_anio_cop|usd=@piloto_anio_usd}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_piloto}}">{{venta.planes.pedir|plan=@piloto}}</a>
+          <ul class="checks"><li>{{venta.plan.piloto.1}}</li><li>{{venta.plan.piloto.2}}</li></ul>
+        </article>
+        <article class="card card--plan span-4 is-featured">
+          <span class="badge badge--esquina">{{venta.planes.recomendado}}</span>
+          <h3>{{venta.plan.planta}}</h3>
+          <p class="muted">{{venta.plan.planta.para}}</p>
+          <p class="price"><span class="t-stat">{{@planta_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@planta_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@planta_anio_cop|usd=@planta_anio_usd}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_planta}}">{{venta.planes.pedir|plan=@planta}}</a>
+          <ul class="checks"><li>{{venta.plan.planta.1}}</li><li>{{venta.plan.planta.2}}</li></ul>
+        </article>
+        <article class="card card--plan span-4">
+          <h3>{{venta.plan.corporativo}}</h3>
+          <p class="muted">{{venta.plan.corporativo.para}}</p>
+          <p class="price"><span class="t-stat">{{@corporativo_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.planes.usd_mes|usd=@corporativo_mes_usd}}</p>
+          <p class="t-small muted anual">{{venta.planes.anual|cop=@corporativo_anio_cop|usd=@corporativo_anio_usd}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_corporativo}}">{{venta.planes.pedir|plan=@corporativo}}</a>
+          <ul class="checks"><li>{{venta.plan.corporativo.1}}</li><li>{{venta.plan.corporativo.2}}</li></ul>
+        </article>
+      </div>
+      <p style="margin-top: var(--s-4)">{{venta.planes.otros|base=@marca_base|base_usd=@marca_base_usd}}</p>
+    </div>
+  </section>
+
+  <section class="section" id="mercado" aria-labelledby="mercado-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5">
+          <h2 id="mercado-h">{{inv.mercado.titulo}}</h2>
+          <p style="margin-top: var(--s-4)">{{inv.mercado.texto}}</p>
+          <dl class="cifras">
+            <div><dt>{{inv.mercado.empresas|n=@empresas}}</dt><dd>{{inv.mercado.empresas.nota}}</dd></div>
+            <div><dt>{{inv.mercado.total|cop=@mercado}}</dt><dd>{{inv.mercado.total.nota|ticket=@ticket|usd=@mercado_usd}}</dd></div>
+            <div><dt>{{inv.mercado.meta|pct=@penetracion}}</dt><dd>{{inv.mercado.meta.nota|empresas=@meta_empresas|partners=@meta_partners}}</dd></div>
+          </dl>
+        </div>
+        <div class="frame frame--photo span-6 start-7" style="--ratio: 75%">
+          <img class="frame__img" src="{{@raiz}}assets/img/photo-f12146844.jpg" srcset="{{@raiz}}assets/img/photo-f12146844-500.jpg 500w, {{@raiz}}assets/img/photo-f12146844-960.jpg 960w, {{@raiz}}assets/img/photo-f12146844.jpg 1280w" sizes="(max-width: 639px) 160vw, (max-width: 1023px) 200vw, 860px" width="1280" height="703" alt="{{inv.mercado.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="puerto de Barranquilla">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- dark-band + line-carries-colour (moments.md): la franja de otro fondo, con la línea que la descubre -->
+  <section class="section ground-inverse" id="proyeccion" style="--hm: 2" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}' aria-labelledby="proyeccion-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="proyeccion-h">{{inv.proyeccion.titulo}}</h2>
+          <p>{{inv.proyeccion.texto}}</p>
+          <ul class="rows">
+            <li><span class="rows__name">{{inv.proy.medida}}</span><span class="rows__value">{{@ing_a_medida}}</span><p>{{inv.proy.medida.nota}}</p></li>
+            <li><span class="rows__name">{{inv.proy.suscripcion}}</span><span class="rows__value">{{@ing_suscripcion}}</span><p>{{inv.proy.suscripcion.nota}}</p></li>
+            <li><span class="rows__name">{{inv.proy.marca}}</span><span class="rows__value">{{@ing_marca_blanca}}</span><p>{{inv.proy.marca.nota}}</p></li>
+            <li><span class="rows__name">{{inv.proy.total}}</span><span class="rows__value">{{@ing_total}}</span><p>{{@ing_total_usd}}</p></li>
+          </ul>
+        </div>
+        <div class="grafico span-6 start-7">
+          {{@grafico_ingresos}}
+          <ol>
+            <li><i aria-hidden="true"></i>{{inv.proy.medida}} · {{@ing_a_medida}}</li>
+            <li><i aria-hidden="true"></i>{{inv.proy.suscripcion}} · {{@ing_suscripcion}}</li>
+            <li><i aria-hidden="true"></i>{{inv.proy.marca}} · {{@ing_marca_blanca}}</li>
+          </ol>
+          <p>{{inv.proy.fijo|mes=@mes_fijo}}</p>
+          <p>{{inv.proy.ebitda|cop=@ebitda|pct=@ebitda_pct}}</p>
+          <p><a class="link" href="#fondos">{{inv.proy.enlace}}</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="fondos" aria-labelledby="fondos-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="fondos-h">{{inv.fondos.titulo}}</h2>
+          <p>{{inv.fondos.texto|cop=@capital_cop|usd=@capital_usd}}</p>
+        </div>
+        <div class="span-6 start-7">{{@grafico_fondos}}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="ruta" aria-labelledby="ruta-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="ruta-h">{{inv.ruta.titulo}}</h2>
+          <p>{{inv.ruta.texto}}</p>
+          <ul class="rows">
+            <li><span class="rows__name">{{inv.ruta.t1}}</span><p>{{inv.ruta.t1.nota}}</p></li>
+            <li><span class="rows__name">{{inv.ruta.t2}}</span><p>{{inv.ruta.t2.nota}}</p></li>
+            <li><span class="rows__name">{{inv.ruta.t3}}</span><p>{{inv.ruta.t3.nota}}</p></li>
+            <li><span class="rows__name">{{inv.ruta.t4}}</span><p>{{inv.ruta.t4.nota}}</p></li>
+          </ul>
+        </div>
+        <div class="hecho span-6 start-7" role="img" aria-label="{{inv.ruta.arte}}">
+          <div class="hecho__panel" aria-hidden="true">
+            <p class="hecho__titulo">{{inv.hecho.titulo}}</p>
+            <ul class="checks"><li>{{inv.hecho.1}}</li><li>{{inv.hecho.2}}</li><li>{{inv.hecho.3}}</li><li>{{inv.hecho.4}}</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">{{inv.cierre.titulo}}</h2><p class="t-lead">{{inv.cierre.texto}}</p></div>
+        <a class="btn btn--primary" href="{{@mailto_inversion}}">{{inv.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">SAFETY VR</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-6 stack-4">
+          <p class="footer__lede">{{inv.pie.lema}}</p>
+        </div>
+        <div class="span-2 footer__col"><h3>{{inv.pie.inversion}}</h3><ul><li><a href="#modelo">{{inv.nav.modelo}}</a></li><li><a href="#suscripciones">{{inv.nav.suscripciones}}</a></li><li><a href="#proyeccion">{{inv.nav.proyeccion}}</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>{{inv.nav.fondos}}</h3><ul><li><a href="#mercado">{{inv.nav.mercado}}</a></li><li><a href="#fondos">{{inv.nav.fondos}}</a></li><li><a href="#ruta">{{inv.ruta.t1}}</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>{{inv.pie.producto}}</h3><ul><li><a href="{{@url_comercial}}">{{inv.pie.comercial}}</a></li><li><a href="{{@raiz}}demo/">{{venta.pie.probar}}</a></li><li><a href="{{@raiz}}avance/">{{venta.pie.avance}}</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>{{venta.pie.derechos|anio=@anio}}</span>
+        <div class="socials"></div>
+        {{@creditos}}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="{{venta.nav.rapidas}}">
+  <a class="btn btn--primary" href="{{@mailto_inversion}}">{{inv.accion}}</a>
+</nav>
+
+<script type="module" src="{{@raiz}}assets/system.js"></script>
+<script type="module" src="{{@raiz}}assets/motion/motion.js"></script>
+<script type="module" src="{{@raiz}}assets/layout/layout.js"></script>
+</body>
+</html>

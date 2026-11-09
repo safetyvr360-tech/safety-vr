@@ -12,12 +12,14 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 9 de noviembre de 2026: **202/202 en verde, 95 de 95 rupturas detectadas.**
+Al 9 de noviembre de 2026: **218/218 en verde, 109 de 109 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 
 ## Página comercial (la raíz publicada)
 
+- `src/negocio/precios.ts`, `modelo.ts` — la única fuente de precios (COP y USD) y de las cifras del año 1; las pruebas exigen las del modelo financiero
+- `comercial/inversion.html` — la página para inversionistas (`/inversion/`, `/en/investors/`)
 - `comercial/plantilla.html` — la página de venta; sus textos son claves `venta.*` de `mensajes/*.json`
 - `tools/construir-comercial.mjs` — la arma en `sitio/` (es-CO) y `sitio/en/` (en); una clave que falta revienta el armado
 - `comercial/assets/` — el subconjunto del kit de diseño (design-taste-frontend), íconos reales y fotos

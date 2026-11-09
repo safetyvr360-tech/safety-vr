@@ -47,6 +47,8 @@ const motor = sumar(
   ...['matematica', 'disposicion'].map((n) => correrPruebas(`src/webxr/${n}.test.ts`)),
   ...['uuidv7', 'firma', 'xapi', 'cola'].map((n) => correrPruebas(`src/telemetria/${n}.test.ts`)),
   ...['codigo', 'vigencia', 'cadena', 'verificacion'].map((n) => correrPruebas(`src/certificados/${n}.test.ts`)),
+  // el modelo de negocio y los precios (página comercial y de inversión)
+  ...readdirSync(`${raiz}src/negocio`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/negocio/${n}`)),
 );
 // Todas las suites de idioma (catálogos, negociación, textos crudos), sin lista a mano.
 const idiomas = sumar(...readdirSync(`${raiz}src/i18n`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/i18n/${n}`)));
