@@ -5,6 +5,21 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 — MVP publicado en GitHub
+
+- Repositorio público: https://github.com/safetyvr360-tech/safety-vr (cuenta
+  safetyvr360-tech; el usuario inició sesión y autorizó la aplicación de Claude
+  en GitHub).
+- Primer commit `653867a` en `main`: 52 archivos (la previsualización generada
+  no se versiona; GitHub Actions la construye).
+- GitHub Pages configurado con origen «GitHub Actions». Demo:
+  https://safetyvr360-tech.github.io/safety-vr/
+- Respaldo previo: `respaldos/codigo-2026-11-09_0031.zip`.
+- La copia de trabajo del repositorio es la fuente de verdad desde ahora; la
+  carpeta `codigo/` del disco F se mantiene sincronizada con ella.
+
+---
+
 ## 8 de noviembre de 2026 (4) — MVP listo para GitHub
 
 El usuario pidió subir un MVP a GitHub. Desde la sesión de Claude no hay cuenta
