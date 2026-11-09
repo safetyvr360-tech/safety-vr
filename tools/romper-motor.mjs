@@ -6,7 +6,7 @@
 //   node tools/romper-motor.mjs          informe legible
 //   node tools/romper-motor.mjs --json   informe para la previsualización
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -233,6 +233,26 @@ const json = process.argv.includes('--json');
 const informe = [];
 let huecos = 0;
 
+// Si el proceso muere en medio de una ruptura (Ctrl+C, un límite de tiempo, un
+// cierre forzado que en Windows no deja correr ningún manejador), el archivo
+// quedaría roto en la copia de trabajo: pasó una vez con disposicion.ts. Antes
+// de romper se anota el original en .romper-en-curso.json; al terminar el grupo
+// se borra la nota, y al arrancar se restaura cualquier nota que haya quedado.
+const NOTA = `${raiz}.romper-en-curso.json`;
+if (existsSync(NOTA)) {
+  const { archivo, original } = JSON.parse(readFileSync(NOTA, 'utf8'));
+  writeFileSync(`${raiz}${archivo}`, original);
+  rmSync(NOTA);
+  console.error(`Una corrida anterior quedó interrumpida: ${archivo} restaurado a su original.`);
+}
+let enCurso = null;
+for (const senal of ['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGBREAK']) {
+  process.on(senal, () => {
+    if (enCurso) { writeFileSync(enCurso.ruta, enCurso.original); rmSync(NOTA, { force: true }); }
+    process.exit(130);
+  });
+}
+
 // Reportero TAP explícito: desde Node 23 el reportero por omisión es «spec»
 // aunque la salida no sea una terminal, y sin `not ok` toda ruptura parecería
 // en verde. El límite por prueba convierte un cuelgue en un fallo con nombre;
@@ -254,6 +274,8 @@ for (const prueba of new Set(GRUPOS.map((g) => g.prueba))) {
 for (const g of GRUPOS) {
   const ruta = `${raiz}${g.archivo}`;
   const original = readFileSync(ruta, 'utf8');
+  enCurso = { ruta, original };
+  writeFileSync(NOTA, JSON.stringify({ archivo: g.archivo, original }));
   try {
     for (const [nombre, nombreEn, buscar, poner] of g.rupturas) {
       const entrada = { archivo: g.archivo, nombre: { 'es-CO': nombre, en: nombreEn }, ok: false, fallidas: [] };
@@ -278,6 +300,8 @@ for (const g of GRUPOS) {
     }
   } finally {
     writeFileSync(ruta, original);
+    rmSync(NOTA, { force: true });
+    enCurso = null;
   }
 }
 

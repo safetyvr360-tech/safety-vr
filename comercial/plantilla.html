@@ -112,7 +112,7 @@
   }
   /* teléfono: los planes sin la línea anual, para caber en dos pantallas */
   @media (max-width: 639px) { #planes .card--plan > .t-small { display: none; } }
-  @media (max-width: 639px) { main > #pasos[data-moment]:not(.is-live) { height: calc(2 * 100lvh); } }
+  @media (max-width: 639px) { main > #pasos[data-moment]:not(.is-live) { height: auto; min-height: calc(2 * 100lvh); } #pasos:not(.is-live) .mo-pc__visual > img { aspect-ratio: 5 / 4; max-height: none; } }
   /* preguntas: la foto del visor bajo el texto, 3:2 */
   #preguntas .frame { --ratio: 66.6%; }
   /* el nombre del cierre: con su interlineado completo para que el recorte no corte las mayúsculas */

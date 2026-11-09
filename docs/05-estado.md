@@ -5,6 +5,27 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (5) — ajustes de la página comercial y ruptura a prueba de cortes
+
+- El usuario decidió dejar el repositorio **público**: GitHub Pages gratis no
+  publica repositorios privados.
+- **Bug de herramientas:** una corrida de `romper-motor.mjs` cortada a la
+  fuerza dejó aplicada una ruptura en `src/webxr/disposicion.ts` (copia de
+  trabajo; el commit estaba limpio). El chequeo previo lo detectó y se negó a
+  correr. Ahora el motor anota el archivo y su original en
+  `.romper-en-curso.json` antes de romper y, al arrancar, restaura cualquier
+  nota que haya quedado. También restaura ante Ctrl+C y cierre. Probado
+  matándolo con SIGKILL en plena ruptura: quedó roto `sesion.ts`; la corrida
+  siguiente lo restauró y detectó 88 de 88.
+- Teléfono: las imágenes de los pasos a 5:4 y la sección con altura mínima de
+  dos pantallas (crece con su contenido). El espacio pasos → videos quedó
+  corregido y desapareció el choque a 320 px.
+- Siguen abiertos: `copy-headings` (el verificador lee en inglés) y el espacio
+  hero → plataforma a 390 px (la receta del hero llena el pie de la pantalla).
+- 195/195, 88 de 88; `check.mjs` sin hallazgos a 1440, 768 y 390.
+
+---
+
 ## 9 de noviembre de 2026 (4) — página comercial de venta, bilingüe
 
 El usuario pidió la página comercial completa de venta del servicio, con
