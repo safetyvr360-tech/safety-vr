@@ -163,6 +163,55 @@ comprobar(enTelefono.length === 2, `en un teléfono vertical los dos botones sig
 if (capturas) await canvas.screenshot({ path: `${capturas}/7-telefono.png` });
 
 comprobar(errores.length === 0, `sin errores durante el recorrido ${errores.join(' | ')}`);
+
+// ---------------------------------------------------------------- plataforma
+// La página que publica GitHub Pages (sitio/index.html), usada como la usaría
+// un trabajador: empezar, decidir sobre los paneles 3D, ver el resultado,
+// recibir el certificado y verificarlo.
+const p2 = await navegador.newPage({ viewport: { width: 1280, height: 900 } });
+const errores2 = [];
+p2.on('pageerror', (e) => errores2.push(e.message));
+p2.on('console', (m) => { if (m.type() === 'error' && !/ERR_|fonts\.g/.test(m.text())) errores2.push(m.text()); });
+const sitio = readFileSync(`${raiz}sitio/index.html`, 'utf8');
+await p2.route('http://localhost/**', (r) => r.fulfill({ contentType: 'text/html; charset=utf-8', body: sitio }));
+await p2.goto('http://localhost/');
+await p2.waitForTimeout(500);
+comprobar(await p2.evaluate(() => document.compatMode) === 'CSS1Compat', 'la plataforma se sirve como documento HTML completo (sin modo de compatibilidad)');
+comprobar(/Capacitación en seguridad industrial/.test(await p2.textContent('h1')), 'la portada es la de la plataforma, no la del avance');
+comprobar(!(await p2.isVisible('text=Pruebas en verde')), 'la portada no muestra cifras de desarrollo');
+await p2.click('#b-empezar');
+await p2.waitForTimeout(400);
+const lienzo = p2.locator('#visor');
+async function elegir(id) {
+  const bs = await p2.evaluate(() => visor.botonesEnPantalla());
+  const b = bs.find((x) => x.id === id);
+  if (!b) throw new Error(`plataforma: el botón ${id} no está en pantalla`);
+  await lienzo.scrollIntoViewIfNeeded();
+  const c = await lienzo.boundingBox();
+  await p2.mouse.click(c.x + b.x, c.y + b.y);
+  await p2.waitForTimeout(120);
+}
+for (const a of ['a_revisar_permiso', 'a_medir', 'a_designar_vigia', 'a_arnes', 'a_evacuar']) await elegir(a);
+await p2.waitForTimeout(500);
+comprobar(await p2.isVisible('#resultado') && /APTO/.test(await p2.textContent('#r-resumen')), 'al terminar la plataforma muestra el resultado');
+const codigo = (await p2.textContent('#r-certificado .codigo') || '').trim();
+comprobar(/^SVR-/.test(codigo), `al aprobar recibe un certificado (${codigo})`);
+await p2.click('#i-en');
+await p2.waitForTimeout(300);
+comprobar(/PASS/.test(await p2.textContent('#r-resumen')) && await p2.evaluate(() => certs.length) === 1, 'cambiar a inglés traduce el resultado sin emitir otro certificado');
+await p2.click('#i-es');
+await p2.click('text=Verificar este certificado');
+await p2.waitForTimeout(300);
+comprobar(/Certificado vigente/.test(await p2.textContent('#v-respuesta')), 'el certificado recién emitido se verifica como vigente');
+await p2.setViewportSize({ width: 390, height: 844 });
+await p2.waitForTimeout(200);
+comprobar(await p2.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'en un teléfono la página no se desborda hacia los lados');
+comprobar(errores2.length === 0, `la plataforma no tiene errores ${errores2.join(' | ')}`);
+if (capturas) {
+  await p2.setViewportSize({ width: 1280, height: 900 });
+  await p2.evaluate(() => window.scrollTo(0, 0));
+  await p2.screenshot({ path: `${capturas}/8-plataforma.png` });
+}
 await navegador.close();
 console.log(fallos.length === 0 ? '\nVisor verificado en navegador.' : `\n${fallos.length} comprobación(es) fallaron.`);
 process.exit(fallos.length === 0 ? 0 : 1);

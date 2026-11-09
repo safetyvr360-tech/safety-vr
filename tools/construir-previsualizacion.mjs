@@ -1,10 +1,13 @@
-// Arma previsualizacion/index.html: una sola página con el motor real de
-// Safety VR corriendo EC-01 y el estado de obra. Las cifras no se escriben a
-// mano: salen de correr las pruebas y el Método de Ruptura al construir.
+// Arma las páginas web de Safety VR con el motor real:
+// - previsualizacion/index.html — el estado de obra (pruebas, plan, demo técnica).
+// - sitio/index.html            — la PLATAFORMA: lo que ve un trabajador.
+// - sitio/avance/index.html     — el estado de obra, publicado aparte.
+// Las cifras no se escriben a mano: salen de correr las pruebas y el Método
+// de Ruptura al construir. sitio/ es lo que GitHub Pages publica.
 //
 //   node tools/construir-previsualizacion.mjs
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
@@ -69,9 +72,29 @@ const DATOS = {
 
 const codigo = ['src/escenario/validador.ts', 'src/escenario/ejemplos/ec-01.ts', 'src/motor/maquina.ts', 'src/motor/sesion.ts', 'src/motor/presentador.ts', 'src/webxr/matematica.ts', 'src/webxr/disposicion.ts', 'src/webxr/dibujo.ts', 'src/webxr/visor.ts', 'src/telemetria/uuidv7.ts', 'src/telemetria/firma.ts', 'src/telemetria/xapi.ts', 'src/telemetria/cola.ts', 'src/certificados/codigo.ts', 'src/certificados/vigencia.ts', 'src/certificados/cadena.ts', 'src/certificados/verificacion.ts'].map(aNavegador).join('\n');
 
-const html = leer('previsualizacion/plantilla.html')
+const armar = (plantilla) => leer(plantilla)
   .replace('/*__MOTOR__*/', () => codigo)
   .replace('/*__DATOS__*/', () => JSON.stringify(DATOS));
 
-writeFileSync(`${raiz}previsualizacion/index.html`, html);
-console.log(`previsualizacion/index.html · ${DATOS.pruebas.pass}/${DATOS.pruebas.total} pruebas · ${rupturas.length} rupturas detectadas`);
+// Documento HTML completo para servir fuera de la vista previa de Claude
+// (GitHub Pages): doctype, codificación y ajuste para teléfono.
+const documento = (cuerpo, lang) => `<!doctype html>
+<html lang="${lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+${cuerpo}
+</body>
+</html>
+`;
+
+const avance = armar('previsualizacion/plantilla.html');
+writeFileSync(`${raiz}previsualizacion/index.html`, avance);
+mkdirSync(`${raiz}sitio/avance`, { recursive: true });
+writeFileSync(`${raiz}sitio/index.html`, documento(armar('app/plantilla.html'), 'es-CO'));
+writeFileSync(`${raiz}sitio/avance/index.html`, documento(avance, 'es-CO'));
+writeFileSync(`${raiz}sitio/.nojekyll`, '');
+console.log(`sitio/ (plataforma + avance) · ${DATOS.pruebas.pass}/${DATOS.pruebas.total} pruebas · ${rupturas.length} rupturas detectadas`);

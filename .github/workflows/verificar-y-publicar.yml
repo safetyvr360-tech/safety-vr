@@ -34,13 +34,8 @@ jobs:
         run: |
           npm install --no-save playwright@1.49.1
           npx playwright install --with-deps chromium
-      - name: Prueba del visor en navegador
+      - name: Prueba del visor y de la plataforma en navegador
         run: npm run probar-visor
-      - name: Preparar el sitio
-        run: |
-          mkdir -p sitio
-          cp previsualizacion/index.html sitio/index.html
-          touch sitio/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: sitio

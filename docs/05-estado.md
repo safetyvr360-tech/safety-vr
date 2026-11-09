@@ -5,6 +5,29 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (2) — la demo en vivo muestra la plataforma
+
+El usuario vio que la demo publicada mostraba el reporte de avance y no la
+plataforma. Corrección:
+- `app/plantilla.html`: la página del producto, bilingüe (claves
+  `plataforma.*` en los catálogos): portada, ficha del escenario, botones para
+  empezar en pantalla o en realidad virtual, visor 360°, resultado con los
+  criterios, certificado (de demostración, guardado en el navegador) y
+  verificación pública por código.
+- El sitio se arma en `sitio/`: la plataforma en la raíz y el avance en
+  `/avance/`. Las páginas ahora salen como documento HTML completo (doctype,
+  codificación y ajuste para teléfono); antes dependían del envoltorio de la
+  vista previa de Claude.
+- Bug evitado antes de publicar: cambiar de idioma con el resultado en pantalla
+  volvía a emitir el certificado. Emitir y mostrar quedaron separados, con
+  comprobación en navegador.
+- `probar-visor.mjs` recorre también la plataforma como un trabajador.
+- Respaldo previo: commit `0c03518` en GitHub y
+  `respaldos/repo-safety-vr-2026-11-09_1328.zip` (el disco F rechazó la
+  escritura en ese momento; el .zip se entregó por el chat).
+
+---
+
 ## 9 de noviembre de 2026 — MVP publicado en GitHub
 
 - Repositorio público: https://github.com/safetyvr360-tech/safety-vr (cuenta

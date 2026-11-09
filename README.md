@@ -35,9 +35,17 @@ npm run previsualizacion # genera previsualizacion/index.html: ábralo en el nav
 La prueba del visor en navegador real (`npm run probar-visor`) necesita
 Playwright: `npm install --no-save playwright && npx playwright install chromium`.
 
-Cada push corre todo esto en GitHub Actions. En la rama `main`, si todo pasa, la
-demo se publica en GitHub Pages: esa dirección https se abre directamente en el
-navegador del Meta Quest para probar el modo realidad virtual.
+Cada push corre todo esto en GitHub Actions. En la rama `main`, si todo pasa, el
+sitio se publica en GitHub Pages:
+
+- **Plataforma:** https://safetyvr360-tech.github.io/safety-vr/ — la capacitación
+  EC-01 en pantalla o en realidad virtual (ábrala en el navegador del Meta Quest),
+  el resultado, el certificado y su verificación pública.
+- **Estado del proyecto:** https://safetyvr360-tech.github.io/safety-vr/avance/ —
+  pruebas, rupturas, plan de obra y la demo técnica.
+
+`npm run previsualizacion` arma las dos páginas en `sitio/` (`app/plantilla.html`
+es la plataforma; `previsualizacion/plantilla.html`, el avance).
 
 ## Estado
 
@@ -60,7 +68,8 @@ and a PostgreSQL schema with per-organization row-level security. The UI is
 fully bilingual (es-CO / en).
 
 Run `npm test` (Node 22.6+, no dependencies). On every push, GitHub Actions
-runs the tests, the breakage method and a real-browser viewer test, and deploys
-the demo to GitHub Pages from `main`.
+runs the tests, the breakage method and a real-browser test, and deploys the
+platform to https://safetyvr360-tech.github.io/safety-vr/ (project status at
+`/avance/`).
 
 © ULTRAMEDIA COMPANY. Todos los derechos reservados. All rights reserved.
