@@ -66,6 +66,7 @@
   "plataforma.criterios": "Criterios evaluados",
   "plataforma.certificado": "Certificado de competencia",
   "plataforma.certificado.demo": "Certificado de demostración: se guarda solo en este navegador.",
+  "plataforma.certificado.error": "Usted aprobó, pero el certificado no se pudo emitir en este navegador. Repita el escenario para intentarlo de nuevo.",
   "plataforma.certificado.codigo": "Código de verificación",
   "plataforma.certificado.vigente_hasta": "Vigente hasta",
   "plataforma.certificado.verificar": "Verificar este certificado",

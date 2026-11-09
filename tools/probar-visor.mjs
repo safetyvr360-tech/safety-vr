@@ -203,6 +203,22 @@ await p2.click('#i-es');
 await p2.click('text=Verificar este certificado');
 await p2.waitForTimeout(300);
 comprobar(/Certificado vigente/.test(await p2.textContent('#v-respuesta')), 'el certificado recién emitido se verifica como vigente');
+const rutaApta = ['a_revisar_permiso', 'a_medir', 'a_designar_vigia', 'a_arnes', 'a_evacuar'];
+// Otra pestaña emitió mientras esta tenía una copia vieja: no debe pisarla.
+await p2.evaluate(() => { certs = []; });
+await p2.click('#b-reiniciar');
+await p2.waitForTimeout(300);
+for (const a of rutaApta) await elegir(a);
+await p2.waitForTimeout(500);
+const cadena = await p2.evaluate(() => JSON.parse(localStorage.getItem('svr-certs')));
+comprobar(cadena.length === 2 && cadena[1].hash_anterior === cadena[0].hash, 'con dos pestañas, el segundo certificado se encadena al primero sin pisarlo');
+// Si la emisión falla, el trabajador ve su resultado igual y un aviso claro.
+await p2.evaluate(() => { crypto.subtle.digest = () => Promise.reject(new Error('sin WebCrypto')); });
+await p2.click('#b-reiniciar');
+await p2.waitForTimeout(300);
+for (const a of rutaApta) await elegir(a);
+await p2.waitForTimeout(500);
+comprobar(await p2.isVisible('#resultado') && /APTO/.test(await p2.textContent('#r-resumen')) && /no se pudo emitir/.test(await p2.textContent('#r-certificado')), 'si el certificado no se puede emitir, el resultado se muestra igual con el aviso');
 await p2.setViewportSize({ width: 390, height: 844 });
 await p2.waitForTimeout(200);
 comprobar(await p2.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'en un teléfono la página no se desborda hacia los lados');

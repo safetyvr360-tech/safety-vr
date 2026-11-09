@@ -209,8 +209,10 @@ const tx = (texto) => texto[idioma] ?? texto[doc.idiomas[0]];
 
 // Certificados de demostración: sin servidor, viven en este navegador.
 const ORG = 'org-demo';
-let certs = [];
-try { certs = JSON.parse(leer('svr-certs') || '[]'); if (!Array.isArray(certs)) certs = []; } catch (e) { certs = []; }
+// Se relee antes de emitir: otra pestaña pudo agregar un eslabón y, si no, esta
+// lo pisaría al guardar y la cadena quedaría rota.
+const leerCerts = () => { try { const c = JSON.parse(leer('svr-certs') || '[]'); return Array.isArray(c) ? c : []; } catch (e) { return []; } };
+let certs = leerCerts();
 const uuid = crearGeneradorUuidv7();
 
 let visor = null, sesionVista = null, idSesion = null, rvOk = false;
@@ -270,17 +272,23 @@ let ultimo = null; // { s, cert } de la última sesión cerrada
 
 async function cerrar(s) {
   const e = s.estadoActual();
-  let cert = null;
+  let cert = null, fallo = false;
   if (e.veredicto === 'apto') {
-    const paquete = await armarPaquete({
-      id: idSesion, trabajador_id: 'trabajador-demo', version_simulador: `${doc.codigo}@${doc.version}`, dispositivo_id: 'navegador',
-      escenario: doc.codigo, iniciada_en: new Date().toISOString(), duracion_s: s.duracionS(), puntaje: e.puntaje, veredicto: e.veredicto,
-    }, [], 'demo');
-    cert = await emitirCertificado({ paquete, doc, organizacion_id: ORG, anterior: certs.at(-1) ?? null, ahoraMs: Date.now(), codigo: generarCodigo() });
-    certs.push(cert);
-    guardar('svr-certs', JSON.stringify(certs));
+    // Si la emisión falla (p. ej. sin WebCrypto), el resultado se muestra igual.
+    try {
+      const paquete = await armarPaquete({
+        id: idSesion, trabajador_id: 'trabajador-demo', version_simulador: `${doc.codigo}@${doc.version}`, dispositivo_id: 'navegador',
+        escenario: doc.codigo, iniciada_en: new Date().toISOString(), duracion_s: s.duracionS(), puntaje: e.puntaje, veredicto: e.veredicto,
+      }, [], 'demo');
+      certs = leerCerts();
+      cert = await emitirCertificado({ paquete, doc, organizacion_id: ORG, anterior: certs.at(-1) ?? null, ahoraMs: Date.now(), codigo: generarCodigo() });
+      certs.push(cert);
+      guardar('svr-certs', JSON.stringify(certs));
+    } catch (err) {
+      cert = null; fallo = true;
+    }
   }
-  ultimo = { s, cert };
+  ultimo = { s, cert, fallo };
   pintarResultado();
 }
 
@@ -298,7 +306,7 @@ function pintarResultado() {
   const caja = $('r-certificado'); caja.replaceChildren(); caja.className = 'tarjeta';
   $('resultado').hidden = false;
   const cert = ultimo.cert;
-  if (!cert) { caja.append(el('div', 'etiqueta', t('plataforma.certificado')), el('p', null, t('plataforma.sin_certificado'))); return; }
+  if (!cert) { caja.append(el('div', 'etiqueta', t('plataforma.certificado')), el('p', null, t(ultimo.fallo ? 'plataforma.certificado.error' : 'plataforma.sin_certificado'))); return; }
   caja.className = 'tarjeta certificado';
   const fecha = new Intl.DateTimeFormat(idioma, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${cert.vigente_hasta}T12:00:00Z`));
   caja.append(el('div', 'etiqueta', t('plataforma.certificado')), el('h3', null, tx(doc.titulo)),
@@ -311,6 +319,7 @@ function pintarResultado() {
 
 async function verificarAhora() {
   const buscar = async (codigo) => {
+    certs = leerCerts();
     const i = certs.findIndex((c) => c.codigo === codigo);
     return i < 0 ? null : { cert: certs[i], siguiente: certs[i + 1] ?? null };
   };

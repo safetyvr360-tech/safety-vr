@@ -66,6 +66,7 @@
   "plataforma.criterios": "Assessed criteria",
   "plataforma.certificado": "Competency certificate",
   "plataforma.certificado.demo": "Demo certificate: it is stored only in this browser.",
+  "plataforma.certificado.error": "You passed, but the certificate could not be issued in this browser. Repeat the scenario to try again.",
   "plataforma.certificado.codigo": "Verification code",
   "plataforma.certificado.vigente_hasta": "Valid until",
   "plataforma.certificado.verificar": "Verify this certificate",
