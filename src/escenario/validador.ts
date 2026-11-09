@@ -2,7 +2,7 @@
 // Sin dependencias: corre con `node --experimental-strip-types`.
 
 import type {
-  Compuerta, Criterio, Escenario, Hallazgo, Informe, Nodo, Texto,
+  Accion, Compuerta, Criterio, Escenario, Hallazgo, Informe, Nodo, Texto,
 } from './tipos.ts';
 
 const CLAVES_OBLIGATORIAS = [
@@ -270,7 +270,7 @@ export function compuertaAlcanzabilidad(doc: Escenario): Hallazgo[] {
       }
     }
     if (actual.final) break;
-    const buena = actual.acciones.find((a) => a.resultado === 'correcto');
+    const buena: Accion | undefined = actual.acciones.find((a) => a.resultado === 'correcto');
     if (!buena) {
       add('nodo_sin_accion_correcta', `El nodo "${actual.id}" no ofrece ninguna acción correcta.`, `nodos.${actual.id}`);
       break;

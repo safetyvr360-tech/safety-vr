@@ -8,3 +8,5 @@ capturas/
 .env.*
 previsualizacion/index.html
 sitio/
+.next/
+*.tsbuildinfo

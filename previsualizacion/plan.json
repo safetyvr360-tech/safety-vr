@@ -49,10 +49,10 @@
     }
   },
   {
-    "estado": "pendiente",
+    "estado": "hecho",
     "titulo": {
-      "es-CO": "App Next.js y sistema de diseño bilingüe (bloqueado: instalar paquetes)",
-      "en": "Next.js app and bilingual design system (blocked: package installs)"
+      "es-CO": "App Next.js 15 y sistema de diseño bilingüe (corre en local; falta un servidor donde publicarla)",
+      "en": "Next.js 15 app and bilingual design system (runs locally; still needs a server to deploy to)"
     }
   },
   {

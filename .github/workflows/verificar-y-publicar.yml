@@ -1,4 +1,5 @@
-# En cada push: pruebas, Método de Ruptura, visor en navegador real y, si todo
+# En cada push: pruebas, Método de Ruptura, compilación de la app Next.js,
+# visor en navegador real y, si todo
 # está en verde en la rama main, publica la demo en GitHub Pages (https).
 # La dirección de Pages sirve para abrir el visor en un Meta Quest.
 
@@ -24,10 +25,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Instalar paquetes
+        run: npm ci
       - name: Pruebas
         run: npm test
       - name: Método de Ruptura
         run: npm run romper
+      - name: Compilar la app Next.js (tipos incluidos)
+        run: npm run build
       - name: Construir la previsualización
         run: npm run previsualizacion
       - name: Instalar Chromium para la prueba del visor

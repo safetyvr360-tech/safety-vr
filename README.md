@@ -44,7 +44,7 @@ sitio se publica en GitHub Pages:
 - **Estado del proyecto:** https://safetyvr360-tech.github.io/safety-vr/avance/ —
   pruebas, rupturas, plan de obra y la demo técnica.
 
-`npm run previsualizacion` arma las dos páginas en `sitio/` (`app/plantilla.html`
+`npm run previsualizacion` arma las dos páginas en `sitio/` (`plataforma/plantilla.html`
 es la plataforma; `previsualizacion/plantilla.html`, el avance).
 
 ## Estado
@@ -52,8 +52,8 @@ es la plataforma; `previsualizacion/plantilla.html`, el avance).
 Ver [`LEEME.md`](LEEME.md) (mapa del código) y
 [`docs/05-estado.md`](docs/05-estado.md) (bitácora de cada sesión de trabajo).
 
-Pendiente: probar en un visor real, fotos 360° de los entornos, app Next.js con
-portal de empresa, servidor de sincronización (LRS) y ejecutar las migraciones
+Pendiente: probar en un visor real, fotos 360° de los entornos, autenticación y
+puerta del visor, portal de empresa, servidor de sincronización (LRS) y ejecutar las migraciones
 en PostgreSQL.
 
 ---

@@ -5,6 +5,85 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (3) — herramientas fiables, dos bugs de la plataforma y la app Next.js
+
+**Contexto.** Sesión nueva en otra máquina (Windows, Node 26). El repositorio
+se clonó en `F:\ULTRAMEDIA COMPANY - PROYECTOS\02-SAFETY-VR\safety-vr`.
+La instalación de paquetes ya funciona, así que se arrancó la app.
+
+**Bug grave en las herramientas (no en el producto).** En esta máquina la
+ruptura daba **0 de 70 detectadas** y se colgaba. Tres causas:
+1. Desde Node 23, `node --test` ya no usa el reportero TAP cuando la salida no
+   es una terminal. Sin `not ok`, toda ruptura parecía «en verde». Ahora se pasa
+   `--test-reporter=tap` (ruptura y previsualización). Además la ruptura
+   comprueba primero que cada suite intacta pasa y se lee; si no, sale con
+   código 2 y no rompe nada. Esta comprobación también se rompió a propósito.
+2. Git en Windows convertía los saltos de línea a CRLF y las rupturas de varias
+   líneas no encontraban su fragmento. Nuevo `.gitattributes` con `eol=lf`.
+3. Una ruptura de la cola («quitar el candado de sincronización») dejaba la
+   suite colgada para siempre. Ahora hay un límite por prueba (20 s) y por
+   proceso (120 s); un cuelgue cuenta como ruptura detectada.
+En GitHub Actions (Linux, Node 22) las cifras anteriores eran ciertas.
+
+**Bugs de la plataforma publicada** (`plataforma/plantilla.html`):
+1. Si emitir el certificado fallaba (por ejemplo, sin WebCrypto), el error se
+   tragaba y el trabajador que aprobó no veía ni su resultado. Ahora lo ve, con
+   el aviso bilingüe `plataforma.certificado.error`.
+2. Con dos pestañas abiertas, la segunda pisaba la cadena de certificados de la
+   primera. Ahora se relee el almacenamiento antes de emitir y de verificar.
+Las dos se verificaron en el navegador integrado y se rompieron a propósito
+(reaparecieron: 1 certificado en vez de 2; «No se emite certificado» al
+aprobar). Se agregaron dos comprobaciones a `probar-visor.mjs`. **No se corrió
+aquí** porque no hay Playwright: lo corre GitHub Actions.
+
+**App Next.js 15.5 + sistema de diseño bilingüe** (paso 2 del plan de obra):
+- Next 15.5.29, React 19.1, TypeScript 5.9, versiones exactas. PostCSS forzada
+  a 8.5.32 con `overrides` (la que trae Next 15 tiene avisos de seguridad):
+  `npm audit` sin vulnerabilidades. Next 16 no, porque el contrato fija el 15.
+- La plantilla estática pasó de `app/` a `plataforma/`: Next toma `app/` de la
+  raíz como su carpeta de rutas.
+- `src/i18n/idiomas.ts` (puro): rutas `/es-CO/…` y `/en/…`; en la raíz manda la
+  cookie, después `Accept-Language` con sus pesos q, después es-CO. Cualquier
+  español va a es-CO y cualquier inglés a en. Cambiar de idioma conserva la
+  página, la consulta y el fragmento.
+- `src/middleware.ts`: redirige las rutas sin idioma y recuerda la elección.
+- `src/app/[idioma]/`: inicio (cuatro portales y acceso a la demo), `sistema`
+  (colores, tipografía, botones, campo del código de seis dígitos, estados,
+  tarjetas) y 404 propia de cada idioma.
+- `src/componentes/`: `sistema.css` (los mismos colores y fuentes de la
+  plataforma publicada; fuentes servidas por `next/font`), `piezas.tsx` y
+  `navegacion.tsx` (enlace activo y selector de idioma).
+- Textos: 64 claves `web.*` en los dos catálogos. Nueva prueba
+  `src/i18n/textos-crudos.test.ts`: lee el árbol sintáctico de TypeScript y
+  falla si un `.tsx` trae texto visible escrito a mano.
+- Tipos: el chequeo de Next encontró un error de tipos real en
+  `validador.ts` (Node nunca revisa tipos al quitarlos). Corregido; `tsc` sin errores.
+- Bug encontrado al verificar: `dynamicParams = false` en el layout bloqueaba la
+  404 propia (`NoFallbackError`). Quitado: el middleware ya garantiza el idioma.
+- GitHub Actions ahora instala paquetes (`npm ci`) y compila la app (`npm run
+  build`). Pages sigue publicando solo la plataforma estática: la app necesita
+  un servidor (middleware), que todavía no existe.
+- `construir-previsualizacion.mjs` cuenta solas todas las suites de
+  `src/i18n/`; antes la lista estaba escrita a mano y dejaba fuera las nuevas.
+
+**Verificación (corrida aquí, Node 26).**
+- Node: **189/189** (antes 178; nuevas: idiomas 8, textos crudos 3).
+- Ruptura: **83 de 83** (antes 70; nuevas: idiomas 9, detector 2, componentes 2).
+- `tsc --noEmit`: 0 errores. `next build`: compila y genera 7 páginas.
+- Navegador integrado: `/` → `/es-CO`; cambio a inglés en `/es-CO/sistema` →
+  `/en/sistema` con la cookie guardada; `/` con la cookie → `/en`;
+  `/sistema?x=1` → `/es-CO/sistema?x=1`; `/fr/x` → 404; 404 en inglés y en
+  español con su botón de vuelta; en un teléfono (375 px) no hay desborde lateral.
+- **No verificado:** `probar-visor.mjs` (sin Playwright aquí) y el resultado en
+  GitHub Actions (no se ha subido nada).
+
+**Siguiente.** Autenticación y puerta del visor con código de seis dígitos
+(paso 3 del plan): lógica pura del emparejamiento primero (código, vigencia,
+intentos, token de dispositivo), con sus pruebas y rupturas. Para la capa de
+datos falta PostgreSQL en esta máquina (migraciones 001 y 002 sin ejecutar).
+
+---
+
 ## 9 de noviembre de 2026 (2) — la demo en vivo muestra la plataforma
 
 El usuario vio que la demo publicada mostraba el reporte de avance y no la

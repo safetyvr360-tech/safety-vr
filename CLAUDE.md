@@ -54,6 +54,8 @@ npm test                  # todas las pruebas (node --test, sin dependencias)
 npm run romper            # Método de Ruptura automático (tools/romper-motor.mjs)
 npm run previsualizacion  # arma sitio/ (plataforma + /avance/) y previsualizacion/index.html
 npm run probar-visor      # prueba en navegador real (necesita Playwright)
+npm run dev               # app Next.js en local (antes: npm install)
+npm run build             # compila la app y revisa los tipos
 ```
 
 Cada push a `main` corre todo en GitHub Actions y publica `sitio/` en GitHub
@@ -61,7 +63,7 @@ Pages. Mapa del código: `LEEME.md`.
 
 ## Siguiente en el plan
 
-App Next.js con sistema de diseño bilingüe; autenticación y puerta del visor
+App Next.js con sistema de diseño bilingüe (hecha: `src/app/`); autenticación y puerta del visor
 con código de seis dígitos; portal de Empresa; LRS propio y punto de
 sincronización (upsert por id); correr las migraciones 001 y 002 en
 PostgreSQL; probar el modo RV en un Meta Quest; fotos 360° reales de EC-01.

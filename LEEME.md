@@ -1,6 +1,7 @@
 # Código ejecutable de Safety VR
 
-Node 22, sin dependencias. Bitácora de sesiones: `docs/05-estado.md` (léala al
+Node 22. El simulador (motor, visor, telemetría, certificados) no tiene
+dependencias; la app web usa Next.js 15 (`npm install` antes de `npm run dev`). Bitácora de sesiones: `docs/05-estado.md` (léala al
 empezar, actualícela al terminar).
 
 ## Pruebas
@@ -11,8 +12,23 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 8 de noviembre de 2026: **178/178 en verde, 70 de 70 rupturas detectadas,
-27 de 27 comprobaciones en navegador.**
+Al 9 de noviembre de 2026: **189/189 en verde, 83 de 83 rupturas detectadas.**
+El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
+(dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
+
+## App web (Next.js 15, App Router)
+
+```
+npm install
+npm run dev      # o: npm run build && npm run start
+```
+
+- `src/i18n/idiomas.ts` — idioma por ruta (/es-CO, /en), cookie y Accept-Language (puro, probado)
+- `src/middleware.ts` — redirige las rutas sin idioma y recuerda la elección
+- `src/app/[idioma]/` — inicio, `sistema` (sistema de diseño) y 404 de cada idioma
+- `src/app/textos.ts` — textos desde `mensajes/*.json` con la misma `traducir` del simulador
+- `src/componentes/` — `sistema.css` (colores y fuentes), `piezas.tsx`, `navegacion.tsx`
+- `src/i18n/textos-crudos.test.ts` — falla si un .tsx trae texto visible escrito a mano
 
 ## Validador de escenarios (compuertas 1, 2 y 3 — ADR-005)
 

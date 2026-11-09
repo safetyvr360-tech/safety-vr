@@ -7,7 +7,7 @@
 //
 //   node tools/construir-previsualizacion.mjs
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
@@ -46,7 +46,8 @@ const motor = sumar(
   ...['uuidv7', 'firma', 'xapi', 'cola'].map((n) => correrPruebas(`src/telemetria/${n}.test.ts`)),
   ...['codigo', 'vigencia', 'cadena', 'verificacion'].map((n) => correrPruebas(`src/certificados/${n}.test.ts`)),
 );
-const idiomas = correrPruebas('src/i18n/catalogo.test.ts');
+// Todas las suites de idioma (catálogos, negociación, textos crudos), sin lista a mano.
+const idiomas = sumar(...readdirSync(`${raiz}src/i18n`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/i18n/${n}`)));
 const ruptura = spawnSync(process.execPath, ['tools/romper-motor.mjs', '--json'], { cwd: raiz, encoding: 'utf8' });
 const rupturas = JSON.parse(ruptura.stdout);
 
@@ -96,7 +97,7 @@ ${cuerpo}
 const avance = armar('previsualizacion/plantilla.html');
 writeFileSync(`${raiz}previsualizacion/index.html`, avance);
 mkdirSync(`${raiz}sitio/avance`, { recursive: true });
-writeFileSync(`${raiz}sitio/index.html`, documento(armar('app/plantilla.html'), 'es-CO'));
+writeFileSync(`${raiz}sitio/index.html`, documento(armar('plataforma/plantilla.html'), 'es-CO'));
 writeFileSync(`${raiz}sitio/avance/index.html`, documento(avance, 'es-CO'));
 writeFileSync(`${raiz}sitio/.nojekyll`, '');
 console.log(`sitio/ (plataforma + avance) · ${DATOS.pruebas.pass}/${DATOS.pruebas.total} pruebas · ${rupturas.length} rupturas detectadas`);

@@ -173,6 +173,43 @@ const GRUPOS = [
       ['el español tutea', 'Spanish uses tú instead of usted', 'Póngase el visor para continuar.', 'Ponte el visor para continuar.'],
     ],
   },
+  {
+    archivo: 'src/i18n/idiomas.ts',
+    prueba: 'src/i18n/idiomas.test.ts',
+    rupturas: [
+      ['el peso q no cuenta', 'the q weight is ignored', '.sort((a, b) => b.peso - a.peso || a.orden - b.orden)', '.sort((a, b) => a.orden - b.orden)'],
+      ['q=0 cuenta como aceptado', 'q=0 counts as accepted', 'o.idioma !== null && o.peso > 0', 'o.idioma !== null'],
+      ['la preferencia guardada se ignora', 'the saved preference is ignored', '  if (esIdioma(preferido)) return preferido;\n', ''],
+      ['se acepta una preferencia inválida', 'an invalid preference is accepted', 'if (esIdioma(preferido)) return preferido;', 'if (preferido) return preferido;'],
+      ['un español regional no va a es-CO', 'a regional Spanish does not map to es-CO', "if (base === 'es') return 'es-CO';", "if (etiqueta.trim() === 'es-CO') return 'es-CO';"],
+      ['sin pistas abre en inglés', 'with no hints it opens in English', "IDIOMA_POR_OMISION: Idioma = 'es-CO'", "IDIOMA_POR_OMISION: Idioma = 'en'"],
+      ['el idioma se busca en cualquier segmento', 'the language is looked up in any segment', "const primero = ruta.split('/')[1] ?? '';", "const primero = ruta.split('/').find(esIdioma) ?? '';"],
+      ['cambiar de idioma apila segmentos', 'switching language stacks segments', 'if (idiomaDeRuta(camino) !== null) partes[1] = idioma;\n  else partes.splice(1, 0, idioma);', 'partes.splice(1, 0, idioma);'],
+      ['cambiar de idioma pierde la consulta', 'switching language drops the query', 'return nuevo + resto;', 'return nuevo;'],
+    ],
+  },
+  {
+    archivo: 'src/i18n/textos-crudos.test.ts',
+    prueba: 'src/i18n/textos-crudos.test.ts',
+    rupturas: [
+      ['el detector no ve texto entre etiquetas', 'the detector misses text between tags', 'if (ts.isJsxText(n) && tieneLetras(n.text))', 'if (false)'],
+      ['el detector no ve atributos visibles', 'the detector misses visible attributes', 'ATRIBUTOS_VISIBLES.has(n.name.getText(sf))', 'false'],
+    ],
+  },
+  {
+    archivo: 'src/componentes/piezas.tsx',
+    prueba: 'src/i18n/textos-crudos.test.ts',
+    rupturas: [
+      ['un componente trae texto escrito a mano', 'a component has hand-written text', '<label htmlFor={props.id}>{props.etiqueta}</label>', '<label htmlFor={props.id}>Código</label>'],
+    ],
+  },
+  {
+    archivo: 'src/componentes/navegacion.tsx',
+    prueba: 'src/i18n/textos-crudos.test.ts',
+    rupturas: [
+      ['una etiqueta accesible escrita a mano', 'a hand-written accessible label', 'aria-label={props.etiqueta}', 'aria-label="Idioma"'],
+    ],
+  },
 ];
 
 const json = process.argv.includes('--json');
