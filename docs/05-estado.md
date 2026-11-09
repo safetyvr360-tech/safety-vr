@@ -18,7 +18,7 @@ los scripts del kit (navegación, movimiento, momentos) tocan el DOM y chocaría
 con la hidratación de React; Pages, además, es lo que hoy está publicado.
 
 **Cómo se arma.** `comercial/plantilla.html` no tiene texto visible: son claves
-`venta.*` de `mensajes/*.json` (172 claves nuevas por idioma). El armador
+`venta.*` de `mensajes/*.json` (174 claves nuevas por idioma). El armador
 `tools/construir-comercial.mjs` (llamado desde `construir-previsualizacion.mjs`)
 escapa el texto y revienta ante una clave o un dato que falte. Prueba nueva
 `src/i18n/comercial.test.ts` (6) y 5 rupturas nuevas.
