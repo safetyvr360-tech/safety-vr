@@ -16,7 +16,9 @@ const raiz = fileURLToPath(new URL('..', import.meta.url));
 const leer = (r) => readFileSync(`${raiz}${r}`, 'utf8');
 
 function correrPruebas(archivo) {
-  const r = spawnSync(process.execPath, ['--experimental-strip-types', '--test', archivo], { cwd: raiz, encoding: 'utf8' });
+  // TAP explícito: desde Node 23 el reportero por omisión no es TAP y los
+  // conteos `# tests N` desaparecerían (la página diría 0 pruebas).
+  const r = spawnSync(process.execPath, ['--experimental-strip-types', '--test', '--test-reporter=tap', '--test-timeout=20000', archivo], { cwd: raiz, encoding: 'utf8', timeout: 120_000 });
   const n = (k) => Number((r.stdout.match(new RegExp(`^# ${k} (\\d+)`, 'm')) ?? [0, 0])[1]);
   return { total: n('tests'), pass: n('pass'), fail: n('fail') };
 }

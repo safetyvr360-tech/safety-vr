@@ -179,6 +179,24 @@ const json = process.argv.includes('--json');
 const informe = [];
 let huecos = 0;
 
+// Reportero TAP explícito: desde Node 23 el reportero por omisión es «spec»
+// aunque la salida no sea una terminal, y sin `not ok` toda ruptura parecería
+// en verde. El límite por prueba convierte un cuelgue en un fallo con nombre;
+// el del proceso es la última red.
+const ARGS_PRUEBA = ['--experimental-strip-types', '--test', '--test-reporter=tap', '--test-timeout=20000'];
+const correr = (prueba) => spawnSync(process.execPath, [...ARGS_PRUEBA, prueba], { cwd: raiz, encoding: 'utf8', timeout: 120_000 });
+
+// Antes de romper: cada suite intacta pasa y su salida se entiende. Si no, el
+// informe de ruptura no valdría nada (una suite que no se lee «nunca falla»).
+for (const prueba of new Set(GRUPOS.map((g) => g.prueba))) {
+  const r = correr(prueba);
+  const pasan = Number((r.stdout.match(/^# pass (\d+)/m) ?? [0, 0])[1]);
+  if (r.status !== 0 || pasan === 0) {
+    console.error(`La suite ${prueba} no pasa intacta o su salida no se pudo leer (código ${r.status}, ${pasan} en verde). No se rompe nada.`);
+    process.exit(2);
+  }
+}
+
 for (const g of GRUPOS) {
   const ruta = `${raiz}${g.archivo}`;
   const original = readFileSync(ruta, 'utf8');
@@ -192,8 +210,10 @@ for (const g of GRUPOS) {
         continue;
       }
       writeFileSync(ruta, original.replace(buscar, poner));
-      const r = spawnSync(process.execPath, ['--experimental-strip-types', '--test', g.prueba], { cwd: raiz, encoding: 'utf8' });
-      entrada.fallidas = [...r.stdout.matchAll(/^not ok \d+ - (.+)$/gm)].map((m) => m[1]);
+      const r = correr(g.prueba);
+      entrada.fallidas = [...(r.stdout ?? '').matchAll(/^not ok \d+ - (.+)$/gm)].map((m) => m[1]);
+      // La suite que no termina o se cae también delata la ruptura.
+      if (entrada.fallidas.length === 0 && r.status !== 0) entrada.fallidas = [r.error ? 'ETIMEDOUT' : `exit ${r.status}`];
       entrada.ok = entrada.fallidas.length > 0;
       if (!entrada.ok) huecos += 1;
       if (!json) {

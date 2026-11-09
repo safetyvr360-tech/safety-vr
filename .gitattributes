@@ -1,0 +1,6 @@
+# Saltos de línea LF en todas partes: el Método de Ruptura busca fragmentos
+# de varias líneas y en Windows git los convertía a CRLF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.zip binary
