@@ -1,0 +1,453 @@
+<!doctype html>
+<!-- Página comercial de SAFETY VR. tools/construir-comercial.mjs la arma una vez por idioma:
+     cada marcador entre llaves dobles es una clave de mensajes/<idioma>.json (escapada), con variables
+     tras «|», o un dato del armador si empieza por «@» (la sintaxis está en el armador). Ningún texto visible
+     se escribe aquí (directiva 4). Kit: design-taste-frontend (tasteskill 2.5), en comercial/assets. -->
+<html lang="{{@lang}}" data-type="software" data-radius="soft" data-ground="sky" data-buttons="tonal" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{venta.meta.titulo}}</title>
+<meta name="description" content="{{venta.meta.descripcion}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{venta.meta.titulo}}">
+<meta property="og:description" content="{{venta.meta.descripcion}}">
+<meta property="og:image" content="{{@raiz}}share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{{@raiz}}favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1217">
+<link rel="alternate" hreflang="es-CO" href="{{@url_es}}">
+<link rel="alternate" hreflang="en" href="{{@url_en}}">
+<!-- <link rel="canonical" href="https://[dominio de SAFETY VR]/"> cuando exista el dominio propio -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{@raiz}}assets/system.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/cards.css">
+<link rel="stylesheet" href="{{@raiz}}assets/motion/motion.css">
+<link rel="stylesheet" href="{{@raiz}}assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="{{@raiz}}assets/layout/layout.css">
+<link rel="stylesheet" href="{{@raiz}}assets/icons/icon.css">
+<!-- colores propios de SAFETY VR (start.mjs brand): el fondo de sala de control y el amarillo de las señales de seguridad -->
+<style>
+:root {
+  --p-bg: #0d1217; --p-surface: #18222b; --p-ink: #eef2f5; --p-muted: #9aa7b4;
+  --p-accent: #f2bb1d; --p-accent-ink: #0d1217; --p-action: #f2bb1d; --p-action-ink: #0d1217;
+  --p-inv-bg: #eef2f5; --p-inv-surface: #dce0e3; --p-inv-ink: #0d1217; --p-inv-muted: #585d62;
+  --p-inv-accent: #0d1217; --p-inv-accent-ink: #eef2f5; --p-inv-action: #0d1217; --p-inv-action-ink: #eef2f5;
+  --font-display: "Reddit Sans", system-ui, sans-serif;
+  --font-text: "Reddit Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="{{@raiz}}assets/ui/base.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/window/fragment.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/doc/fragment.css">
+<link rel="stylesheet" href="{{@raiz}}assets/ui/checklist/fragment.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="{{@raiz}}assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="{{@raiz}}assets/moments/moments.js">
+<link rel="modulepreload" href="{{@raiz}}assets/moments/lib.js">
+<link rel="modulepreload" href="{{@raiz}}assets/moments/pinned-chapters/moment.js">
+<!-- CSS de la página: solo lo que va dentro de un visual -->
+<style>
+  /* hero collage: el marco con el fondo iluminado (una luz amarilla tenue) y la ficha sobre la esquina */
+  .hero__art { background:
+      radial-gradient(70% 60% at 18% 12%, color-mix(in oklab, var(--ground-surface) 80%, white), transparent 70%),
+      radial-gradient(60% 50% at 90% 100%, color-mix(in oklab, var(--ground-bg) 80%, var(--ground-accent)), transparent 70%),
+      var(--ground-bg); }
+  .hero__art > .ly-piece--note { left: var(--s-6); bottom: var(--s-6); width: 300px; z-index: 2; }
+  .hero__proof { font-size: var(--t-small); color: var(--muted); }
+  .ly-piece--main .ui-win__main { padding-right: var(--ly-cut-room); }
+  @media (max-width: 1023px) { .hero__art > .ly-piece--note { left: var(--s-4); bottom: var(--s-4); width: 270px; } }
+  /* app-frame (sections-library.md) */
+  .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+  .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+  .app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+  .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+  .app > .app__pane--open > .ui-doc { padding: var(--s-6); }
+  @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+  @media (max-width: 1023px) {
+    .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .app > .app__pane--list { max-height: 252px; }
+    .app > .app__pane--list::after { display: none; }
+    .app .ui-win__side { display: none; }
+    .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+    .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+  }
+  @media (max-width: 639px) {
+    .app.ui { grid-template-rows: minmax(0, 1fr); }
+    .app > .app__pane--list { display: none; }
+    .app > .app__pane + .app__pane { border-top: 0; }
+  }
+  /* simuladores: las filas de texto y un muro de cuatro fotografías (2 x 2, 4:3, 2px entre ellas) */
+  .wall { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; border-radius: var(--r-lg); overflow: hidden; }
+  .wall > img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .motores { display: flex; align-items: center; gap: var(--s-6); flex-wrap: wrap; }
+  #simuladores .rows > li { grid-template-columns: minmax(0, 1fr); }
+  #simuladores .rows p { margin: 0; color: var(--ink); }
+  @media (max-width: 1023px) { .wall { margin-top: var(--s-7); } }
+  @media (max-width: 639px) { .wall > img { aspect-ratio: 3 / 5; } }
+  /* video: el marco 16:9 que cabe en una pantalla; en el teléfono, 4:5 para llenarla */
+  #videos .frame { --ratio: 56.25%; }
+  #videos .frame > .ly-play { left: auto; bottom: auto; }
+  @media (max-width: 1023px) { #videos .frame { --ratio: 75%; } }
+  @media (max-width: 639px) { #videos .frame { --ratio: 125%; } }
+  /* tableta (640 a 1023): estas secciones apiladas ocupan dos pantallas (layout-v4.md) */
+  @media (min-width: 640px) and (max-width: 1023px) { #simuladores, #planes, #preguntas { --h: 2; } }
+  /* capítulos sin fijar (tableta y teléfono): exactamente dos pantallas, con las imágenes más altas en tableta para llenarlas */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    main > #pasos[data-moment]:not(.is-live) { height: calc(2 * 100svh); }
+    #pasos:not(.is-live) .mo-pc__step { grid-template-columns: minmax(0, 1fr); }
+    #pasos:not(.is-live) .mo-pc__step .mo-pc__visual { grid-column: 1; grid-row: auto; margin-top: var(--s-4); }
+    #pasos:not(.is-live) .mo-pc__visual > img { aspect-ratio: 16 / 9; max-height: none; }
+    .wall > img { aspect-ratio: 1; }
+  }
+  /* teléfono: los planes sin la línea anual, para caber en dos pantallas */
+  @media (max-width: 639px) { #planes .card--plan > .t-small { display: none; } }
+  @media (max-width: 639px) { main > #pasos[data-moment]:not(.is-live) { height: calc(2 * 100lvh); } }
+  /* preguntas: la foto del visor bajo el texto, 3:2 */
+  #preguntas .frame { --ratio: 66.6%; }
+  /* el nombre del cierre: con su interlineado completo para que el recorte no corte las mayúsculas */
+  #contact .close__word { line-height: 1; }
+</style>
+</head>
+<body>
+<!-- tipo: software (SaaS de capacitación SST con simuladores de RV)
+     reparto: hero collage, nav nav-cards, cierre close-word, pie footer-columns (repartido otra vez: footer-statement en página oscura pinta la acción principal con la tinta del fondo, same-action), ritmo surface-pairs,
+     botones tonal, marca wordmark; fuente reddit (Reddit Sans + JetBrains Mono); paleta: los colores de
+     la marca (start.mjs brand), el fondo oscuro de sala de control y el amarillo de las señales de seguridad
+     momentos: pinned-chapters (#pasos); liquid-type se quitó: su sección de una frase quedaba vacía en tableta y teléfono (sparse) -->
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">{{venta.saltar}}</a>
+    <a class="nav__logo" href="#top">SAFETY VR</a>
+    <nav class="nav__links" aria-label="{{venta.nav.principal}}">
+      <div class="nav__item">
+        <a class="nav__link" href="#plataforma">{{venta.nav.producto}} <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="#planes">
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f39732179-500.jpg" alt="{{venta.menu.suscripcion.alt}}" data-source="stand-in" data-subject="trabajo en alturas"></div>
+              <span class="t-card">{{venta.menu.suscripcion.titulo}}</span>
+              <span class="t-small muted">{{venta.menu.suscripcion.linea}}</span>
+            </a>
+            <a class="menu-card span-4" href="#simuladores">
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f74518880-500.jpg" alt="{{venta.menu.medida.alt}}" data-source="stand-in" data-subject="izaje"></div>
+              <span class="t-card">{{venta.menu.medida.titulo}}</span>
+              <span class="t-small muted">{{venta.menu.medida.linea}}</span>
+            </a>
+            <a class="menu-card span-4" href="#planes">
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f114420573-500.jpg" alt="{{venta.menu.marca.alt}}" data-source="stand-in" data-subject="trabajo en caliente"></div>
+              <span class="t-card">{{venta.menu.marca.titulo}}</span>
+              <span class="t-small muted">{{venta.menu.marca.linea}}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#simuladores">{{venta.nav.simuladores}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#planes">{{venta.nav.planes}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="#preguntas">{{venta.nav.preguntas}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{@url_otro}}" hreflang="{{@otro_lang}}" lang="{{@otro_lang}}" aria-label="{{venta.nav.otro_idioma.nombre}}">{{venta.nav.otro_idioma}}</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="{{venta.nav.menu}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--collage" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <h1 id="hero-h">{{venta.hero.titulo}}</h1>
+        <p class="hero__lead">{{venta.hero.bajada}}</p>
+        <div class="btn-row"><a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="{{@raiz}}demo/">{{venta.hero.secundaria}}</a></div>
+        <p class="hero__proof">{{venta.hero.prueba}}</p>
+      </div>
+      <div class="hero__art span-6 start-7" role="img" aria-label="{{venta.hero.arte}}" data-ui-pause-host>
+        <div class="ly-piece ly-piece--main" aria-hidden="true">
+          <div class="ui ui-panel ui-win" data-ui="window" data-open="{{venta.ui.st.por_vencer}}" data-work="{{venta.ui.st.asignando}}" data-done="{{venta.ui.st.reasignado}}">
+            <div class="ui-win__bar">
+              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="ui-win__crumb">{{venta.ui.portal}} <i>/</i> <b>{{venta.ui.vencimientos}}</b></span>
+              <span class="ui-spacer"></span>
+              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">{{venta.ui.buscar}}</span><span class="ui-kbd">/</span></span>
+            </div>
+            <div class="ui-win__body">
+              <nav class="ui-win__side" aria-hidden="true">
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>{{venta.ui.vencimientos}}<em>9</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="6" r="2.5"/><path d="M3.5 13.5c.6-2.3 2.4-3.5 4.5-3.5s3.9 1.2 4.5 3.5"/></svg>{{venta.ui.cuadrillas}}<em>6</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M2.5 9h3l1 1.5h3l1-1.5h3"/><path d="M2.5 9 4 3.5h8L13.5 9v3.5h-11z"/></svg>{{venta.ui.rutas}}<em>4</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>{{venta.ui.certificados}}</span>
+                <span class="ui-win__label">{{venta.ui.sedes}}</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>{{venta.ui.sede1}}</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>{{venta.ui.sede2}}</span>
+              </nav>
+              <div class="ui-win__main">
+                <div class="ui-win__cols" aria-hidden="true"><span>{{venta.ui.col.cuenta}}</span><span>{{venta.ui.col.escenario}}</span><span>{{venta.ui.col.estado}}</span><span>{{venta.ui.col.vence}}</span></div>
+                <ul class="ui-win__rows">
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">T4</span><span class="ui-win__who">T-0412</span><span class="ui-win__sub">{{venta.ui.ec01}}</span><span class="ui-win__st" data-st>{{venta.ui.st.por_vencer}}</span><span class="ui-win__age">{{venta.ui.dias|n=12}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">T7</span><span class="ui-win__who">T-0738</span><span class="ui-win__sub">{{venta.ui.alturas}}</span><span class="ui-win__st" data-st>{{venta.ui.st.por_vencer}}</span><span class="ui-win__age">{{venta.ui.dias|n=19}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">T2</span><span class="ui-win__who">T-0215</span><span class="ui-win__sub">{{venta.ui.izaje}}</span><span class="ui-win__st" data-st>{{venta.ui.st.por_vencer}}</span><span class="ui-win__age">{{venta.ui.dias|n=23}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">T9</span><span class="ui-win__who">T-0951</span><span class="ui-win__sub">{{venta.ui.ec01}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.vigente}}</span><span class="ui-win__age">{{venta.ui.dias|n=211}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">T3</span><span class="ui-win__who">T-0367</span><span class="ui-win__sub">{{venta.ui.alturas}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.vigente}}</span><span class="ui-win__age">{{venta.ui.dias|n=284}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">T6</span><span class="ui-win__who">T-0624</span><span class="ui-win__sub">{{venta.ui.izaje}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.vigente}}</span><span class="ui-win__age">{{venta.ui.dias|n=302}}</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ly-piece ly-piece--note" aria-hidden="true" data-ui-loop>
+          <div class="ui ui-panel ui-checks" data-ui="checklist">
+            <div class="ui-checks__head">
+              <div class="ui-title">{{venta.ui.cert.titulo}}</div>
+              <span class="ui-spacer"></span>
+              <div class="ui-meta" data-checks-count>{{venta.ui.cert.cuenta|n=2}}</div>
+            </div>
+            <div class="ui-checks__bar"><i data-checks-bar style="--k:0.5"></i></div>
+            <ul class="ui-checks__list">
+              <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">{{venta.ui.cert.1}}</span></li>
+              <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">{{venta.ui.cert.2}}</span></li>
+              <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">{{venta.ui.cert.3}}</span></li>
+              <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">{{venta.ui.cert.4}}</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="plataforma" aria-labelledby="plataforma-h">
+    <div class="wrap">
+      <div class="grid">
+        <h2 class="span-5" id="plataforma-h">{{venta.plataforma.titulo}}</h2>
+        <div class="span-6 start-7 stack-4">
+          <p class="muted">{{venta.plataforma.texto}}</p>
+          <p><a class="link" href="#planes">{{venta.plataforma.enlace}}</a></p>
+        </div>
+      </div>
+      <div class="ui app fill" role="img" aria-label="{{venta.plataforma.arte}}" data-ui-pause-host>
+        <div class="app__pane app__pane--list">
+          <div class="ui ui-panel ui-win" data-ui="window" data-open="{{venta.ui.st.sin_revisar}}" data-work="{{venta.ui.st.leyendo}}" data-done="{{venta.ui.st.cubierta}}">
+            <div class="ui-win__bar">
+              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="ui-win__crumb">{{venta.ui.documentos}} <i>/</i> <b>{{venta.ui.matrices}}</b></span>
+              <span class="ui-spacer"></span>
+            </div>
+            <div class="ui-win__body">
+              <div class="ui-win__main">
+                <div class="ui-win__cols" aria-hidden="true"><span>{{venta.ui.col.area}}</span><span>{{venta.ui.col.documento}}</span><span>{{venta.ui.col.estado}}</span><span>{{venta.ui.col.cambio}}</span></div>
+                <ul class="ui-win__rows">
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">MT</span><span class="ui-win__who">{{venta.ui.area.mantenimiento}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=23}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=2}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">AL</span><span class="ui-win__who">{{venta.ui.area.almacenamiento}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=17}}</span><span class="ui-win__st" data-st>{{venta.ui.st.sin_revisar}}</span><span class="ui-win__age">{{venta.ui.dias|n=3}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">PC</span><span class="ui-win__who">{{venta.ui.area.patio}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=11}}</span><span class="ui-win__st" data-st>{{venta.ui.st.sin_revisar}}</span><span class="ui-win__age">{{venta.ui.dias|n=5}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">SE</span><span class="ui-win__who">{{venta.ui.area.subestacion}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=14}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=8}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">TA</span><span class="ui-win__who">{{venta.ui.area.talleres}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=19}}</span><span class="ui-win__st" data-st>{{venta.ui.st.sin_revisar}}</span><span class="ui-win__age">{{venta.ui.dias|n=9}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">BO</span><span class="ui-win__who">{{venta.ui.area.bodega}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=8}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=12}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">CA</span><span class="ui-win__who">{{venta.ui.area.calderas}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=21}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=15}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">LB</span><span class="ui-win__who">{{venta.ui.area.laboratorio}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=12}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=21}}</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">DS</span><span class="ui-win__who">{{venta.ui.area.despachos}}</span><span class="ui-win__sub">{{venta.ui.matriz|n=9}}</span><span class="ui-win__st is-done" data-st>{{venta.ui.st.cubierta}}</span><span class="ui-win__age">{{venta.ui.dias|n=30}}</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app__pane app__pane--open" data-ui-loop>
+          <div class="ui ui-doc" data-ui="doc">
+            <article class="ui-doc__page">
+              <div class="ui-doc__label">{{venta.ui.doc.etiqueta}}</div>
+              <div class="ui-doc__title">{{venta.ui.doc.titulo}}</div>
+              <div class="ui-doc__text">{{venta.ui.doc.1a}} <mark class="ui-doc__mark is-on">{{venta.ui.doc.1b}}</mark> {{venta.ui.doc.1c}}</div>
+              <div class="ui-doc__text">{{venta.ui.doc.2a}} <mark class="ui-doc__mark" data-kind="{{venta.ui.doc.nota.tipo}}" data-msg="{{venta.ui.doc.nota.2}}" data-where="{{venta.ui.doc.donde.2}}">{{venta.ui.doc.2b}}</mark> {{venta.ui.doc.2c}}</div>
+              <div class="ui-doc__text">{{venta.ui.doc.3}}</div>
+              <div class="ui-doc__text">{{venta.ui.doc.4}}</div>
+            </article>
+            <aside class="ui-doc__note ui-panel is-on" aria-live="polite">
+              <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind>{{venta.ui.doc.nota.tipo}}</span></div>
+              <div class="ui-doc__msg" data-doc-msg>{{venta.ui.doc.nota.1}}</div>
+              <div class="ui-doc__where" data-doc-where>{{venta.ui.doc.donde.1}}</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="simuladores" style="--hm: 2" aria-labelledby="simuladores-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="simuladores-h">{{venta.simuladores.titulo}}</h2>
+          <p>{{venta.simuladores.texto}}</p>
+          <ul class="rows">
+            <li><span class="rows__name">{{venta.sim.alturas.titulo}}</span><p>{{venta.sim.alturas.texto}}</p></li>
+            <li><span class="rows__name">{{venta.sim.confinado.titulo}}</span><p>{{venta.sim.confinado.texto}}</p></li>
+            <li><span class="rows__name">{{venta.sim.izaje.titulo}}</span><p>{{venta.sim.izaje.texto}}</p></li>
+            <li><span class="rows__name">{{venta.sim.caliente.titulo}}</span><p>{{venta.sim.caliente.texto}}</p></li>
+          </ul>
+          <p>{{venta.simuladores.tambien}}</p>
+          <div class="motores">
+            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unity.svg" alt="Unity" width="39" height="40">
+            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unrealengine.svg" alt="Unreal Engine" width="40" height="40">
+          </div>
+        </div>
+        <div class="wall span-6 start-7">
+          <img src="{{@raiz}}assets/img/photo-f39732179-960.jpg" width="960" height="640" alt="{{venta.sim.alturas.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en alturas">
+          <img src="{{@raiz}}assets/img/photo-f97315440-500.jpg" width="500" height="333" alt="{{venta.sim.confinado.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="espacio confinado">
+          <img src="{{@raiz}}assets/img/photo-f74518880-960.jpg" width="960" height="640" alt="{{venta.sim.izaje.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="izaje">
+          <img src="{{@raiz}}assets/img/photo-f114420573-960.jpg" width="960" height="640" alt="{{venta.sim.caliente.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en caliente">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- pinned-chapters (moments.md): dos pantallas; los tres pasos se abren uno a uno -->
+  <section class="section" id="pasos" style="--h: 2" data-moment="pinned-chapters" aria-labelledby="pasos-h">
+    <div class="wrap mo-pc__grid">
+      <div class="mo-pc__text">
+        <h2 id="pasos-h">{{venta.pasos.titulo}}</h2>
+        <ol class="mo-pc__steps">
+          <li class="mo-pc__step">
+            <h3>{{venta.paso1.titulo}}</h3>
+            <p>{{venta.paso1.texto}}</p>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/photo-f39743637-960.jpg" alt="{{venta.paso1.alt}}" width="960" height="722" data-source="stand-in" data-subject="trabajo en alturas"></figure>
+          </li>
+          <li class="mo-pc__step">
+            <h3>{{venta.paso2.titulo}}</h3>
+            <p>{{venta.paso2.texto}}</p>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-visor.jpg" alt="{{venta.paso2.alt}}" width="1146" height="624" data-source="client" data-subject="visor EC-01"></figure>
+          </li>
+          <li class="mo-pc__step">
+            <h3>{{venta.paso3.titulo}}</h3>
+            <p>{{venta.paso3.texto}}</p>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-certificado.jpg" alt="{{venta.paso3.alt}}" width="564" height="452" data-source="client" data-subject="certificado EC-01"></figure>
+          </li>
+        </ol>
+      </div>
+      <div class="mo-pc__visuals frame"></div>
+    </div>
+  </section>
+
+  <!-- CLIENT FILE video: {{@video_comentario}} -->
+  <section class="section ground-surface" id="videos" aria-labelledby="videos-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="videos-h">{{venta.videos.titulo}}</h2>
+        <p>{{venta.videos.texto}}</p>
+      </div>
+      <figure class="frame frame--photo fit-screen">
+        <img class="frame__img" src="{{@video_poster}}" alt="{{venta.videos.alt}}" width="960" height="653" loading="lazy" decoding="async" data-source="{{@video_fuente}}" data-subject="video de las apps">
+        {{@video_play}}
+      </figure>
+    </div>
+  </section>
+
+  <section class="section pricing" id="planes" style="--hm: 2" aria-labelledby="planes-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="planes-h">{{venta.planes.titulo}}</h2>
+        <p>{{venta.planes.texto}} {{venta.planes.incluye}}</p>
+      </div>
+      <div class="grid">
+        <article class="card card--plan span-4">
+          <h3>{{venta.plan.piloto}}</h3>
+          <p class="muted">{{venta.plan.piloto.para}}</p>
+          <p class="price"><span class="t-stat">{{venta.plan.piloto.precio}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.plan.piloto.anual}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_piloto}}">{{venta.planes.pedir|plan=@piloto}}</a>
+          <ul class="checks"><li>{{venta.plan.piloto.1}}</li><li>{{venta.plan.piloto.2}}</li></ul>
+        </article>
+        <article class="card card--plan span-4 is-featured">
+          <h3>{{venta.plan.planta}}</h3>
+          <p class="muted">{{venta.plan.planta.para}}</p>
+          <p class="price"><span class="t-stat">{{venta.plan.planta.precio}}</span><span class="muted">{{venta.planes.mes}}</span><span class="badge">{{venta.planes.recomendado}}</span></p>
+          <p class="t-small muted">{{venta.plan.planta.anual}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_planta}}">{{venta.planes.pedir|plan=@planta}}</a>
+          <ul class="checks"><li>{{venta.plan.planta.1}}</li><li>{{venta.plan.planta.2}}</li></ul>
+        </article>
+        <article class="card card--plan span-4">
+          <h3>{{venta.plan.corporativo}}</h3>
+          <p class="muted">{{venta.plan.corporativo.para}}</p>
+          <p class="price"><span class="t-stat">{{venta.plan.corporativo.precio}}</span><span class="muted">{{venta.planes.mes}}</span></p>
+          <p class="t-small muted">{{venta.plan.corporativo.anual}}</p>
+          <a class="btn btn--secondary" href="{{@mailto_corporativo}}">{{venta.planes.pedir|plan=@corporativo}}</a>
+          <ul class="checks"><li>{{venta.plan.corporativo.1}}</li><li>{{venta.plan.corporativo.2}}</li></ul>
+        </article>
+      </div>
+      <p class="muted" style="margin-top: var(--s-5)">{{venta.planes.otros}}</p>
+    </div>
+  </section>
+
+  <section class="section questions" id="preguntas" style="--hm: 2" aria-labelledby="preguntas-h">
+    <div class="wrap">
+      <div class="grid">
+        <div class="span-5 stack-4">
+          <h2 id="preguntas-h">{{venta.faq.titulo}}</h2>
+          <p class="muted">{{venta.faq.texto}}</p>
+          <p><a class="link" href="{{@mailto_equipo}}">{{venta.faq.enlace}}</a></p>
+          <div class="frame frame--photo">
+            <img class="frame__img" src="{{@raiz}}assets/img/photo-f140087302-960.jpg" srcset="{{@raiz}}assets/img/photo-f140087302-500.jpg 500w, {{@raiz}}assets/img/photo-f140087302-960.jpg 960w, {{@raiz}}assets/img/photo-f140087302.jpg 1280w" sizes="(max-width: 1023px) 100vw, 40vw" width="1280" height="901" alt="{{venta.equipos.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="Meta Quest 3">
+          </div>
+          <div class="motores">
+            <img class="ic ic-40 ic-land" src="{{@raiz}}assets/icons/meta.svg" alt="Meta" width="40" height="27">
+            <img class="ic ic-40" src="{{@raiz}}assets/icons/google-chrome.svg" alt="Chrome" width="40" height="40">
+          </div>
+        </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>{{venta.faq.1.p}}</h3><p>{{venta.faq.1.r}}</p></div>
+          <div class="faq__item"><h3>{{venta.faq.2.p}}</h3><p>{{venta.faq.2.r}}</p></div>
+          <div class="faq__item"><h3>{{venta.faq.3.p}}</h3><p>{{venta.faq.3.r}}</p></div>
+          <div class="faq__item"><h3>{{venta.faq.4.p}}</h3><p>{{venta.faq.4.r}}</p></div>
+          <div class="faq__item"><h3>{{venta.faq.6.p}}</h3><p>{{venta.faq.6.r}}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">{{venta.cierre.titulo}}</h2><p class="t-lead">{{venta.cierre.texto}}</p></div>
+        <a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">SAFETY VR</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-6 stack-4">
+          <p class="footer__lede">{{venta.pie.lema}}</p>
+        </div>
+        <div class="span-2 footer__col"><h3>{{venta.pie.producto}}</h3><ul><li><a href="#plataforma">{{venta.pie.plataforma}}</a></li><li><a href="#simuladores">{{venta.nav.simuladores}}</a></li><li><a href="#pasos">{{venta.pie.como}}</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>{{venta.pie.precios}}</h3><ul><li><a href="#planes">{{venta.nav.planes}}</a></li><li><a href="#preguntas">{{venta.nav.preguntas}}</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>{{venta.pie.demo}}</h3><ul><li><a href="{{@raiz}}demo/">{{venta.pie.probar}}</a></li><li><a href="{{@raiz}}demo/#verificar">{{venta.pie.verificar}}</a></li><li><a href="{{@raiz}}avance/">{{venta.pie.avance}}</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>{{venta.pie.derechos|anio=@anio}}</span>
+        <div class="socials"></div>
+        <span>{{venta.equipos.marcas}}</span>
+        {{@creditos}}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="{{venta.nav.rapidas}}">
+  <a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}</a>
+</nav>
+
+<script type="module" src="{{@raiz}}assets/system.js"></script>
+<script type="module" src="{{@raiz}}assets/motion/motion.js"></script>
+<script type="module" src="{{@raiz}}assets/layout/layout.js"></script>
+</body>
+</html>

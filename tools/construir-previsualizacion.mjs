@@ -11,6 +11,8 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
+import { armarComercial } from './construir-comercial.mjs';
+import { traducir } from '../src/motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('..', import.meta.url));
 const leer = (r) => readFileSync(`${raiz}${r}`, 'utf8');
@@ -97,7 +99,10 @@ ${cuerpo}
 const avance = armar('previsualizacion/plantilla.html');
 writeFileSync(`${raiz}previsualizacion/index.html`, avance);
 mkdirSync(`${raiz}sitio/avance`, { recursive: true });
-writeFileSync(`${raiz}sitio/index.html`, documento(armar('plataforma/plantilla.html'), 'es-CO'));
+mkdirSync(`${raiz}sitio/demo`, { recursive: true });
+writeFileSync(`${raiz}sitio/demo/index.html`, documento(armar('plataforma/plantilla.html'), 'es-CO'));
+// La raíz publicada es la página comercial (es-CO) y /en/ su versión en inglés.
+armarComercial(raiz, DATOS.catalogos, traducir);
 writeFileSync(`${raiz}sitio/avance/index.html`, documento(avance, 'es-CO'));
 writeFileSync(`${raiz}sitio/.nojekyll`, '');
-console.log(`sitio/ (plataforma + avance) · ${DATOS.pruebas.pass}/${DATOS.pruebas.total} pruebas · ${rupturas.length} rupturas detectadas`);
+console.log(`sitio/ (comercial es-CO y en + demo + avance) · ${DATOS.pruebas.pass}/${DATOS.pruebas.total} pruebas · ${rupturas.length} rupturas detectadas`);

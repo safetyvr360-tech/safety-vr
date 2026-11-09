@@ -1,0 +1,195 @@
+<!doctype html>
+<!-- Página comercial de SAFETY VR. tools/construir-comercial.mjs la arma una vez por idioma:
+     cada marcador entre llaves dobles es una clave de mensajes/<idioma>.json (escapada), con variables
+     tras «|», o un dato del armador si empieza por «@» (la sintaxis está en el armador). Ningún texto visible
+     se escribe aquí (directiva 4). Kit: design-taste-frontend (tasteskill 2.5), en comercial/assets. -->
+<html lang="es-CO" data-type="software" data-radius="soft" data-ground="sky" data-buttons="tonal" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAFETY VR: photograph credits</title>
+<meta name="description" content="The photographers, licences and source pages of the photographs on the SAFETY VR website.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SAFETY VR: simuladores SST en realidad virtual para empresas">
+<meta property="og:description" content="Capacitación en seguridad industrial con visores Meta Quest: escenarios de alto riesgo sin conexión y certificados verificables. Planes desde $450.000 al mes.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1217">
+<link rel="alternate" hreflang="es-CO" href="https://safetyvr360-tech.github.io/safety-vr/">
+<link rel="alternate" hreflang="en" href="https://safetyvr360-tech.github.io/safety-vr/en/">
+<!-- <link rel="canonical" href="https://[dominio de SAFETY VR]/"> cuando exista el dominio propio -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<!-- colores propios de SAFETY VR (start.mjs brand): el fondo de sala de control y el amarillo de las señales de seguridad -->
+<style>
+:root {
+  --p-bg: #0d1217; --p-surface: #18222b; --p-ink: #eef2f5; --p-muted: #9aa7b4;
+  --p-accent: #f2bb1d; --p-accent-ink: #0d1217; --p-action: #f2bb1d; --p-action-ink: #0d1217;
+  --p-inv-bg: #eef2f5; --p-inv-surface: #dce0e3; --p-inv-ink: #0d1217; --p-inv-muted: #585d62;
+  --p-inv-accent: #0d1217; --p-inv-accent-ink: #eef2f5; --p-inv-action: #0d1217; --p-inv-action-ink: #eef2f5;
+  --font-display: "Reddit Sans", system-ui, sans-serif;
+  --font-text: "Reddit Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="assets/ui/base.css">
+<link rel="stylesheet" href="assets/ui/window/fragment.css">
+<link rel="stylesheet" href="assets/ui/doc/fragment.css">
+<link rel="stylesheet" href="assets/ui/checklist/fragment.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/pinned-chapters/moment.js">
+<link rel="modulepreload" href="assets/moments/liquid-type/moment.js">
+<!-- CSS de la página: solo lo que va dentro de un visual -->
+<style>
+  /* hero collage: el marco con el fondo iluminado (una luz amarilla tenue) y la ficha sobre la esquina */
+  .hero__art { background:
+      radial-gradient(70% 60% at 18% 12%, color-mix(in oklab, var(--ground-surface) 80%, white), transparent 70%),
+      radial-gradient(60% 50% at 90% 100%, color-mix(in oklab, var(--ground-bg) 80%, var(--ground-accent)), transparent 70%),
+      var(--ground-bg); }
+  .hero__art > .ly-piece--note { left: var(--s-6); bottom: var(--s-6); width: 300px; z-index: 2; }
+  .hero__proof { font-size: var(--t-small); color: var(--muted); }
+  .ly-piece--main .ui-win__main { padding-right: var(--ly-cut-room); }
+  @media (max-width: 1023px) { .hero__art > .ly-piece--note { left: var(--s-4); bottom: var(--s-4); width: 270px; } }
+  /* app-frame (sections-library.md) */
+  .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+  .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+  .app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+  .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+  .app > .app__pane--open > .ui-doc { padding: var(--s-6); }
+  @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+  @media (max-width: 1023px) {
+    .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .app > .app__pane--list { max-height: 252px; }
+    .app > .app__pane--list::after { display: none; }
+    .app .ui-win__side { display: none; }
+    .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+    .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+  }
+  @media (max-width: 639px) {
+    .app.ui { grid-template-rows: minmax(0, 1fr); }
+    .app > .app__pane--list { display: none; }
+    .app > .app__pane + .app__pane { border-top: 0; }
+  }
+  /* simuladores: cuatro tarjetas abiertas con su fotografía */
+  #simuladores .panel { --p-h: 300px; }
+  #simuladores .motores { display: flex; align-items: center; gap: var(--s-5); flex-wrap: wrap; margin-top: var(--s-7); }
+  @media (max-width: 639px) { #simuladores .panel { --p-h: 160px; } }
+  /* video: el marco 16:9 que cabe en una pantalla */
+  #videos .frame { --ratio: 56.25%; }
+  #videos .frame > .ly-play { left: auto; bottom: auto; }
+  /* equipos: los íconos reales en fila */
+  #equipos .motores { display: flex; align-items: center; gap: var(--s-6); flex-wrap: wrap; margin-top: var(--s-6); }
+</style>
+</head>
+<body>
+<!-- tipo: software (SaaS de capacitación SST con simuladores de RV)
+     reparto: hero collage, nav nav-cards, cierre close-word, pie footer-statement, ritmo surface-pairs,
+     botones tonal, marca wordmark; fuente reddit (Reddit Sans + JetBrains Mono); paleta: los colores de
+     la marca (start.mjs brand), el fondo oscuro de sala de control y el amarillo de las señales de seguridad
+     momentos: pinned-chapters (#pasos), liquid-type (#firma) -->
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="./#top">Saltar al contenido</a>
+    <a class="nav__logo" href="./#top">SAFETY VR</a>
+    <nav class="nav__links" aria-label="Principal">
+      <div class="nav__item">
+        <a class="nav__link" href="./#plataforma">Producto <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="./#planes">
+              <div class="panel"><img class="frame__img" src="assets/img/photo-f39732179-500.jpg" alt="Trabajador con arnés y línea de vida, revisado por su supervisor" data-source="stand-in" data-subject="trabajo en alturas"></div>
+              <span class="t-card">Suscripción</span>
+              <span class="t-small muted">Catálogo, asientos y certificados por mes</span>
+            </a>
+            <a class="menu-card span-4" href="./#simuladores">
+              <div class="panel"><img class="frame__img" src="assets/img/photo-f74518880-500.jpg" alt="Grúa móvil levantando un equipo con el personal fuera de la zona de carga" data-source="stand-in" data-subject="izaje"></div>
+              <span class="t-card">Simulador a medida</span>
+              <span class="t-small muted">Su riesgo propio, en Unity o Unreal 5</span>
+            </a>
+            <a class="menu-card span-4" href="./#planes">
+              <div class="panel"><img class="frame__img" src="assets/img/photo-f114420573-500.jpg" alt="Soldador trabajando en una tubería en un patio de obra" data-source="stand-in" data-subject="trabajo en caliente"></div>
+              <span class="t-card">Marca blanca</span>
+              <span class="t-small muted">Para consultoras SST que revenden</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="./#simuladores">Simuladores</a></div>
+      <div class="nav__item"><a class="nav__link" href="./#planes">Planes</a></div>
+      <div class="nav__item"><a class="nav__link" href="./#preguntas">Preguntas</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="nav__link" href="en/" hreflang="en" lang="en" aria-label="Ver esta página en inglés">EN</a>
+      <a class="btn btn--primary" href="mailto:safetyvr360@gmail.com?subject=Demostraci%C3%B3n%20de%20SAFETY%20VR">Solicitar una demostración</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menú"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <p><a class="link" href="index.html">SAFETY VR</a></p>
+  <section class="credits-list" id="credits" aria-labelledby="credits-h">
+    <h1 id="credits-h">Photograph credits</h1>
+    <ul>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Construction_worker_harness_(9253634989).jpg">National Institute for Occupational Safety and Health (NIOSH) from USA</a>, <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public domain</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Framing_fall_prevention_(9253620155).jpg">National Institute for Occupational Safety and Health (NIOSH) from USA</a>, <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public domain</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Welding_pipe.jpg">Newfoundlandguy</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Meta_Quest_3_-_3.jpg">Kyu3a</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:SRR_Construction_Employees_Reach_12-Year_Milestone_of_Working_Safe_(4730838849).jpg">Savannah River Site</a>, <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public domain</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Confined_Space_(16203362269).jpg">darkday from Brisbane, Australia</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_2852_Dump_Truck_Drives_Through_an_Open_cut_Mine.jpg">Publishing, CSIRO</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer closing footer--statement" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">Pruebe SAFETY VR con su cuadrilla</h2><p class="t-lead">El plan Piloto cubre 15 trabajadores por $450.000 al mes.</p></div>
+        <a class="btn btn--primary" href="mailto:safetyvr360@gmail.com?subject=Demostraci%C3%B3n%20de%20SAFETY%20VR">Solicitar una demostración<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">SAFETY VR</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <p class="footer__lede">Capacitación SST en realidad virtual, desde Barranquilla.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Producto</h3><ul><li><a href="./#plataforma">Plataforma</a></li><li><a href="./#simuladores">Simuladores</a></li><li><a href="./#pasos">Implementación</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Precios</h3><ul><li><a href="./#planes">Planes</a></li><li><a href="./#preguntas">Preguntas</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Demo</h3><ul><li><a href="demo/">Probar EC-01</a></li><li><a href="demo/#verificar">Verificar un certificado</a></li><li><a href="avance/">Estado del proyecto</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>© 2026 SAFETY VR, una plataforma de ULTRAMEDIA COMPANY</span>
+        <div class="socials"></div>
+        <span>Los nombres y logos de productos son marcas de sus dueños.</span>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+</body>
+</html>

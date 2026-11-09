@@ -5,6 +5,79 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (4) — página comercial de venta, bilingüe
+
+El usuario pidió la página comercial completa de venta del servicio, con
+videos de YouTube y las apps, de manera profesional, usando su skill
+`design-taste-frontend` (tasteskill 2.5).
+
+**Dónde vive.** Página estática en la raíz que publica GitHub Pages:
+`sitio/index.html` (es-CO) y `sitio/en/index.html` (en). La demo jugable pasó a
+`sitio/demo/` (sus enlaces al avance, a `../avance/`). No va en la app Next.js:
+los scripts del kit (navegación, movimiento, momentos) tocan el DOM y chocarían
+con la hidratación de React; Pages, además, es lo que hoy está publicado.
+
+**Cómo se arma.** `comercial/plantilla.html` no tiene texto visible: son claves
+`venta.*` de `mensajes/*.json` (172 claves nuevas por idioma). El armador
+`tools/construir-comercial.mjs` (llamado desde `construir-previsualizacion.mjs`)
+escapa el texto y revienta ante una clave o un dato que falte. Prueba nueva
+`src/i18n/comercial.test.ts` (6) y 5 rupturas nuevas.
+
+**Contenido, todo de los documentos del proyecto:** precios del modelo
+financiero corregido (Piloto $450.000, Planta $1.350.000, Corporativo
+$3.600.000 al mes; marca blanca $1.800.000 + 30 %; a medida USD 5.000 a
+15.000); las 10 apps nativas en Unity y Unreal 5 que corren sin conexión (los
+temas de la memoria del proyecto: alturas, espacios confinados, izaje, trabajo
+en caliente, conducción de camiones, manejo de emociones); la matriz de riesgos
+como insumo; la firma del especialista SST; el código de seis dígitos; la doble
+ciega (la empresa ve la competencia, no el puntaje). Contacto: el correo del
+proyecto, en `mailto:` con asunto por idioma.
+
+**Reparto de la skill:** hero `collage` (el Portal de Empresa con vencimientos y
+una ficha de certificado emitido, fragmentos `window` y `checklist` del kit
+reescritos), `nav-cards` (suscripción, a medida, marca blanca), cierre
+`close-word`, pie `footer-columns` (repartido otra vez: `footer-statement` en
+página oscura pinta la acción principal con otro color), ritmo `surface-pairs`,
+botones `tonal`, fuente Reddit Sans + JetBrains Mono, colores propios de la
+marca (`start.mjs brand`: fondo #0d1217, amarillo de seguridad #f2bb1d).
+Momento: `pinned-chapters` (implementación en 3 pasos). `liquid-type` se quitó:
+su sección de una sola frase quedaba vacía en tableta y teléfono.
+
+**Secciones:** hero · plataforma (matriz de riesgos → escenarios, `app-frame`
+con `window` + `doc`) · simuladores (filas + muro de 4 fotos, íconos reales de
+Unity y Unreal) · pasos (fotografía, captura real del visor EC-01 y del
+certificado, sacadas de la demo con Chrome sin ventana) · videos (marco de
+YouTube) · planes · preguntas (con la foto del Meta Quest 3 y los íconos de Meta
+y Chrome) · cierre y pie.
+
+**Videos de YouTube: falta el material del cliente.** No hay ningún video en los
+documentos. El marco está listo: `comercial/videos.json`, campo `youtube`, con
+el id del video; con él aparece el botón que abre el video en YouTube. Sin él
+el marco muestra su póster y ningún botón muerto.
+
+**Fotos: todas provisionales** (Wikimedia Commons, licencias libres, créditos en
+`credits.html` y la línea del pie): arnés y cerchas (NIOSH), tapa de espacio
+confinado, izaje con grúa, soldadura de tubería, camión minero y el Meta Quest 3.
+Ninguna es del cliente; hay que reemplazarlas por fotos propias.
+
+**Verificación (corrida aquí).**
+- Node: **195/195**. Ruptura: **88 de 88**.
+- copy-lint: 0 FAIL y 0 WARN en las dos versiones.
+- `check.mjs` (diseño) a 1440, 1024, 820, 768 y 390: sin hallazgos.
+- Compuerta de la skill: **GATE: OPEN 3** (vueltas agotadas; 36 → 9 → 3).
+  Quedan: `copy-headings` (el verificador solo reconoce sustantivos de sección
+  en inglés: «Preguntas sobre SAFETY VR» no le cuenta) y dos `section-gaps` a
+  390 px (hero → plataforma 117 px; pasos → videos 592 px).
+- Navegador integrado: es-CO y en, cambio de idioma, demo y créditos en 200,
+  ninguna imagen rota, sin errores en consola.
+- **No verificado:** `probar-visor.mjs` (sin Playwright aquí; ahora lee la demo
+  en `sitio/demo/`) y el resultado en GitHub Actions (nada se ha subido).
+
+**Siguiente.** Los enlaces de YouTube y las fotos reales del cliente; corregir
+los dos espacios del teléfono; después, autenticación y puerta del visor.
+
+---
+
 ## 9 de noviembre de 2026 (3) — herramientas fiables, dos bugs de la plataforma y la app Next.js
 
 **Contexto.** Sesión nueva en otra máquina (Windows, Node 26). El repositorio

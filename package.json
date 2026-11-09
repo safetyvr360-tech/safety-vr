@@ -10,7 +10,7 @@
   "scripts": {
     "test": "node --experimental-strip-types --test \"src/*/*.test.ts\"",
     "romper": "node tools/romper-motor.mjs",
-    "previsualizacion": "node tools/construir-previsualizacion.mjs",
+    "previsualizacion": "node --experimental-strip-types tools/construir-previsualizacion.mjs",
     "probar-visor": "node tools/probar-visor.mjs",
     "verificar": "npm test && npm run romper && npm run previsualizacion",
     "dev": "next dev",

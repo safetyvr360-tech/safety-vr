@@ -197,6 +197,23 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'tools/construir-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la página comercial no escapa el texto', 'the sales page does not escape text', 'return escapar(t(nombre, vars));', 'return t(nombre, vars);'],
+      ['un dato inexistente sale vacío', 'a missing value renders empty', "if (!(k in datos)) throw new Error(`dato_inexistente: ${k}`);\n      return datos[k];", "return datos[k] ?? '';"],
+      ['las variables del armador no llegan', 'values from the builder are dropped', 'vars[k] = datos[v.slice(1)];', "vars[k] = '';"],
+    ],
+  },
+  {
+    archivo: 'comercial/plantilla.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la página comercial trae texto escrito a mano', 'the sales page has hand-written text', '<h2 id="planes-h">{{venta.planes.titulo}}</h2>', '<h2 id="planes-h">Planes y precios</h2>'],
+      ['la página comercial usa una clave que no existe', 'the sales page uses a key that does not exist', '{{venta.planes.titulo}}', '{{venta.planes.titulos}}'],
+    ],
+  },
+  {
     archivo: 'src/componentes/piezas.tsx',
     prueba: 'src/i18n/textos-crudos.test.ts',
     rupturas: [

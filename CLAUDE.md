@@ -6,7 +6,8 @@ suscripción, con cuatro portales (Trabajador, Empresa/HSE, Proveedor SST y
 Operación). Este repositorio es el MVP.
 
 - Repositorio: https://github.com/safetyvr360-tech/safety-vr
-- Plataforma publicada: https://safetyvr360-tech.github.io/safety-vr/
+- Página comercial publicada: https://safetyvr360-tech.github.io/safety-vr/ (inglés en /en/)
+- Demo jugable: https://safetyvr360-tech.github.io/safety-vr/demo/
 - Estado del proyecto: https://safetyvr360-tech.github.io/safety-vr/avance/
 - Documentos de negocio y backup histórico (fuera del repositorio):
   `F:\ULTRAMEDIA COMPANY - PROYECTOS\02-SAFETY-VR`

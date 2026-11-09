@@ -38,7 +38,8 @@ Playwright: `npm install --no-save playwright && npx playwright install chromium
 Cada push corre todo esto en GitHub Actions. En la rama `main`, si todo pasa, el
 sitio se publica en GitHub Pages:
 
-- **Plataforma:** https://safetyvr360-tech.github.io/safety-vr/ — la capacitación
+- **Página comercial:** https://safetyvr360-tech.github.io/safety-vr/ (en inglés: /en/) — planes, simuladores y preguntas.
+- **Demo:** https://safetyvr360-tech.github.io/safety-vr/demo/ — la capacitación
   EC-01 en pantalla o en realidad virtual (ábrala en el navegador del Meta Quest),
   el resultado, el certificado y su verificación pública.
 - **Estado del proyecto:** https://safetyvr360-tech.github.io/safety-vr/avance/ —

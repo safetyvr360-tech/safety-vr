@@ -172,7 +172,7 @@ const p2 = await navegador.newPage({ viewport: { width: 1280, height: 900 } });
 const errores2 = [];
 p2.on('pageerror', (e) => errores2.push(e.message));
 p2.on('console', (m) => { if (m.type() === 'error' && !/ERR_|fonts\.g/.test(m.text())) errores2.push(m.text()); });
-const sitio = readFileSync(`${raiz}sitio/index.html`, 'utf8');
+const sitio = readFileSync(`${raiz}sitio/demo/index.html`, 'utf8');
 await p2.route('http://localhost/**', (r) => r.fulfill({ contentType: 'text/html; charset=utf-8', body: sitio }));
 await p2.goto('http://localhost/');
 await p2.waitForTimeout(500);
