@@ -314,5 +314,9 @@
   "venta.pie.derechos": "© {anio} SAFETY VR, a ULTRAMEDIA COMPANY platform",
   "venta.pie.creditos": "Photographs via Wikimedia Commons",
   "venta.nav.rapidas": "Quick actions",
-  "venta.planes.incluye": "Every plan includes the company portal and certificates verifiable by code."
+  "venta.planes.incluye": "Every plan includes the company portal and certificates verifiable by code.",
+  "venta.seo.servicio": "Industrial safety training in virtual reality",
+  "venta.seo.tipo": "Occupational safety training with VR simulators",
+  "plataforma.titulo_pagina": "SAFETY VR: confined space simulator demo, EC-01",
+  "plataforma.descripcion_pagina": "Try SAFETY VR scenario EC-01 for free: confined space entry in virtual reality, with a result and a verifiable certificate."
 }

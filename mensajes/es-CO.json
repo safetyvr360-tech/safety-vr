@@ -314,5 +314,9 @@
   "venta.pie.derechos": "© {anio} SAFETY VR, una plataforma de ULTRAMEDIA COMPANY",
   "venta.pie.creditos": "Fotografías vía Wikimedia Commons",
   "venta.nav.rapidas": "Acciones rápidas",
-  "venta.planes.incluye": "Todos incluyen el Portal de Empresa y certificados verificables por código."
+  "venta.planes.incluye": "Todos incluyen el Portal de Empresa y certificados verificables por código.",
+  "venta.seo.servicio": "Capacitación en seguridad industrial con realidad virtual",
+  "venta.seo.tipo": "Capacitación SST con simuladores de realidad virtual",
+  "plataforma.titulo_pagina": "SAFETY VR: demo del simulador de espacio confinado EC-01",
+  "plataforma.descripcion_pagina": "Pruebe gratis el escenario EC-01 de SAFETY VR: ingreso a espacio confinado en realidad virtual, con resultado y certificado verificable."
 }

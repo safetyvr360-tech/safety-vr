@@ -206,6 +206,25 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'tools/seo-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['Google ve un precio distinto al de la página', 'Google sees a different price from the page', 'planta: 1350000', 'planta: 1300000'],
+      ['el JSON-LD puede cerrar su etiqueta', 'the JSON-LD can close its tag', ".replace(/</g, '\\\\u003c')", ''],
+      ['el sitemap pierde la versión por omisión', 'the sitemap drops the default version', "    .concat(`    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"${URLS['es-CO']}\"/>`)\n", ''],
+      ['Analytics carga sin id', 'Analytics loads with no id', '  if (c.google_analytics) {', '  if (true) {'],
+      ['se acepta un id de Analytics inválido', 'an invalid Analytics id is accepted', "if (c.google_analytics !== null && !/^G-[A-Z0-9]{6,12}$/.test(c.google_analytics))", 'if (false)'],
+      ['las preguntas no llegan a Google', 'the questions do not reach Google', 'const PREGUNTAS = [1, 2, 3, 4, 6];', 'const PREGUNTAS = [];'],
+    ],
+  },
+  {
+    archivo: 'tools/construir-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la versión en inglés se declara canónica la española', 'the English page claims the Spanish one as canonical', '    canonica: URLS[idioma],', "    canonica: URLS['es-CO'],"],
+    ],
+  },
+  {
     archivo: 'comercial/plantilla.html',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [

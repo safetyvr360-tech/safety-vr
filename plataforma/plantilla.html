@@ -1,6 +1,8 @@
-<title>SAFETY VR</title>
+<title>{{titulo}}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="SAFETY VR — capacitación en seguridad industrial con realidad virtual. ULTRAMEDIA COMPANY.">
+<meta name="description" content="{{descripcion}}">
+<link rel="canonical" href="https://safetyvr360-tech.github.io/safety-vr/demo/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -219,6 +221,7 @@ let visor = null, sesionVista = null, idSesion = null, rvOk = false;
 
 function pintarTextos() {
   document.documentElement.lang = idioma === 'en' ? 'en' : 'es-CO';
+  document.title = t('plataforma.titulo_pagina');
   for (const n of document.querySelectorAll('[data-t]')) n.textContent = t(n.dataset.t);
   for (const b of document.querySelectorAll('[data-idioma]')) b.setAttribute('aria-pressed', String(b.dataset.idioma === idioma));
   $('f-titulo').textContent = `${doc.codigo} · ${tx(doc.titulo)}`;

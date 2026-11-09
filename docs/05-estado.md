@@ -5,6 +5,44 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (6) — SEO de la página comercial (la lista del video)
+
+El usuario pasó la transcripción de un video con lo que le falta a una web para
+que Google la encuentre: Analytics, ficha de Google Business Profile, Search
+Console, servicio y nombre en los títulos, robots.txt que no bloquee, y que la
+web esté publicada de verdad.
+
+**Lo que se revisó en el sitio publicado:** es la versión vieja (título solo
+«SAFETY VR», `/en/` en 404), porque los commits no se han subido. No hay
+robots.txt en la raíz del dominio (404), así que nada bloquea a los buscadores.
+Un robots.txt dentro de `/safety-vr/` no lo leería ningún buscador: va en la
+raíz del dominio, y ese es otro repositorio (`safetyvr360-tech.github.io`).
+
+**Lo que se hizo** (`tools/seo-comercial.mjs`, puro):
+- Canónica por idioma, `hreflang` es-CO / en / x-default, Open Graph completo
+  (url, idioma, imagen absoluta 1200 × 630) y Twitter.
+- Datos estructurados JSON-LD: organización, sitio, el servicio con los 3 planes
+  en COP y las 5 preguntas frecuentes, en el idioma de la página. Una prueba
+  exige que los precios coincidan con los del catálogo.
+- `sitio/sitemap.xml` con las dos versiones enlazadas y la demo.
+- `comercial/favicon.svg` (la franja de seguridad) y `comercial/share.jpg`
+  (captura del hero): antes la página los nombraba y no existían.
+- La demo tenía de título solo «SAFETY VR»: ahora título y descripción desde el
+  catálogo, canónica e ícono.
+- `comercial/sitio.json`: `google_analytics` (G-…) y `search_console` (token).
+  En `null` no se carga nada de Google; un id mal formado revienta el armado.
+
+**Pruebas:** 202/202; ruptura 95 de 95 (7 nuevas). copy-lint 0/0.
+
+**Falta, y es del usuario** (cuenta de Google): crear la propiedad de GA4 y
+pasar el id G-…; verificar el sitio en Search Console (token de la etiqueta
+HTML) y enviar el sitemap; la ficha de Business Profile (pide una dirección o
+zona de servicio; los documentos solo dan Barranquilla). Antes de activar
+Analytics conviene un aviso de cookies y tratamiento de datos (Ley 1581 de 2012).
+Y subir los commits para que Google vea la versión nueva.
+
+---
+
 ## 9 de noviembre de 2026 (5) — ajustes de la página comercial y ruptura a prueba de cortes
 
 - El usuario decidió dejar el repositorio **público**: GitHub Pages gratis no

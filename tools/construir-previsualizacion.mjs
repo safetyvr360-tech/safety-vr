@@ -100,7 +100,11 @@ const avance = armar('previsualizacion/plantilla.html');
 writeFileSync(`${raiz}previsualizacion/index.html`, avance);
 mkdirSync(`${raiz}sitio/avance`, { recursive: true });
 mkdirSync(`${raiz}sitio/demo`, { recursive: true });
-writeFileSync(`${raiz}sitio/demo/index.html`, documento(armar('plataforma/plantilla.html'), 'es-CO'));
+// Título y descripción de la demo desde el catálogo es-CO (lo que lee Google); al cambiar de idioma, pintarTextos cambia el título.
+const esDemo = (k) => traducir(DATOS.catalogos['es-CO'], k).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+writeFileSync(`${raiz}sitio/demo/index.html`, documento(armar('plataforma/plantilla.html'), 'es-CO')
+  .replace('<title>{{titulo}}</title>', `<title>${esDemo('plataforma.titulo_pagina')}</title>`)
+  .replace('content="{{descripcion}}"', `content="${esDemo('plataforma.descripcion_pagina')}"`));
 // La raíz publicada es la página comercial (es-CO) y /en/ su versión en inglés.
 armarComercial(raiz, DATOS.catalogos, traducir);
 writeFileSync(`${raiz}sitio/avance/index.html`, documento(avance, 'es-CO'));

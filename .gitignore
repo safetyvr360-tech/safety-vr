@@ -12,3 +12,4 @@ sitio/
 *.tsbuildinfo
 .taste-skill/
 .romper-en-curso.json
+.claude/launch.json

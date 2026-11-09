@@ -12,7 +12,7 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 9 de noviembre de 2026: **195/195 en verde, 88 de 88 rupturas detectadas.**
+Al 9 de noviembre de 2026: **202/202 en verde, 95 de 95 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 
@@ -21,6 +21,8 @@ El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 - `comercial/plantilla.html` — la página de venta; sus textos son claves `venta.*` de `mensajes/*.json`
 - `tools/construir-comercial.mjs` — la arma en `sitio/` (es-CO) y `sitio/en/` (en); una clave que falta revienta el armado
 - `comercial/assets/` — el subconjunto del kit de diseño (design-taste-frontend), íconos reales y fotos
+- `tools/seo-comercial.mjs` — canónica, hreflang, JSON-LD (servicio, planes, preguntas) y sitemap.xml
+- `comercial/sitio.json` — ids de Google Analytics y Search Console (`null`: no se carga nada)
 - `comercial/videos.json` — el id de YouTube del video del cliente (`null`: el marco queda con su póster y sin botón)
 - `src/i18n/comercial.test.ts` — claves en los dos catálogos, sin texto crudo, texto escapado
 - La demo jugable quedó en `sitio/demo/`; el avance, en `sitio/avance/`

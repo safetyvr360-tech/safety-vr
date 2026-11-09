@@ -10,9 +10,10 @@
 //   {{@dato}}              un valor del armador (rutas, enlaces, HTML ya armado)
 
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { URLS, datosEstructurados, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from './seo-comercial.mjs';
 
 const CORREO = 'safetyvr360@gmail.com'; // contacto del proyecto (contrato/MEMORIA-DEL-PROYECTO.md)
-const PUBLICA = 'https://safetyvr360-tech.github.io/safety-vr/';
+const PUBLICA = URLS['es-CO'];
 
 export const escapar = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -52,7 +53,13 @@ export function datosDe(idioma, t, extra) {
     otro_lang: enIngles ? 'es-CO' : 'en',
     url_otro: enIngles ? '../' : 'en/',
     url_es: PUBLICA,
-    url_en: `${PUBLICA}en/`,
+    url_en: URLS.en,
+    canonica: URLS[idioma],
+    og_locale: enIngles ? 'en_US' : 'es_CO',
+    og_locale_otro: enIngles ? 'es_CO' : 'en_US',
+    og_imagen: `${PUBLICA}share.jpg`,
+    json_ld: jsonEnScript(datosEstructurados(idioma, t)),
+    google: etiquetasGoogle(extra.config),
     anio: String(new Date().getFullYear()),
     mailto: escapar(mailto(t('venta.accion.asunto'))),
     mailto_equipo: escapar(mailto(t('venta.accion.asunto'))),
@@ -82,10 +89,12 @@ export function armarComercial(raiz, catalogos, traducir) {
   const plantilla = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
   const videos = JSON.parse(readFileSync(`${raiz}comercial/videos.json`, 'utf8'));
   if (videos.youtube !== null && !/^[\w-]{11}$/.test(videos.youtube)) throw new Error(`id_de_youtube_invalido: ${videos.youtube}`);
+  // Google Analytics y Search Console: los ids que da el cliente (null: no se carga nada)
+  const config = validarConfig(JSON.parse(readFileSync(`${raiz}comercial/sitio.json`, 'utf8')));
   const salida = {};
   for (const idioma of ['es-CO', 'en']) {
     const t = (clave, vars) => traducir(catalogos[idioma], clave, vars);
-    const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos }));
+    const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config }));
     const dir = idioma === 'en' ? `${raiz}sitio/en` : `${raiz}sitio`;
     mkdirSync(dir, { recursive: true });
     writeFileSync(`${dir}/index.html`, html);
@@ -95,5 +104,6 @@ export function armarComercial(raiz, catalogos, traducir) {
   for (const f of ['credits.html', 'favicon.svg', 'share.jpg']) {
     if (existsSync(`${raiz}comercial/${f}`)) cpSync(`${raiz}comercial/${f}`, `${raiz}sitio/${f}`);
   }
+  writeFileSync(`${raiz}sitio/sitemap.xml`, sitemap(new Date().toISOString().slice(0, 10)));
   return salida;
 }
