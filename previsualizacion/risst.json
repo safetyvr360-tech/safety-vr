@@ -1,0 +1,22 @@
+[
+  {
+    "es-CO": "La app Next.js necesita instalar paquetes, y en esta sesión la instalación está bloqueada. Se habilita en la configuración de red de Claude; aplica en un chat nuevo.",
+    "en": "The Next.js app needs package installs, which are blocked in this session. Enable them in Claude’s network settings; it applies to a new chat."
+  },
+  {
+    "es-CO": "La migración 002 (columnas y protecciones de la tabla certificado) está escrita con sus pruebas, pero no se ha ejecutado: aquí no hay PostgreSQL.",
+    "en": "Migration 002 (columns and safeguards on the certificate table) is written with its tests but has not been run: there is no PostgreSQL here."
+  },
+  {
+    "es-CO": "Dominio del perfil xAPI: los verbos propios (omitió un requisito, agotó el tiempo) necesitan una dirección web estable de ULTRAMEDIA. Hoy es configurable y dice «por definir».",
+    "en": "xAPI profile domain: the custom verbs (skipped a requirement, ran out of time) need a stable ULTRAMEDIA web address. It is configurable and currently says “to be defined”."
+  },
+  {
+    "es-CO": "Falta probar el modo RV en un Meta Quest y conseguir las fotos 360° reales de los tres entornos de EC-01.",
+    "en": "VR mode still needs testing on a Meta Quest, and the real 360° photos of the three EC-01 environments are missing."
+  },
+  {
+    "es-CO": "EC-01 (RISST): n03 cubre dos requisitos con un solo desenlace; n02 usa el «permiso» para medir la atmósfera.",
+    "en": "EC-01 (RISST): n03 covers two requirements with a single outcome; n02 uses the “permit” to test the atmosphere."
+  }
+]

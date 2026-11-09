@@ -1,0 +1,212 @@
+// Método de Ruptura (directiva 3) sobre src/motor/ y los catálogos de idioma.
+// Aplica cada ruptura sobre el archivo, corre la suite que lo defiende, exige
+// que falle al menos una prueba y restaura. Si una ruptura deja la suite en
+// verde, el hallazgo es la prueba y este script sale con código 1.
+//
+//   node tools/romper-motor.mjs          informe legible
+//   node tools/romper-motor.mjs --json   informe para la previsualización
+
+import { readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const raiz = fileURLToPath(new URL('..', import.meta.url));
+
+const GRUPOS = [
+  {
+    archivo: 'src/motor/maquina.ts',
+    prueba: 'src/motor/maquina.test.ts',
+    rupturas: [
+      ['un error se borra acertando después', 'an error is erased by a later correct answer', 'return GRAVEDAD[nuevo] > GRAVEDAD[previo] ? nuevo : previo;', 'return nuevo;'],
+      ['el crítico fallado deja de bloquear el apto', 'a failed critical criterion no longer blocks a pass', '&& fallidos.length === 0 ?', '?'],
+      ['un crítico sin evaluar figura fallado durante la sesión', 'an unassessed critical criterion shows as failed mid-session', '(r === undefined ? cerrada : r !== \'correcto\')', "r !== 'correcto'"],
+      ['requiere deja de revisarse', 'requirements stop being checked', 'filter((m) => !marcas.has(m))', 'filter(() => false)'],
+      ['al_entrar no mueve el instrumento', 'al_entrar no longer moves the instrument', 'l.valor = ef.valor;', ''],
+      ['el estado visible sopla el resultado', 'the visible state gives away the answer', 'const av: AccionVisible = { id: a.id, etiqueta: { ...a.etiqueta } };', 'const av = { id: a.id, etiqueta: { ...a.etiqueta }, resultado: a.resultado } as AccionVisible;'],
+      ['entrar a un nodo final no termina', 'entering a final node does not finish', 'if (n.final) {\n      terminar();', 'if (false) {\n      terminar();'],
+      ['abandonar no lleva a estado final', 'abandoning does not reach a final state', "fase = 'abandonada';", ''],
+      ['el requisito faltante no califica', 'a missing requirement is not scored', 'n.al_faltar_requisito;\n      calificar(des.evalua, des.resultado);', 'n.al_faltar_requisito;'],
+      ['el tiempo agotado no califica', 'running out of time is not scored', '      }\n      calificar(des.evalua, des.resultado);', '      }'],
+      ['el motor acepta escenarios inválidos', 'the engine accepts invalid scenarios', 'if (!informe.ok) {', 'if (false) {'],
+      ['parcial vale lo mismo que correcto', 'partial is worth as much as correct', 'parcial: 0.5', 'parcial: 1'],
+      ['el estado devuelto comparte memoria', 'the returned state shares memory', 'marcas: [...marcas].sort(),', 'marcas: marcas as unknown as string[],'],
+    ],
+  },
+  {
+    archivo: 'src/motor/sesion.ts',
+    prueba: 'src/motor/sesion.test.ts',
+    rupturas: [
+      ['el plazo vence en cada cuadro', 'the deadline fires on every frame', 'plazo = null; // una sola vez por entrada al nodo', ''],
+      ['la pausa no congela el plazo', 'pausing does not freeze the deadline', 'if (plazo !== null) plazo += congelado;', ''],
+      ['se puede actuar en pausa', 'actions are allowed while paused', "if (pausaDesde !== null) throw new ErrorMotor('en_pausa');", ''],
+      ['el tiempo agotado se fecha al revisar', 'a timeout is stamped when checked', 'sincronizar(p.estado, vencio);', 'sincronizar(p.estado, reloj());'],
+      ['la duración cuenta la pausa', 'duration counts paused time', 'return Math.round((hasta - inicio - pausado) / 1000);', 'return Math.round((hasta - inicio) / 1000);'],
+      ['cambiar de nodo no reinicia el plazo', 'changing node does not restart the deadline', '} else if (entro) {', '} else if (false) {'],
+    ],
+  },
+  {
+    archivo: 'src/motor/presentador.ts',
+    prueba: 'src/motor/presentador.test.ts',
+    rupturas: [
+      ['mezcla idiomas cuando falta la traducción', 'mixes languages when a translation is missing', 'return doc.idiomas.includes(pedido) ? pedido : doc.idiomas[0]!;', 'return pedido;'],
+      ['una clave inexistente sale como texto vacío', 'a missing key renders as empty text', "if (plantilla === undefined) throw new Error(`clave_de_catalogo_inexistente: ${clave}`);", "if (plantilla === undefined) return '';"],
+      ['los números ignoran el idioma', 'numbers ignore the language', "new Intl.NumberFormat(idioma, { maximumFractionDigits: 2 })", "new Intl.NumberFormat('en', { maximumFractionDigits: 2 })"],
+      ['el reloj redondea hacia abajo', 'the clock rounds down', 'Math.ceil(e.restanteMs / 1000)', 'Math.floor(e.restanteMs / 1000)'],
+      ['ofrece acciones en pausa', 'offers actions while paused', 'acciones: vivo && !e.enPausa', 'acciones: vivo'],
+      ['la retroalimentación pierde el tono', 'feedback loses its tone', "estado.retroalimentacion_resultado ?? 'neutro'", "'neutro'"],
+    ],
+  },
+  {
+    archivo: 'src/webxr/matematica.ts',
+    prueba: 'src/webxr/matematica.test.ts',
+    rupturas: [
+      ['la rotación gira al revés', 'rotation turns the wrong way', 'm[0] = c; m[2] = -s; m[8] = s; m[10] = c;', 'm[0] = c; m[2] = s; m[8] = -s; m[10] = c;'],
+      ['el rayo del control apunta hacia atrás', 'the controller ray points backwards', 'direccion: normalizar([-pose[8]!, -pose[9]!, -pose[10]!]),', 'direccion: normalizar([pose[8]!, pose[9]!, pose[10]!]),'],
+      ['la proyección ignora el aspecto', 'projection ignores aspect ratio', 'm[0] = f / aspecto;', 'm[0] = f;'],
+    ],
+  },
+  {
+    archivo: 'src/webxr/disposicion.ts',
+    prueba: 'src/webxr/disposicion.test.ts',
+    rupturas: [
+      ['el rayo toca paneles que están detrás', 'the ray hits panels behind the viewer', 'if (t <= 0) return null;', ''],
+      ['el eje vertical del panel queda invertido', 'the panel vertical axis is flipped', 'const v = 0.5 - y / p.alto_m;', 'const v = 0.5 + y / p.alto_m;'],
+      ['el texto se sale del ancho', 'text overflows the width', 'if (actual && medir(prueba, tam, peso) > ancho) {', 'if (false) {'],
+      ['el fondo cuenta como contenido', 'the background counts as content', 'd.ops.slice(1).map(', 'd.ops.map('],
+      ['los paneles laterales cambian de lado', 'side panels swap sides', "{ id: 'instrumentos', yaw: 50 * GRADO,", "{ id: 'instrumentos', yaw: -50 * GRADO,"],
+      ['el resaltado no se ve', 'the highlight is invisible', "color: activo ? 'boton_activo' : 'boton', radio: 16, borde: activo ? 'acento' : 'linea'", "color: 'boton', radio: 16, borde: 'linea'"],
+    ],
+  },
+  {
+    archivo: 'src/telemetria/uuidv7.ts',
+    prueba: 'src/telemetria/uuidv7.test.ts',
+    rupturas: [
+      ['el UUID pierde la versión 7', 'the UUID loses version 7', 'b[6] = 0x70 | (contador >> 8);', 'b[6] = 0x40 | (contador >> 8);'],
+      ['el contador no sube en el mismo milisegundo', 'the counter does not increase within a millisecond', '      contador += 1;\n', ''],
+      ['el reloj hacia atrás desordena los ids', 'a clock going back reorders ids', 'if (ms < ultimoMs) ms = ultimoMs;', ''],
+    ],
+  },
+  {
+    archivo: 'src/telemetria/firma.ts',
+    prueba: 'src/telemetria/firma.test.ts',
+    rupturas: [
+      ['el JSON canónico no ordena las claves', 'canonical JSON does not sort keys', '.filter((k) => o[k] !== undefined).sort();', '.filter((k) => o[k] !== undefined);'],
+      ['verificar acepta cualquier firma', 'verify accepts any signature', 'return d === 0;', 'return true;'],
+      ['se firma con secreto vacío', 'signing with an empty secret', "if (!secreto) throw new Error('secreto_vacio');", ''],
+    ],
+  },
+  {
+    archivo: 'src/telemetria/xapi.ts',
+    prueba: 'src/telemetria/xapi.test.ts',
+    rupturas: [
+      ['el actor lleva el correo (rompe ADR-001)', 'the actor carries an email (breaks ADR-001)', "actor: { objectType: 'Agent', account: { homePage: ctx.plataforma, name: ctx.trabajadorId } },", "actor: { objectType: 'Agent', mbox: `mailto:${ctx.trabajadorId}@x.co`, account: { homePage: ctx.plataforma, name: ctx.trabajadorId } } as never,"],
+      ['un acierto se reporta como error', 'a correct answer is reported as wrong', "success: e.resultado === 'correcto',\n        extensions", "success: false,\n        extensions"],
+      ['la duración cuenta las pausas', 'duration counts pauses', 'const segundos = ctx.duracionS ?? (e.en_ms - base) / 1000;', 'const segundos = (e.en_ms - base) / 1000;'],
+      ['el puntaje no viaja en el cierre', 'the score is missing at the end', 'const puntaje = e.puntaje ?? 0;', 'const puntaje = 0;'],
+      ['falta el registration de la sesión', 'the session registration is missing', 'registration: ctx.sesionId,', "registration: '',"],
+    ],
+  },
+  {
+    archivo: 'src/telemetria/cola.ts',
+    prueba: 'src/telemetria/cola.test.ts',
+    rupturas: [
+      ['encolar duplica la sesión', 'enqueue duplicates the session', 'if (e.pendientes.some((x) => x.paquete.sesion.id === id) || e.rechazados.some((x) => x.paquete.sesion.id === id)) return false;', ''],
+      ['sin red se pierde el paquete', 'without network the package is lost', "            actual.intentos += 1;\n            actual.ultimo_error = r;", "            e.pendientes.splice(i, 1);\n            actual.ultimo_error = r;"],
+      ['se reintenta sin esperar', 'retries without waiting', '.filter((x) => opciones.forzar === true || x.proximo_intento_ms <= reloj())', '.filter(() => true)'],
+      ['forzar no fuerza al volver la red', 'forcing does not force when the network returns', 'opciones.forzar === true || x.proximo_intento_ms', 'x.proximo_intento_ms'],
+      ['dos sincronizaciones a la vez', 'two syncs at once', 'if (sincronizando) {', 'if (false) {'],
+      ['un rechazado se reintenta para siempre', 'a rejected package retries forever', "} else if (r === 'rechazado') {", "} else if (false) {"],
+      ['se envía en desorden', 'sent out of order', '.sort((a, b) => (a.paquete.sesion.id < b.paquete.sesion.id ? -1 : 1));', ';'],
+    ],
+  },
+  {
+    archivo: 'src/certificados/codigo.ts',
+    prueba: 'src/certificados/codigo.test.ts',
+    rupturas: [
+      ['el código acepta letras confundibles', 'the code accepts confusable letters', "export const ALFABETO = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';", "export const ALFABETO = '0123456789ABCDEFGHIJKLMNOPQRSTUV';"],
+      ['el dígito de control no se revisa', 'the check digit is not verified', 'return controlValido(s) ? formatear(s) : null;', 'return formatear(s);'],
+      ['la O tecleada no se lee como cero', 'a typed O is not read as zero', ".replace(/O/g, '0')", ''],
+    ],
+  },
+  {
+    archivo: 'src/certificados/vigencia.ts',
+    prueba: 'src/certificados/vigencia.test.ts',
+    rupturas: [
+      ['la fecha es la de UTC, no la de Colombia', 'the date is UTC, not Colombia', 'return new Date(ms + desfaseMin * 60_000).toISOString().slice(0, 10);', 'return new Date(ms).toISOString().slice(0, 10);'],
+      ['el 31 de enero + 1 mes salta a marzo', 'January 31 + 1 month jumps to March', 'Math.min(d, ultimo)', 'd'],
+      ['el último día ya cuenta como vencido', 'the last day already counts as expired', 'if (quedan < 0) return \'vencido\';', 'if (quedan <= 0) return \'vencido\';'],
+      ['no avisa antes del vencimiento', 'no warning before expiry', "if (quedan <= diasAviso) return 'por_vencer';", ''],
+    ],
+  },
+  {
+    archivo: 'src/certificados/cadena.ts',
+    prueba: 'src/certificados/cadena.test.ts',
+    rupturas: [
+      ['se certifica una sesión no apta', 'a failed session gets certified', "if (s.veredicto !== 'apto') throw new ErrorCertificado('sesion_no_apta');", ''],
+      ['la huella ignora la vigencia', 'the hash ignores the validity date', '    vigente_hasta: c.vigente_hasta,\n    hash_anterior', '    hash_anterior'],
+      ['la cadena no revisa el eslabón', 'the chain does not check the link', "if (i > 0 && c.hash_anterior !== certs[i - 1]!.hash) return { ok: false, indice: i, motivo: 'eslabon_roto' };", ''],
+      ['el certificado no apunta al anterior', 'the certificate does not point to the previous one', 'hash_anterior: e.anterior ? e.anterior.hash : null,', 'hash_anterior: null,'],
+      ['se acepta otra versión del simulador', 'another simulator version is accepted', "if (s.version_simulador !== `${e.doc.codigo}@${e.doc.version}`) throw new ErrorCertificado('version_distinta');", ''],
+    ],
+  },
+  {
+    archivo: 'src/certificados/verificacion.ts',
+    prueba: 'src/certificados/verificacion.test.ts',
+    rupturas: [
+      ['la verificación no mira el eslabón siguiente', 'verification ignores the next link', 'const enlace = r.siguiente === null || r.siguiente.hash_anterior === r.cert.hash;', 'const enlace = true;'],
+      ['un código mal escrito llega a la base', 'a mistyped code reaches the database', "if (!codigo) return { veredicto: 'codigo_invalido', codigo: null, cert: null };", "if (!codigo) return { veredicto: 'no_encontrado', codigo: null, cert: (await buscar(texto)) as never };"],
+      ['un vencido se muestra como confiable', 'an expired one is shown as trustworthy', "const confiable = v.veredicto === 'vigente' || v.veredicto === 'por_vencer';", "const confiable = v.veredicto !== 'alterado';"],
+    ],
+  },
+  {
+    archivo: 'mensajes/en.json',
+    prueba: 'src/i18n/catalogo.test.ts',
+    rupturas: [
+      ['falta una clave en inglés', 'a key is missing in English', '  "motor.objeto": "Uses: {objeto}",\n', ''],
+      ['el inglés pierde una variable', 'English drops a variable', '"{segundos} s left"', '"seconds left"'],
+    ],
+  },
+  {
+    archivo: 'mensajes/es-CO.json',
+    prueba: 'src/i18n/catalogo.test.ts',
+    rupturas: [
+      ['el español tutea', 'Spanish uses tú instead of usted', 'Póngase el visor para continuar.', 'Ponte el visor para continuar.'],
+    ],
+  },
+];
+
+const json = process.argv.includes('--json');
+const informe = [];
+let huecos = 0;
+
+for (const g of GRUPOS) {
+  const ruta = `${raiz}${g.archivo}`;
+  const original = readFileSync(ruta, 'utf8');
+  try {
+    for (const [nombre, nombreEn, buscar, poner] of g.rupturas) {
+      const entrada = { archivo: g.archivo, nombre: { 'es-CO': nombre, en: nombreEn }, ok: false, fallidas: [] };
+      informe.push(entrada);
+      if (!original.includes(buscar)) {
+        huecos += 1;
+        if (!json) console.log(`?? ${g.archivo} · ${nombre}: el fragmento ya no existe, actualice la ruptura`);
+        continue;
+      }
+      writeFileSync(ruta, original.replace(buscar, poner));
+      const r = spawnSync(process.execPath, ['--experimental-strip-types', '--test', g.prueba], { cwd: raiz, encoding: 'utf8' });
+      entrada.fallidas = [...r.stdout.matchAll(/^not ok \d+ - (.+)$/gm)].map((m) => m[1]);
+      entrada.ok = entrada.fallidas.length > 0;
+      if (!entrada.ok) huecos += 1;
+      if (!json) {
+        console.log(entrada.ok
+          ? `ok ${g.archivo} · ${nombre}\n     -> ${entrada.fallidas.join('\n     -> ')}`
+          : `XX ${g.archivo} · ${nombre}: la suite siguió en verde`);
+      }
+    }
+  } finally {
+    writeFileSync(ruta, original);
+  }
+}
+
+if (json) process.stdout.write(JSON.stringify(informe));
+else console.log(huecos === 0 ? `\nLas ${informe.length} rupturas fueron detectadas. Archivos restaurados.` : `\n${huecos} ruptura(s) sin detectar. Archivos restaurados.`);
+process.exit(huecos === 0 ? 0 : 1);

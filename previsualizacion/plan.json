@@ -1,0 +1,100 @@
+[
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Cimientos: esquema y RLS jerárquica con ltree",
+      "en": "Foundations: schema and hierarchical RLS with ltree"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Validador de escenarios, compuertas 1, 2 y 3",
+      "en": "Scenario validator, gates 1, 2 and 3"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Motor: intérprete puro del grafo (maquina.ts)",
+      "en": "Engine: pure graph interpreter (maquina.ts)"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Adaptador: reloj, pausa y eventos fechados (sesion.ts)",
+      "en": "Adapter: clock, pause and timestamped events (sesion.ts)"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Adaptador: vista bilingüe desde catálogos (presentador.ts)",
+      "en": "Adapter: bilingual view from catalogs (presentador.ts)"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Adaptador: visor WebGL con modo pantalla y modo RV (visor.ts)",
+      "en": "Adapter: WebGL viewer with screen and VR modes (visor.ts)"
+    }
+  },
+  {
+    "estado": "curso",
+    "titulo": {
+      "es-CO": "Prueba en un visor real (Meta Quest) y fotos 360° de los entornos",
+      "en": "Test on a real headset (Meta Quest) and 360° photos of the environments"
+    }
+  },
+  {
+    "estado": "pendiente",
+    "titulo": {
+      "es-CO": "App Next.js y sistema de diseño bilingüe (bloqueado: instalar paquetes)",
+      "en": "Next.js app and bilingual design system (blocked: package installs)"
+    }
+  },
+  {
+    "estado": "pendiente",
+    "titulo": {
+      "es-CO": "Autenticación y puerta del visor con código de seis dígitos",
+      "en": "Authentication and six-digit headset pairing"
+    }
+  },
+  {
+    "estado": "pendiente",
+    "titulo": {
+      "es-CO": "Portal de Empresa: sedes, cuadrillas, cargos, cumplimiento",
+      "en": "Company portal: sites, crews, roles, compliance"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "SDK de telemetría: registros xAPI, paquete firmado y cola sin conexión",
+      "en": "Telemetry SDK: xAPI statements, signed package and offline queue"
+    }
+  },
+  {
+    "estado": "pendiente",
+    "titulo": {
+      "es-CO": "LRS propio y punto de sincronización en el servidor (necesita la app)",
+      "en": "Own LRS and server sync endpoint (needs the app)"
+    }
+  },
+  {
+    "estado": "hecho",
+    "titulo": {
+      "es-CO": "Certificados con hash encadenado, vigencia y verificación pública (lógica; la tabla, sin probar en PostgreSQL)",
+      "en": "Certificates with chained hash, validity and public verification (logic; the table untested on PostgreSQL)"
+    }
+  },
+  {
+    "estado": "pendiente",
+    "titulo": {
+      "es-CO": "Contenido y plan de marketing",
+      "en": "Content and marketing plan"
+    }
+  }
+]

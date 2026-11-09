@@ -1,0 +1,95 @@
+# Código ejecutable de Safety VR
+
+Node 22, sin dependencias. Bitácora de sesiones: `docs/05-estado.md` (léala al
+empezar, actualícela al terminar).
+
+## Pruebas
+
+```
+node --experimental-strip-types --test src/*/*.test.ts
+node tools/romper-motor.mjs
+node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
+```
+
+Al 8 de noviembre de 2026: **178/178 en verde, 70 de 70 rupturas detectadas,
+27 de 27 comprobaciones en navegador.**
+
+## Validador de escenarios (compuertas 1, 2 y 3 — ADR-005)
+
+- `src/escenario/tipos.ts` — el contrato `safetyvr/escenario@1`
+- `src/escenario/validador.ts` — las tres compuertas automáticas y la fachada
+- `src/escenario/ejemplos/ec-01.ts` — escenario de referencia (espacio confinado)
+- `src/escenario/validador.test.ts` — pruebas de ruptura
+
+## Motor (intérprete puro del grafo)
+
+- `src/motor/maquina.ts` — `crearMaquina(doc)` con `iniciar`, `estadoActual`,
+  `ejecutar`, `agotarTiempo` y `abandonar`. Sin WebXR, DOM ni reloj: el
+  adaptador WebXR se monta encima.
+- `src/motor/maquina.test.ts` — pruebas de ruptura
+- `src/motor/sesion.ts` — el motor con reloj inyectado: plazo por nodo, pausa
+  al quitarse el visor, eventos fechados para xAPI
+- `src/motor/presentador.ts` — la vista que dibuja el visor, en es-CO o en,
+  con textos de `mensajes/*.json`
+- `tools/romper-motor.mjs` — Método de Ruptura automático sobre motor,
+  sesión, presentador, visor (partes puras) y catálogos
+
+## Visor 360° (WebGL 2 directo, sin dependencias)
+
+- `src/webxr/matematica.ts` — matrices, proyección y rayos (pura, probada)
+- `src/webxr/disposicion.ts` — paneles, impacto del rayo, texto y operaciones
+  de dibujo (pura, probada)
+- `src/webxr/dibujo.ts` — WebGL: panorama equirrectangular y paneles
+- `src/webxr/visor.ts` — `crearVisor({ canvas, doc, catalogos, idioma })`:
+  modo pantalla y modo realidad virtual (WebXR immersive-vr)
+- `tools/probar-visor.mjs` — recorre EC-01 en Chromium haciendo clic sobre los
+  paneles 3D. El modo RV solo se verifica en un visor real.
+
+## Telemetría (ADR-002, canal de evidencia)
+
+- `src/telemetria/uuidv7.ts` — id de sesión generado en el visor
+- `src/telemetria/firma.ts` — JSON canónico y firma HMAC-SHA256 (WebCrypto)
+- `src/telemetria/xapi.ts` — statements xAPI 1.0.3 desde los eventos de la
+  sesión; actor sin datos personales (ADR-001)
+- `src/telemetria/cola.ts` — paquete firmado y cola offline idempotente con
+  reintentos; almacenamiento y envío inyectados
+
+## Certificados (hash encadenado y verificación pública)
+
+- `src/certificados/codigo.ts` — código `SVR-XXXX-XXXX-XXXX` con dígito de control
+- `src/certificados/vigencia.ts` — vigencia en fechas de Colombia: vigente, por vencer, vencido
+- `src/certificados/cadena.ts` — emisión desde una sesión apta y verificación de la cadena
+- `src/certificados/verificacion.ts` — verificación pública por código, bilingüe, sin puntaje
+- `prisma/sql/002_certificado_cadena.sql` + `pruebas/certificado_cadena.sql` —
+  **escritos, no ejecutados** (falta PostgreSQL)
+
+## Catálogos de idioma
+
+- `mensajes/es-CO.json`, `mensajes/en.json` — textos de interfaz del simulador
+- `src/i18n/catalogo.test.ts` — mismas claves, mismas variables, trato de usted
+
+## Previsualización
+
+```
+node tools/construir-previsualizacion.mjs
+```
+
+Genera `previsualizacion/index.html` (abrir en el navegador): el visor 360°
+real jugando EC-01 y el estado de obra. Se niega a generarla si hay una prueba en
+rojo o una ruptura sin detectar.
+
+## Cimientos de base de datos
+
+- `prisma/sql/001_politicas.sql` — esquema, disparador de ruta y políticas RLS
+- `prisma/sql/pruebas/aislamiento.sql` — pruebas de intrusión entre organizaciones
+
+PostgreSQL 16 con `ltree`. Las pruebas corren como `app_rol`, que no es
+superusuario. **No verificado en esta máquina** (no hay PostgreSQL); estado
+reportado: 27 aserciones en verde. Recuerde: migraciones solo con
+`node tools/aplicar-migraciones.mjs` cuando exista la app.
+
+## La regla que no se negocia
+
+Tabla nueva ⇒ `@@map` en `snake_case`, `ENABLE` + `FORCE ROW LEVEL SECURITY`,
+política explícita, casos positivos **y negativos** en `aislamiento.sql`, y la
+prueba de integración en verde.

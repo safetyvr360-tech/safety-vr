@@ -1,0 +1,17 @@
+{
+  "name": "safety-vr",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SAFETY VR — capacitación en seguridad industrial con realidad virtual (ULTRAMEDIA COMPANY). MVP: motor de escenarios, visor 360° WebXR, telemetría xAPI y certificados encadenados.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types --test \"src/*/*.test.ts\"",
+    "romper": "node tools/romper-motor.mjs",
+    "previsualizacion": "node tools/construir-previsualizacion.mjs",
+    "probar-visor": "node tools/probar-visor.mjs",
+    "verificar": "npm test && npm run romper && npm run previsualizacion"
+  }
+}

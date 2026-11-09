@@ -1,0 +1,587 @@
+<title>SAFETY VR — Avance</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: panel de control de planta — consola del simulador a la izquierda,
+   instrumentación y rúbrica a la derecha, estado de obra debajo. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --tinta: #17202a;
+  --tenue: #5b6673;
+  --linea: #d5dae0;
+  --seguridad: #e8a800;        /* amarillo de seguridad, solo para el acento */
+  --seguridad-tinta: #1a1400;
+  --bien: #1f7a4d;
+  --mal: #b3261e;
+  --medio: #a15c00;
+  --pantalla: #0f1a14;         /* pantalla del detector */
+  --pantalla-texto: #9be7b4;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --texto: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161c; --panel: #19212a; --tinta: #e6eaee; --tenue: #95a1ae; --linea: #2c3743;
+    --seguridad: #f2bb1d; --seguridad-tinta: #1a1400; --bien: #4cc38a; --mal: #ff7b72; --medio: #e3a23b;
+    --pantalla: #07100b; --pantalla-texto: #9be7b4; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161c; --panel: #19212a; --tinta: #e6eaee; --tenue: #95a1ae; --linea: #2c3743;
+  --seguridad: #f2bb1d; --seguridad-tinta: #1a1400; --bien: #4cc38a; --mal: #ff7b72; --medio: #e3a23b;
+  --pantalla: #07100b; --pantalla-texto: #9be7b4; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--tinta); font-family: var(--texto); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.contenedor { max-width: 1180px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: 2.1rem; line-height: 1.05; }
+h2 { font-size: 1.35rem; text-transform: uppercase; letter-spacing: .06em; }
+h3 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+.etiqueta { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tenue); }
+.mono { font-family: var(--mono); }
+button { font: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--seguridad); outline-offset: 2px; }
+
+/* cabecera */
+.cabecera { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between;
+  border-bottom: 3px solid var(--tinta); padding-bottom: 14px; }
+.cabecera .franja { display: inline-block; width: 46px; height: 12px; margin-bottom: 8px;
+  background: repeating-linear-gradient(135deg, var(--seguridad) 0 8px, var(--tinta) 8px 16px); }
+.idioma { display: flex; border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; }
+.idioma button { background: var(--panel); color: var(--tinta); border: 0; padding: 6px 12px; font-family: var(--mono); font-size: .8rem; }
+.idioma button[aria-pressed="true"] { background: var(--tinta); color: var(--bg); }
+
+/* tira de verificación */
+.tira { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--linea);
+  border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; }
+.tira > div { background: var(--panel); padding: 12px 14px; display: grid; gap: 2px; }
+.tira .cifra { font-family: var(--display); font-size: 1.7rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.verde { color: var(--bien); }
+
+/* simulador */
+.sim { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .sim { grid-template-columns: minmax(0, 1fr); } }
+.consola { background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; overflow: hidden; }
+.consola-cab { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--linea); }
+.nodo-id { font-family: var(--mono); font-size: .8rem; background: var(--bg); padding: 2px 8px; border-radius: 4px; }
+.entorno { padding: 16px; display: grid; gap: 14px; }
+.situacion { font-size: 1.12rem; line-height: 1.55; max-width: 62ch; margin: 0; }
+.reloj { display: grid; gap: 6px; }
+.reloj-barra { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.reloj-barra > i { display: block; height: 100%; background: var(--seguridad); transition: width .25s linear; }
+.reloj.urgente .reloj-barra > i { background: var(--mal); }
+.acciones { display: grid; gap: 10px; }
+.accion { text-align: left; background: var(--bg); color: var(--tinta); border: 1px solid var(--linea); border-radius: 8px;
+  padding: 12px 14px; display: grid; gap: 2px; transition: border-color .15s, transform .15s; }
+.accion:hover { border-color: var(--tinta); transform: translateX(2px); }
+.accion .etiqueta { text-transform: none; letter-spacing: 0; }
+.retro { border-left: 4px solid var(--tenue); padding: 10px 14px; background: var(--bg); border-radius: 0 8px 8px 0; margin: 0; }
+.retro.correcto { border-color: var(--bien); }
+.retro.incorrecto { border-color: var(--mal); }
+.retro.parcial { border-color: var(--medio); }
+.controles { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--linea); }
+.btn { border: 1px solid var(--linea); background: var(--panel); color: var(--tinta); border-radius: 6px; padding: 7px 12px; font-size: .85rem; }
+.btn.primario { background: var(--seguridad); color: var(--seguridad-tinta); border-color: var(--seguridad); font-weight: 600; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.cierre { padding: 22px 16px; display: grid; gap: 10px; text-align: left; }
+.sello { font-family: var(--display); font-size: 2.6rem; font-weight: 700; letter-spacing: .04em; line-height: 1; }
+.sello.apto { color: var(--bien); } .sello.no_apto { color: var(--mal); } .sello.incompleta { color: var(--medio); }
+
+.lado { display: grid; gap: 20px; }
+.tarjeta { background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; padding: 14px 16px; display: grid; gap: 12px; align-content: start; }
+
+/* detector de cuatro gases */
+.detector { background: var(--pantalla); color: var(--pantalla-texto); border-radius: 8px; padding: 12px; display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; font-family: var(--mono); }
+.canal { border: 1px solid #1f3b2a; border-radius: 6px; padding: 8px 10px; display: grid; gap: 0; }
+.canal .k { font-size: .72rem; opacity: .75; letter-spacing: .08em; }
+.canal .v { font-size: 1.5rem; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.canal .r { font-size: .68rem; opacity: .6; }
+.canal.alarma { border-color: #ff6b5e; color: #ffb4ab; animation: parpadeo 1s steps(2) infinite; }
+@keyframes parpadeo { 50% { background: #3a0f0b; } }
+@media (prefers-reduced-motion: reduce) { .canal.alarma { animation: none; background: #3a0f0b; } .accion:hover { transform: none; } }
+
+/* rúbrica */
+.rubrica { display: grid; gap: 8px; }
+.criterio { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; }
+.criterio .nombre { font-size: .9rem; }
+.criterio .peso { font-family: var(--mono); font-size: .78rem; color: var(--tenue); font-variant-numeric: tabular-nums; }
+.criterio .estado { grid-column: 1 / -1; display: flex; gap: 6px; align-items: center; }
+.pastilla { font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px;
+  border: 1px solid var(--linea); color: var(--tenue); }
+.pastilla.correcto { color: var(--bien); border-color: var(--bien); }
+.pastilla.incorrecto { color: var(--mal); border-color: var(--mal); }
+.pastilla.parcial { color: var(--medio); border-color: var(--medio); }
+.pastilla.critico { background: var(--tinta); color: var(--bg); border-color: var(--tinta); }
+.marcador { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-top: 1px solid var(--linea); padding-top: 10px; }
+.marcador .cifra { font-family: var(--display); font-size: 2rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--mono); font-size: .75rem; padding: 2px 8px; border-radius: 4px; background: var(--bg); border: 1px solid var(--linea); }
+.vacio { color: var(--tenue); font-size: .85rem; }
+.eventos { max-height: 210px; overflow: auto; font-family: var(--mono); font-size: .74rem; display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.eventos li { display: grid; grid-template-columns: 2.2em minmax(0, 1fr); gap: 6px; }
+.eventos li span:first-child { color: var(--tenue); text-align: right; }
+
+/* estado de obra */
+.obra { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.plan { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.plan li { display: grid; grid-template-columns: 1.6em minmax(0, 1fr) auto; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--linea); align-items: baseline; }
+.plan li:last-child { border-bottom: 0; }
+.plan .n { font-family: var(--mono); color: var(--tenue); font-size: .8rem; }
+.estado-obra { font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; padding: 1px 7px; border-radius: 4px; white-space: nowrap; }
+.estado-obra.hecho { background: var(--bien); color: var(--panel); }
+.estado-obra.curso { background: var(--seguridad); color: var(--seguridad-tinta); }
+.estado-obra.pendiente { border: 1px solid var(--linea); color: var(--tenue); }
+.lista { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: .9rem; }
+.rupturas { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .86rem; }
+.rupturas li { display: grid; grid-template-columns: 1.4em minmax(0, 1fr); gap: 6px; }
+.rupturas li::before { content: "✓"; color: var(--bien); font-weight: 600; }
+.pie { color: var(--tenue); font-size: .8rem; }
+.alertas { display: grid; gap: 6px; }
+.alerta { border: 1px solid var(--mal); color: var(--mal); border-radius: 6px; padding: 6px 10px; font-size: .88rem; font-weight: 500; }
+.aviso { border: 1px dashed var(--linea); border-radius: 6px; padding: 8px 12px; color: var(--tenue); font-size: .88rem; margin: 0; }
+.capas { display: flex; flex-wrap: wrap; gap: 6px; }
+.capa { font-family: var(--mono); font-size: .7rem; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--linea); color: var(--tenue); }
+.capa.lista { border-color: var(--bien); color: var(--bien); }
+.visor3d { display: block; width: 100%; aspect-ratio: 16 / 10; max-height: 72vh; background: #000; cursor: grab; touch-action: none; }
+.visor3d:active { cursor: grabbing; }
+.ayuda { margin: 0; padding: 10px 16px 0; }
+.tel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .tel { grid-template-columns: minmax(0, 1fr); } }
+.red { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.punto { width: 10px; height: 10px; border-radius: 50%; background: var(--bien); display: inline-block; }
+.punto.off { background: var(--mal); }
+.colalista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-family: var(--mono); font-size: .76rem; }
+.colalista li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 6px 8px; border: 1px solid var(--linea); border-radius: 6px; }
+.colalista li span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.json { margin: 0; max-height: 360px; overflow: auto; background: var(--bg); border: 1px solid var(--linea); border-radius: 8px; padding: 10px 12px; font-family: var(--mono); font-size: .72rem; line-height: 1.45; white-space: pre; }
+.verif { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; }
+.verif label { grid-column: 1 / -1; }
+.verif #verif-fecha { grid-column: 1 / -1; }
+.verif button { grid-column: 1 / -1; justify-self: start; }
+.campo { font: inherit; font-family: var(--mono); font-size: .9rem; padding: 8px 10px; border: 1px solid var(--linea); border-radius: 6px; background: var(--panel); color: var(--tinta); min-width: 0; }
+.campo:focus-visible { outline: 3px solid var(--seguridad); outline-offset: 1px; }
+.verif-res { border: 1px solid var(--linea); border-radius: 8px; padding: 12px 14px; display: grid; gap: 8px; }
+.verif-res.si { border-color: var(--bien); }
+.verif-res.no { border-color: var(--mal); }
+.verif-res .sello { font-size: 1.6rem; }
+.verif-res dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; font-size: .88rem; }
+.verif-res dt { color: var(--tenue); }
+.verif-res dd { margin: 0; font-family: var(--mono); overflow-wrap: anywhere; }
+.colalista li.roto { border-color: var(--mal); }
+.colalista button.enlace { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+
+<div class="contenedor">
+  <header class="cabecera">
+    <div>
+      <span class="franja" aria-hidden="true"></span>
+      <div class="etiqueta" data-t="holding"></div>
+      <h1>SAFETY VR</h1>
+      <div class="etiqueta" id="corte"></div>
+    </div>
+    <div class="idioma" role="group" aria-label="Idioma / Language">
+      <button type="button" id="es" data-idioma="es-CO" aria-pressed="true">ES-CO</button>
+      <button type="button" id="en" data-idioma="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="tira" id="tira" aria-label="Verificación"></section>
+
+  <section aria-labelledby="t-sim" style="display:grid;gap:12px">
+    <div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between">
+      <h2 id="t-sim" data-t="simTitulo"></h2>
+      <div class="capas" id="capas"></div>
+    </div>
+    <div class="sim">
+      <div class="consola">
+        <div class="consola-cab"><div><div class="etiqueta" id="v-cod"></div><div id="v-tit"></div></div><span class="nodo-id" id="v-nodo"></span></div>
+        <canvas id="visor3d" class="visor3d" aria-label="Escena 360°"></canvas>
+        <p class="pie ayuda" id="v-ayuda"></p>
+        <div class="controles" id="controles"></div>
+      </div>
+      <div class="lado">
+        <div class="tarjeta">
+          <h3 data-t="detector"></h3>
+          <div class="detector" id="detector"></div>
+        </div>
+        <div class="tarjeta">
+          <h3 data-t="rubrica"></h3>
+          <div class="rubrica" id="rubrica"></div>
+          <div class="marcador"><span class="etiqueta" data-t="puntaje"></span><span class="cifra" id="puntaje">0</span></div>
+        </div>
+        <div class="tarjeta">
+          <h3 data-t="marcas"></h3>
+          <div class="chips" id="marcas"></div>
+          <h3 data-t="eventos"></h3>
+          <ol class="eventos" id="eventos"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-tel" style="display:grid;gap:12px">
+    <div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between">
+      <h2 id="t-tel" data-t="telTitulo"></h2>
+      <span class="etiqueta" data-t="telNota"></span>
+    </div>
+    <div class="tel">
+      <div class="tarjeta">
+        <h3 data-t="colaTitulo"></h3>
+        <div class="red" id="red"></div>
+        <ul class="colalista" id="colalista"></ul>
+        <p class="pie" id="colainfo" style="margin:0"></p>
+      </div>
+      <div class="tarjeta" style="min-width:0">
+        <h3 data-t="statementsTitulo"></h3>
+        <pre class="json" id="json"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-cert" style="display:grid;gap:12px">
+    <div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between">
+      <h2 id="t-cert" data-t="certTitulo"></h2>
+      <span class="etiqueta" data-t="certNota"></span>
+    </div>
+    <div class="tel">
+      <div class="tarjeta">
+        <h3 data-t="cadenaTitulo"></h3>
+        <div class="red" id="cadenaestado"></div>
+        <ol class="colalista" id="cadena"></ol>
+      </div>
+      <div class="tarjeta" style="min-width:0">
+        <h3 data-t="verifTitulo"></h3>
+        <form class="verif" id="verif">
+          <label class="etiqueta" for="verif-codigo" data-t="verifCodigo"></label>
+          <input id="verif-codigo" class="campo" autocomplete="off" spellcheck="false" placeholder="SVR-XXXX-XXXX-XXXX">
+          <label class="etiqueta" for="verif-fecha" data-t="verifFecha"></label>
+          <select id="verif-fecha" class="campo"></select>
+          <button type="submit" class="btn primario" id="verif-btn"></button>
+        </form>
+        <div id="verif-res" class="verif-res" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="obra" aria-label="Estado de obra">
+    <div class="tarjeta">
+      <h2 data-t="planTitulo"></h2>
+      <ul class="plan" id="plan"></ul>
+    </div>
+    <div class="tarjeta">
+      <h2 data-t="sesionTitulo"></h2>
+      <h3 data-t="hechoHoy"></h3>
+      <ul class="lista" id="hecho"></ul>
+      <h3 data-t="paraRisst"></h3>
+      <ul class="lista" id="risst"></ul>
+    </div>
+    <div class="tarjeta">
+      <h2 data-t="rupturaTitulo"></h2>
+      <p class="pie" data-t="rupturaNota" style="margin:0"></p>
+      <ul class="rupturas" id="rupturas"></ul>
+    </div>
+  </section>
+  <p class="pie" id="pie"></p>
+</div>
+
+<script>
+/*__MOTOR__*/
+const DATOS = /*__DATOS__*/;
+
+// Textos de esta página de avance (no del producto). Los del visor salen de
+// mensajes/es-CO.json y mensajes/en.json.
+const T = {
+  'es-CO': {
+    holding: 'ULTRAMEDIA COMPANY · Plataforma B', corte: (f) => `Avance al ${f}`,
+    pruebas: 'Pruebas en verde', motor: 'Motor y adaptador', validador: 'Validador', idiomas: 'Catálogos de idioma', rupturas: 'Rupturas detectadas', combinaciones: 'Recorridos de EC-01 que terminan',
+    simTitulo: 'Visor 360° en vivo · EC-01', capas: ['maquina.ts', 'sesion.ts', 'presentador.ts', 'visor WebGL'],
+    detector: 'Instrumentos', rubrica: 'Rúbrica', puntaje: 'Puntaje', marcas: 'Marcas obtenidas', eventos: 'Eventos fechados para xAPI', sinMarcas: 'Todavía ninguna',
+    reiniciar: 'Reiniciar', abandonar: 'Abandonar sesión', agotar: 'Agotar el tiempo ahora', pausar: 'Quitarse el visor', reanudar: 'Ponerse el visor',
+    rvMarco: 'La realidad virtual no se puede abrir dentro de esta vista previa. En el visor se abre desde la app.',
+    sinWebgl: 'Este navegador no tiene WebGL 2, que el visor necesita.',
+    planTitulo: 'Plan de obra', sesionTitulo: 'Esta sesión', hechoHoy: 'Hecho', paraRisst: 'Por confirmar',
+    rupturaTitulo: 'Método de Ruptura', rupturaNota: 'Cada línea es un daño hecho a propósito. En todos los casos falló la prueba correcta, y el archivo se restauró.',
+    hecho: 'hecho', curso: 'en curso', pendiente: 'pendiente',
+    pie: 'Generado desde codigo/ con node tools/construir-previsualizacion.mjs. Las cifras salen de correr las pruebas en el momento de generar.',
+    telTitulo: 'Telemetría xAPI y cola sin conexión', telNota: 'Termine una sesión en el visor para ver lo que se registra',
+    colaTitulo: 'Cola del visor', statementsTitulo: 'Registros xAPI de la última sesión', red: 'Red conectada', sinRed: 'Sin red (planta)', cortarRed: 'Cortar la red', volverRed: 'Volver a conectar', sincronizar: 'Sincronizar ahora',
+    colaVacia: 'Nada pendiente.', enviadas: (n) => `${n} sesión(es) recibidas por el servidor, con la firma verificada.`, espera: (s) => `reintento en ${s} s`, pendiente: 'pendiente', recibida: 'recibida', sinStatements: 'Todavía no hay una sesión terminada.', sinCripto: 'No se pudo firmar el paquete: este navegador solo firma en una conexión segura (https).',
+    certTitulo: 'Certificados con hash encadenado', certNota: 'Apruebe EC-01 en el visor para emitir uno',
+    cadenaTitulo: 'Cadena de la organización', verifTitulo: 'Verificación pública', verifCodigo: 'Código del certificado', verifFecha: 'Verificar como si hoy fuera', verificar: 'Verificar',
+    hoy: 'Hoy', mas11: 'Dentro de 11 meses', mas13: 'Dentro de 13 meses', sinCerts: 'Todavía no hay certificados.', cadenaOk: (n) => `Cadena íntegra: ${n} eslabón(es) verificados.`,
+    cadenaRota: (i, m) => `Cadena rota en el eslabón ${i + 1}: ${m}.`, alterar: 'Alterar un certificado (prueba)', restaurar: 'Restaurar',
+    motivos: { hash_alterado: 'la huella no coincide', eslabon_roto: 'no apunta al anterior', organizacion_mezclada: 'mezcla organizaciones', inicio_invalido: 'no empieza en el primero' },
+    tipos: { inicio: 'inicio', entrada_nodo: 'entra a', requisito_faltante: 'requisito faltante en', accion: 'acción', tiempo_agotado: 'tiempo agotado en', fin: 'fin', abandono: 'abandono' },
+  },
+  en: {
+    holding: 'ULTRAMEDIA COMPANY · Platform B', corte: (f) => `Progress as of ${f}`,
+    pruebas: 'Passing tests', motor: 'Engine and adapter', validador: 'Validator', idiomas: 'Language catalogs', rupturas: 'Breakages caught', combinaciones: 'EC-01 paths that finish',
+    simTitulo: 'Live 360° viewer · EC-01', capas: ['maquina.ts', 'sesion.ts', 'presentador.ts', 'WebGL viewer'],
+    detector: 'Instruments', rubrica: 'Rubric', puntaje: 'Score', marcas: 'Flags earned', eventos: 'Timestamped events for xAPI', sinMarcas: 'None yet',
+    reiniciar: 'Restart', abandonar: 'Abandon session', agotar: 'Run out the clock', pausar: 'Take headset off', reanudar: 'Put headset on',
+    rvMarco: 'Virtual reality cannot open inside this preview. On the headset it opens from the app.',
+    sinWebgl: 'This browser has no WebGL 2, which the viewer needs.',
+    planTitulo: 'Build plan', sesionTitulo: 'This session', hechoHoy: 'Done', paraRisst: 'To confirm',
+    rupturaTitulo: 'Breakage Method', rupturaNota: 'Each line is deliberate damage. In every case the right test failed, and the file was restored.',
+    hecho: 'done', curso: 'in progress', pendiente: 'pending',
+    pie: 'Generated from codigo/ with node tools/construir-previsualizacion.mjs. Figures come from running the tests at build time.',
+    telTitulo: 'xAPI telemetry and offline queue', telNota: 'Finish a session in the viewer to see what gets recorded',
+    colaTitulo: 'Headset queue', statementsTitulo: 'xAPI statements from the last session', red: 'Network connected', sinRed: 'No network (on site)', cortarRed: 'Cut the network', volverRed: 'Reconnect', sincronizar: 'Sync now',
+    colaVacia: 'Nothing pending.', enviadas: (n) => `${n} session(s) received by the server, signature verified.`, espera: (s) => `retry in ${s} s`, pendiente: 'pending', recibida: 'received', sinStatements: 'No finished session yet.', sinCripto: 'The package could not be signed: this browser only signs over a secure connection (https).',
+    certTitulo: 'Certificates with chained hashes', certNota: 'Pass EC-01 in the viewer to issue one',
+    cadenaTitulo: 'Organization chain', verifTitulo: 'Public verification', verifCodigo: 'Certificate code', verifFecha: 'Verify as if today were', verificar: 'Verify',
+    hoy: 'Today', mas11: 'In 11 months', mas13: 'In 13 months', sinCerts: 'No certificates yet.', cadenaOk: (n) => `Chain intact: ${n} link(s) verified.`,
+    cadenaRota: (i, m) => `Chain broken at link ${i + 1}: ${m}.`, alterar: 'Tamper with a certificate (test)', restaurar: 'Restore',
+    motivos: { hash_alterado: 'the hash does not match', eslabon_roto: 'it does not point to the previous one', organizacion_mezclada: 'it mixes organizations', inicio_invalido: 'it does not start at the first one' },
+    tipos: { inicio: 'start', entrada_nodo: 'enters', requisito_faltante: 'missing requirement at', accion: 'action', tiempo_agotado: 'time out at', fin: 'end', abandono: 'abandoned' },
+  },
+};
+
+let idioma = 'es-CO';
+try { const g = localStorage.getItem('svr-idioma'); if (g === 'en' || g === 'es-CO') idioma = g; } catch (e) {}
+const t = (k) => T[idioma][k];
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+const boton = (cls, txt, fn, desactivado) => { const b = el('button', cls, txt); b.type = 'button'; b.disabled = !!desactivado; b.addEventListener('click', fn); return b; };
+
+const doc = ec01();
+// Solo para la demostración: "Agotar el tiempo ahora" adelanta el reloj inyectado.
+let desplazamiento = 0;
+let visor = null, rvOk = false;
+try {
+  visor = crearVisor({
+    canvas: $('visor3d'), doc, catalogos: DATOS.catalogos, idioma,
+    reloj: () => performance.now() + desplazamiento,
+    alCambiar: () => pintar(),
+  });
+  visor.rvDisponible().then((ok) => { rvOk = ok; pintarControles(); });
+} catch (e) {
+  $('v-ayuda').textContent = t('sinWebgl');
+}
+
+// Los botones se reconstruyen solo cuando cambia su estado: si se rehicieran
+// cada segundo, un clic que cae justo en ese momento se perdería.
+let firmaControles = '';
+function pintarControles() {
+  const ctr = $('controles');
+  if (!visor) { ctr.replaceChildren(); return; }
+  const s = visor.sesion();
+  const v = visor.vista();
+  const vivo = s.estadoActual().fase === 'en_curso';
+  const firma = [idioma, vivo, s.enPausa(), !!v.reloj, rvOk, s.estadoActual().nodo && s.estadoActual().nodo.id].join('|');
+  if (firma === firmaControles) return;
+  firmaControles = firma;
+  ctr.replaceChildren();
+  ctr.append(boton('btn primario', t('reiniciar'), () => { desplazamiento = 0; visor.reiniciar(); }));
+  ctr.append(boton('btn', s.enPausa() ? t('reanudar') : t('pausar'), () => { if (s.enPausa()) s.reanudar(); else s.pausar(); visor.refrescar(); }, !vivo));
+  ctr.append(boton('btn', t('agotar'), () => { const r = s.restanteMs(); if (r !== null) desplazamiento += r; }, !(vivo && v.reloj && !s.enPausa())));
+  ctr.append(boton('btn', t('abandonar'), () => { s.abandonar(); visor.refrescar(); }, !vivo));
+  const brv = boton('btn', traducir(DATOS.catalogos[idioma], 'visor.entrar_rv'), () => visor.entrarRV().catch(() => { $('v-ayuda').textContent = t('rvMarco'); }), !rvOk);
+  ctr.append(brv);
+}
+
+function pintarLado() {
+  if (!visor) return;
+  const v = visor.vista(), s = visor.sesion(), estado = s.estadoActual();
+  $('v-cod').textContent = `${v.encabezado.codigo} · v${v.encabezado.version}`;
+  $('v-tit').textContent = v.encabezado.titulo;
+  $('v-nodo').textContent = estado.nodo ? estado.nodo.id : '';
+  const det = $('detector'); det.replaceChildren();
+  for (const ins of v.instrumentos) for (const l of ins.canales) {
+    const c = el('div', `canal${l.alarma ? ' alarma' : ''}`);
+    c.append(el('span', 'k', l.clave), el('span', 'v', l.valor), el('span', 'r', `${l.unidad} · ${l.rango}`));
+    det.append(c);
+  }
+  const rub = $('rubrica'); rub.replaceChildren();
+  for (const cr of v.rubrica) {
+    const fila = el('div', 'criterio');
+    fila.append(el('span', 'nombre', cr.etiqueta), el('span', 'peso', `${cr.peso}`));
+    const est = el('div', 'estado');
+    est.append(el('span', `pastilla ${cr.resultado || ''}`, cr.estado));
+    if (cr.critico) est.append(el('span', 'pastilla critico', traducir(DATOS.catalogos[idioma], 'motor.rubrica.critico')));
+    fila.append(est); rub.append(fila);
+  }
+  $('puntaje').textContent = estado.puntaje;
+  const mk = $('marcas'); mk.replaceChildren();
+  if (estado.marcas.length === 0) mk.append(el('span', 'vacio', t('sinMarcas')));
+  for (const x of estado.marcas) mk.append(el('span', 'chip', x));
+  const ev = $('eventos'); ev.replaceChildren();
+  const eventos = s.eventos();
+  const t0 = eventos.length ? eventos[0].en_ms : 0;
+  for (const e of eventos) {
+    const li = el('li');
+    const seg = ((e.en_ms - t0) / 1000).toLocaleString(idioma, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const partes = [`${seg} s`, T[idioma].tipos[e.tipo], e.accion || e.nodo || '', e.criterio ? `· ${e.criterio}` : '', e.resultado ? `· ${e.resultado}` : '', e.veredicto ? `· ${e.veredicto}` : ''];
+    li.append(el('span', null, `${e.n}`), el('span', null, partes.filter(Boolean).join(' ')));
+    ev.append(li);
+  }
+  ev.scrollTop = ev.scrollHeight;
+}
+
+function pintarFijo() {
+  document.documentElement.lang = idioma === 'en' ? 'en' : 'es-CO';
+  for (const n of document.querySelectorAll('[data-t]')) n.textContent = t(n.dataset.t);
+  for (const b of document.querySelectorAll('[data-idioma]')) b.setAttribute('aria-pressed', String(b.dataset.idioma === idioma));
+  $('corte').textContent = t('corte')(DATOS.fecha[idioma]);
+  if (visor) $('v-ayuda').textContent = traducir(DATOS.catalogos[idioma], 'visor.sin_rv');
+  const capas = $('capas'); capas.replaceChildren();
+  t('capas').forEach((c) => capas.append(el('span', 'capa lista', c)));
+  const tira = $('tira'); tira.replaceChildren();
+  const fr = (x) => `${x.pass}/${x.total}`;
+  const celdas = [
+    [t('pruebas'), fr(DATOS.pruebas)], [t('motor'), fr(DATOS.motor)], [t('validador'), fr(DATOS.validador)],
+    [t('idiomas'), fr(DATOS.idiomas)], [t('rupturas'), `${DATOS.rupturas.filter((r) => r.ok).length}/${DATOS.rupturas.length}`], [t('combinaciones'), '48/48'],
+  ];
+  for (const [k, v] of celdas) { const d = el('div'); d.append(el('span', 'etiqueta', k), el('span', 'cifra verde', v)); tira.append(d); }
+  const plan = $('plan'); plan.replaceChildren();
+  DATOS.plan.forEach((p, i) => {
+    const li = el('li'); li.append(el('span', 'n', String(i + 1)), el('span', null, p.titulo[idioma]), el('span', `estado-obra ${p.estado}`, t(p.estado)));
+    plan.append(li);
+  });
+  const lista = (id, items) => { const u = $(id); u.replaceChildren(); for (const x of items) u.append(el('li', null, x[idioma])); };
+  lista('hecho', DATOS.hecho); lista('risst', DATOS.risst);
+  const ru = $('rupturas'); ru.replaceChildren();
+  for (const r of DATOS.rupturas) ru.append(el('li', null, r.nombre[idioma]));
+  $('pie').textContent = t('pie');
+}
+
+// ---------------------------------------------------------------- telemetría
+// Lo mismo que hará el visor real: al cerrar la sesión, statements xAPI +
+// paquete firmado + cola. El "servidor" de esta página verifica la firma.
+const SECRETO_DEMO = 'token-de-dispositivo-de-demostracion';
+const uuid = crearGeneradorUuidv7();
+const cola = crearCola(almacenEnMemoria());
+let certs = [], alterado = null;
+let hayRed = true, recibidas = 0, ultimosStatements = [], sesionVista = null, idSesion = null, inicioPared = 0;
+const servidor = async (p) => {
+  if (!hayRed) return 'sin_red';
+  const ok = await verificar(contenidoFirmado(p), p.firma, SECRETO_DEMO);
+  if (!ok) return 'rechazado';
+  recibidas += 1;
+  // El servidor emite el certificado de una sesión apta, encadenado al último.
+  if (p.sesion.veredicto === 'apto' && !certs.some((c) => c.sesion_id === p.sesion.id)) {
+    const c = await emitirCertificado({ paquete: p, doc, organizacion_id: 'org-demo', anterior: certs.at(-1) ?? null, ahoraMs: Date.now(), codigo: generarCodigo() });
+    certs.push(c);
+    $('verif-codigo').value = c.codigo;
+    pintarCertificados();
+  }
+  return 'aceptado';
+};
+async function sincronizar(forzar = false) { await cola.sincronizar(servidor, { forzar }); pintarTelemetria(); }
+async function alCerrarSesion(s) {
+  const estado = s.estadoActual();
+  const ctx = {
+    perfil: 'https://perfil.por-definir/xapi/safetyvr', plataforma: 'https://plataforma.por-definir',
+    trabajadorId: 'trabajador-demo', sesionId: idSesion, versionSimulador: `${doc.codigo}@${doc.version}`,
+    dispositivoId: 'navegador-demo', idioma, iniciadaEnMs: inicioPared, duracionS: s.duracionS(),
+  };
+  ultimosStatements = crearStatements(doc, s.eventos(), ctx, uuid);
+  const p = await armarPaquete({
+    id: idSesion, trabajador_id: ctx.trabajadorId, version_simulador: ctx.versionSimulador, dispositivo_id: ctx.dispositivoId,
+    escenario: doc.codigo, iniciada_en: new Date(inicioPared).toISOString(), duracion_s: s.duracionS(), puntaje: estado.puntaje, veredicto: estado.veredicto,
+  }, ultimosStatements, SECRETO_DEMO);
+  cola.encolar(p);
+  await sincronizar();
+}
+function vigilarSesion() {
+  if (!visor) return;
+  const s = visor.sesion();
+  if (s !== sesionVista) { sesionVista = s; idSesion = uuid(); inicioPared = Date.now(); sesionVista.__cerrada = false; }
+  const fase = s.estadoActual().fase;
+  if ((fase === 'terminada' || fase === 'abandonada') && !s.__cerrada) {
+    s.__cerrada = true;
+    alCerrarSesion(s).catch(() => { $('json').textContent = t('sinCripto'); });
+  }
+}
+function pintarTelemetria() {
+  const red = $('red'); red.replaceChildren();
+  const etq = el('span', 'etiqueta'); const pt = el('span', `punto${hayRed ? '' : ' off'}`);
+  etq.append(pt, document.createTextNode(` ${hayRed ? t('red') : t('sinRed')}`));
+  red.append(etq, boton('btn', hayRed ? t('cortarRed') : t('volverRed'), () => { hayRed = !hayRed; if (hayRed) sincronizar(true); else pintarTelemetria(); }), boton('btn', t('sincronizar'), () => sincronizar(true)));
+  const lista = $('colalista'); lista.replaceChildren();
+  const est = cola.estado();
+  if (est.pendientes.length === 0) lista.append(el('li', null, t('colaVacia')));
+  for (const e of est.pendientes) {
+    const li = el('li'); const faltan = Math.max(0, Math.ceil((e.proximo_intento_ms - Date.now()) / 1000));
+    li.append(el('span', null, `${e.paquete.sesion.id} · ${e.paquete.sesion.veredicto} · ${e.paquete.sesion.puntaje}`), el('span', null, e.intentos ? t('espera')(faltan) : t('pendiente')));
+    lista.append(li);
+  }
+  $('colainfo').textContent = t('enviadas')(recibidas);
+  $('json').textContent = ultimosStatements.length ? JSON.stringify(ultimosStatements, null, 2) : t('sinStatements');
+}
+// ---------------------------------------------------------------- certificados
+const hoyCivil = () => fechaCivil(Date.now());
+function fechaVerificacion() {
+  const v = $('verif-fecha').value;
+  return v === 'mas11' ? sumarMeses(hoyCivil(), 11) : v === 'mas13' ? sumarMeses(hoyCivil(), 13) : hoyCivil();
+}
+const buscarCert = async (codigo) => {
+  const i = certs.findIndex((c) => c.codigo === codigo);
+  return i < 0 ? null : { cert: certs[i], siguiente: certs[i + 1] ?? null };
+};
+async function pintarCertificados() {
+  const lista = $('cadena'); lista.replaceChildren();
+  const estado = $('cadenaestado'); estado.replaceChildren();
+  if (!certs.length) { lista.append(el('li', null, t('sinCerts'))); return; }
+  const r = await verificarCadena(certs);
+  const pt = el('span', `punto${r.ok ? '' : ' off'}`);
+  const etq = el('span', 'etiqueta'); etq.append(pt, document.createTextNode(' ' + (r.ok ? t('cadenaOk')(r.eslabones) : t('cadenaRota')(r.indice, t('motivos')[r.motivo]))));
+  estado.append(etq);
+  if (alterado) estado.append(boton('btn', t('restaurar'), () => { certs[alterado.i] = alterado.original; alterado = null; pintarCertificados(); }));
+  else estado.append(boton('btn', t('alterar'), () => {
+    // Le alargan la vigencia al primero y recalculan su huella: igual se nota.
+    const i = 0, original = certs[i];
+    const { hash: _h, ...resto } = { ...original, vigente_hasta: sumarMeses(original.vigente_hasta, 24) };
+    huellaDeCertificado(resto).then((h) => { certs[i] = { ...resto, hash: h }; alterado = { i, original }; pintarCertificados(); });
+  }));
+  certs.forEach((c, i) => {
+    const li = el('li', !r.ok && r.indice === i ? 'roto' : null);
+    const b = el('button', 'enlace', `${c.codigo} · ${c.vigente_hasta}`); b.type = 'button';
+    b.addEventListener('click', () => { $('verif-codigo').value = c.codigo; verificarAhora(); });
+    li.append(b, el('span', null, `#${c.hash.slice(0, 8)} ← ${c.hash_anterior ? '#' + c.hash_anterior.slice(0, 8) : '∅'}`));
+    lista.append(li);
+  });
+}
+async function verificarAhora() {
+  const v = await verificarCodigo($('verif-codigo').value, buscarCert, fechaVerificacion());
+  const vista = presentarVerificacion(v, DATOS.catalogos[idioma], idioma, (c) => (c === doc.codigo ? doc.titulo : null));
+  const caja = $('verif-res'); caja.replaceChildren(); caja.className = `verif-res ${vista.confiable ? 'si' : 'no'}`;
+  caja.append(el('div', `sello ${vista.confiable ? 'apto' : 'no_apto'}`, vista.titulo), el('p', null, vista.detalle));
+  if (vista.filas.length) { const dl = el('dl'); for (const f of vista.filas) dl.append(el('dt', null, f.etiqueta), el('dd', null, f.valor)); caja.append(dl); }
+}
+function pintarFormulario() {
+  $('verif-btn').textContent = t('verificar');
+  const sel = $('verif-fecha'), actual = sel.value || 'hoy'; sel.replaceChildren();
+  for (const k of ['hoy', 'mas11', 'mas13']) { const o = el('option', null, t(k)); o.value = k; sel.append(o); }
+  sel.value = actual;
+}
+$('verif').addEventListener('submit', (e) => { e.preventDefault(); verificarAhora(); });
+$('verif-fecha').addEventListener('change', () => { if ($('verif-codigo').value) verificarAhora(); });
+
+// Reintento automático, como en el visor: cada pocos segundos si hay pendientes.
+setInterval(() => { if (cola.estado().pendientes.length) { if (hayRed) sincronizar(); else pintarTelemetria(); } }, 2000);
+
+function pintar() { vigilarSesion(); pintarLado(); pintarControles(); }
+for (const b of document.querySelectorAll('[data-idioma]')) {
+  b.addEventListener('click', () => {
+    idioma = b.dataset.idioma;
+    try { localStorage.setItem('svr-idioma', idioma); } catch (e) {}
+    pintarFijo(); pintarTelemetria(); pintarFormulario(); pintarCertificados(); if ($('verif-codigo').value) verificarAhora();
+    if (visor) visor.cambiarIdioma(idioma); else pintar();
+  });
+}
+pintarFijo(); pintar(); pintarTelemetria(); pintarFormulario(); pintarCertificados();
+// El reloj del panel corre solo; la columna lateral se refresca cada segundo.
+setInterval(() => { if (visor && visor.sesion().estadoActual().fase === 'en_curso') pintar(); }, 1000);
+</script>

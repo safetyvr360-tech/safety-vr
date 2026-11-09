@@ -1,0 +1,60 @@
+# En cada push: pruebas, Método de Ruptura, visor en navegador real y, si todo
+# está en verde en la rama main, publica la demo en GitHub Pages (https).
+# La dirección de Pages sirve para abrir el visor en un Meta Quest.
+
+name: Verificar y publicar
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pruebas
+        run: npm test
+      - name: Método de Ruptura
+        run: npm run romper
+      - name: Construir la previsualización
+        run: npm run previsualizacion
+      - name: Instalar Chromium para la prueba del visor
+        run: |
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: Prueba del visor en navegador
+        run: npm run probar-visor
+      - name: Preparar el sitio
+        run: |
+          mkdir -p sitio
+          cp previsualizacion/index.html sitio/index.html
+          touch sitio/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sitio
+
+  publicar:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verificar
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

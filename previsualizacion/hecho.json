@@ -1,0 +1,26 @@
+[
+  {
+    "es-CO": "Certificado con hash encadenado: guarda la huella SHA-256 de la sesión aprobada y la del certificado anterior. Alterar un dato o borrar uno del medio rompe la cadena, aunque se recalcule la huella.",
+    "en": "Certificate with chained hash: it stores the SHA-256 hash of the passed session and of the previous certificate. Changing a field or deleting one in the middle breaks the chain, even if the hash is recalculated."
+  },
+  {
+    "es-CO": "Código SVR-XXXX-XXXX-XXXX sin letras confundibles y con dígito de control: un carácter mal tecleado se detecta antes de consultar el servidor.",
+    "en": "SVR-XXXX-XXXX-XXXX code with no confusable letters and a check digit: a mistyped character is caught before querying the server."
+  },
+  {
+    "es-CO": "Vigencia en fechas de Colombia, con fin de mes y años bisiestos; estados vigente, por vencer (30 días) y vencido.",
+    "en": "Validity in Colombian dates, handling month ends and leap years; valid, expiring soon (30 days) and expired."
+  },
+  {
+    "es-CO": "Verificación pública bilingüe: dice qué competencia y hasta cuándo, sin puntaje ni datos del trabajador (ADR-001).",
+    "en": "Bilingual public verification: it states which competency and until when, with no score or worker data (ADR-001)."
+  },
+  {
+    "es-CO": "Bug corregido: un paquete sin firma tumbaba la verificación en vez de rechazarse.",
+    "en": "Bug fixed: a package with no signature crashed verification instead of being rejected."
+  },
+  {
+    "es-CO": "Pruebe abajo: apruebe EC-01, verifique el código, mire cómo luciría en 13 meses y altere un certificado.",
+    "en": "Try it below: pass EC-01, verify the code, see how it would look in 13 months and tamper with a certificate."
+  }
+]
