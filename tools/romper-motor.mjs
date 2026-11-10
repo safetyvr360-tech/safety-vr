@@ -282,6 +282,10 @@ const GRUPOS = [
     rupturas: [
       ['la página comercial trae texto escrito a mano', 'the sales page has hand-written text', '<h2 id="planes-h">{{venta.planes.titulo}}</h2>', '<h2 id="planes-h">Planes y precios</h2>'],
       ['la página comercial usa una clave que no existe', 'the sales page uses a key that does not exist', '{{venta.planes.titulo}}', '{{venta.planes.titulos}}'],
+      ['el menú no observa ninguna sección', 'the menu observes no section', 'for (const [, s] of pares) obs.observe(s);', 'for (const [, s] of []) obs.observe(s);'],
+      ['el menú marca la sección sin que se vea', 'the menu marks the section invisibly', '.nav__link[aria-current="location"]::after { content: ""', '.nav__link[aria-current="lugar"]::after { content: ""'],
+      ['el botón secundario vuelve a fundirse con el fondo', 'the secondary button blends into the ground again', '.btn--secondary:hover { border-color: var(--line-strong); }', '.btn--secondary:hover { border-color: transparent; }'],
+      ['«Pasos» pierde su enlace a los planes', 'Steps loses its link to the plans', '<a class="link" href="#planes">{{venta.pasos.cta}}</a>', '<span>{{venta.pasos.cta}}</span>'],
     ],
   },
   {

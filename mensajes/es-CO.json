@@ -256,6 +256,7 @@
   "venta.paso2.alt": "El escenario EC-01 en el visor: el permiso de trabajo y las dos decisiones posibles",
   "venta.paso3.titulo": "3. Usted ve la competencia certificada",
   "venta.paso3.texto": "La empresa ve quién está apto y hasta cuándo, no el puntaje. Cualquier tercero verifica el certificado con su código.",
+  "venta.pasos.cta": "Ver los planes y precios",
   "venta.paso3.alt": "El certificado del escenario EC-01 con su código de verificación y su vigencia",
   "venta.videos.titulo": "Los simuladores, en video",
   "venta.videos.texto": "Grabaciones de las apps nativas dentro del visor, tal como las ve el trabajador.",

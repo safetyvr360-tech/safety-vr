@@ -128,6 +128,19 @@ test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones
   assert.ok(!/body\s*\{[^}]*user-select:\s*none/.test(css), 'el contenido debe seguir seleccionable');
 });
 
+test('el menú marca la sección visible y el botón secundario se separa del fondo', () => {
+  const html = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+  // el script observa cada sección del menú y marca su enlace con aria-current="location"
+  assert.match(html, /for \(const \[, s\] of pares\) obs\.observe\(s\);/);
+  assert.match(html, /actual\[0\]\.setAttribute\('aria-current', 'location'\)/);
+  // y la marca se ve
+  assert.match(html, /\.nav__link\[aria-current="location"\]::after \{ content: ""/);
+  // el botón secundario (tonal) lleva borde: antes quedaba a 1,02:1 de la tarjeta
+  assert.match(html, /html\[data-buttons="tonal"\] \.btn--secondary, html\[data-buttons="tonal"\] \.btn--secondary:hover \{ border-color: var\(--line-strong\); \}/);
+  // y «Pasos» termina con un enlace a los planes
+  assert.match(html, /<a class="link" href="#planes">\{\{venta\.pasos\.cta\}\}<\/a>/);
+});
+
 test('la demo tiene salida: el logo lleva a la página comercial y menú y pie a los planes', () => {
   const demo = readFileSync(`${raiz}plataforma/plantilla.html`, 'utf8');
   assert.match(demo, /<a class="marca" href="\.\.\/"/);

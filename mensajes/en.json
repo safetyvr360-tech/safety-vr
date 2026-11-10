@@ -256,6 +256,7 @@
   "venta.paso2.alt": "Scenario EC-01 in the viewer: the work permit and the two possible decisions",
   "venta.paso3.titulo": "3. You see the certified competence",
   "venta.paso3.texto": "The company sees who is qualified and until when, not the score. Anyone can verify a certificate by its code.",
+  "venta.pasos.cta": "See plans and pricing",
   "venta.paso3.alt": "The scenario EC-01 certificate with its verification code and expiry date",
   "venta.videos.titulo": "The simulators on video",
   "venta.videos.texto": "Recordings of the native apps inside the headset, as the worker sees them.",

@@ -5,6 +5,26 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (3) — avisos del gate en la página comercial
+
+De los 34 avisos no bloqueantes del gate se corrigieron los que el visitante nota
+(quedan 28; el gate sigue en **PASS**):
+- **El menú marca la sección en la que está el lector** (`aria-current="location"`
+  con un IntersectionObserver y la misma raya que el enlace activo).
+- **Botones secundarios visibles**: «Probar el escenario EC-01» y «Pedir el plan…»
+  quedaban a 1,02–1,15:1 del fondo; ahora llevan borde y un tono más marcado.
+- **Iniciales legibles** en la maqueta de la matriz (antes 3:1).
+- **«Pasos» termina con un enlace** a los planes («Ver los planes y precios» /
+  «See plans and pricing»).
+- Prueba nueva en `comercial.test.ts` y 4 rupturas nuevas.
+
+Quedan como decisión de diseño: separación desigual entre secciones con fondo,
+planes sin imagen, títulos que el verificador no reconoce en español.
+
+Pruebas: 222/222 en verde, 121 de 121 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (2) — rendimiento de las páginas públicas
 
 **Peso y nitidez de las imágenes** (verificadores perf.mjs, consistency.mjs,
