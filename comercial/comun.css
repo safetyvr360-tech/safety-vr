@@ -34,3 +34,11 @@ html[data-buttons="tonal"] .btn--secondary { background: color-mix(in oklab, var
 
 /* Maqueta de vencimientos: «211 d» en una sola línea. */
 .ui-win__age { white-space: nowrap; }
+
+/* El título del héroe collage en inglés: sus palabras son más largas que en
+   español («industrial», «simulators») y a 64 px un título de 47 caracteres
+   llegaba a 4 líneas a 1440 y pasaba el pliegue a 390. Un 8 % más chico. */
+html[lang="en"] .hero--collage h1 { font-size: calc(var(--ly-h1-col) * 0.92); }
+
+/* Palabras que no se parten en los títulos («year-1»; ver marcaSinCorte en tools/construir-comercial.mjs). */
+.sin-corte { white-space: nowrap; }

@@ -303,6 +303,8 @@ const GRUPOS = [
       ['el menú marca la sección sin que se vea', 'the menu marks the section invisibly', '.nav__link[aria-current="location"]::after { content: ""', '.nav__link[aria-current="lugar"]::after { content: ""'],
       ['el botón secundario vuelve a fundirse con el fondo', 'the secondary button blends into the ground again', '.btn--secondary:hover { border-color: var(--line-strong); }', '.btn--secondary:hover { border-color: transparent; }'],
       ['el certificado vuelve a tachar sus pasos', 'the certificate strikes its steps again', '.ui-checks .ui-check.is-done .ui-check__label::after { transform: scaleX(0); }', '.ui-check.is-done .ui-check__label::after { transform: scaleX(0); }'],
+      ['el título en inglés vuelve al tamaño del español', 'the English headline goes back to the Spanish size', 'font-size: calc(var(--ly-h1-col) * 0.92); }', 'font-size: calc(var(--ly-h1-col) * 1); }'],
+      ['el span sin corte se puede partir', 'the no-break span can wrap', '.sin-corte { white-space: nowrap; }', '.sin-corte { white-space: normal; }'],
       ['los días de vencimiento vuelven a partirse', 'the expiry days wrap again', '.ui-win__age { white-space: nowrap; }', '.ui-win__age { white-space: normal; }'],
       ['en el teléfono la raya vuelve al pie de la caja táctil', 'on the phone the line drops to the foot of the tap box', '{ background-position: 0 calc(100% - 10px), 0 calc(100% - 10px); }', '{ background-position: 0 100%, 0 100%; }'],
     ],
@@ -313,6 +315,7 @@ const GRUPOS = [
     rupturas: [
       ['el armado no copia los detalles comunes', 'the build does not copy the shared details', "'movil.css', 'comun.css', 'navegacion.js']", "'movil.css']"],
       ['«año 1» vuelve a partirse en los títulos', '"año 1" breaks across lines in headings again', ".replace(/\\baño (\\d)/g, 'año&nbsp;$1')", ''],
+      ['«year-1» vuelve a partirse en el guion', '"year-1" breaks at the hyphen again', `\n  .replace(/\\b(year)-(\\d)/gi, '<span class="sin-corte">$1-$2</span>');`, ';'],
       ['la sección de video se publica con el póster de stock', 'the video section ships with the stock poster', '  if (videos.youtube) return plantilla;', '  return plantilla;'],
       ['la marca vuelve a partirse en los títulos', 'the brand breaks across lines in headings again', 'return { html: marcaSinCorte(html), usadas: [...usadas] };', 'return { html, usadas: [...usadas] };'],
       ['la marca sin corte se aplica también fuera de los títulos', 'the unbreakable brand also applies outside headings', '/(<h[1-3][^>]*>)([\\s\\S]*?)(<\\/h[1-3]>)/g', '/(<[a-z][1-3]?[^>]*>)([\\s\\S]*?)(<\\/[a-z][1-3]?>)/g'],

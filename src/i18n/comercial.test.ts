@@ -197,6 +197,11 @@ test('la marca no se parte entre líneas en los títulos, y solo en los títulos
   assert.equal(lleno, '<h2>Uso del capital semilla de SAFETY&nbsp;VR</h2>');
   // «año 1» tampoco se parte en un título, y fuera de los títulos queda igual
   assert.equal(marcaSinCorte('<h2>Proyección del año 1</h2><p>el año 1</p>'), '<h2>Proyección del año&nbsp;1</h2><p>el año 1</p>');
+  // ni «year-1», que se parte en el guion: va en un span que no se corta
+  assert.equal(marcaSinCorte('<h2>SAFETY VR year-1 projection</h2><p>Year-1 target</p>'), '<h2>SAFETY&nbsp;VR <span class="sin-corte">year-1</span> projection</h2><p>Year-1 target</p>');
+  assert.match(readFileSync(`${raiz}comercial/comun.css`, 'utf8'), /^\.sin-corte \{ white-space: nowrap; \}/m);
+  // en inglés el título del héroe collage es un 8 % más chico: sus palabras son más largas
+  assert.match(readFileSync(`${raiz}comercial/comun.css`, 'utf8'), /^html\[lang="en"\] \.hero--collage h1 \{ font-size: calc\(var\(--ly-h1-col\) \* 0\.92\); \}/m);
 });
 
 test('sin el id de YouTube del cliente no se publica la sección de video con un póster de stock', () => {

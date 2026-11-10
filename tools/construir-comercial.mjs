@@ -55,10 +55,12 @@ export function llenar(plantilla, t, datos) {
 }
 
 // En los títulos (h1 a h3) no se parten entre dos líneas la marca («SAFETY» al
-// final de una y «VR» al comienzo de la siguiente) ni «año 1» («año» / «1 de…»).
-// Solo el texto de los títulos; los atributos, el <title> y el JSON-LD quedan
-// con el espacio normal.
-const juntar = (texto) => texto.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR').replace(/\baño (\d)/g, 'año&nbsp;$1');
+// final de una y «VR» al comienzo de la siguiente) ni «año 1» («año» / «1 de…»)
+// ni «year-1» («year-» / «1 projection»: el guion permite el corte, así que va en
+// un span .sin-corte de comun.css). Solo el texto de los títulos; los atributos,
+// el <title> y el JSON-LD quedan con el espacio normal.
+const juntar = (texto) => texto.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR').replace(/\baño (\d)/g, 'año&nbsp;$1')
+  .replace(/\b(year)-(\d)/gi, '<span class="sin-corte">$1-$2</span>');
 export function marcaSinCorte(html) {
   return html.replace(/(<h[1-3][^>]*>)([\s\S]*?)(<\/h[1-3]>)/g, (_, abre, dentro, cierra) =>
     abre + dentro.replace(/>([^<]*)</g, juntar).replace(/^([^<]*)/, juntar) + cierra);

@@ -5,6 +5,26 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (8) — la versión en inglés pasa el gate
+
+Primera vez que las páginas en inglés pasan por el gate (antes solo la española):
+- **Comercial en inglés: FAIL 3 → PASS.**
+  - El título del héroe («VR safety simulators for industrial plants») tiene
+    palabras más largas que en español: a 64 px, con 47 caracteres llegaba a 4
+    líneas a 1440 y pasaba el pliegue a 390. En inglés va un 8 % más chico
+    (`comun.css`, `html[lang="en"]`).
+  - Tres preguntas frecuentes no nombraban de qué hablaban («What equipment do we
+    need?»). Ahora nombran los simuladores, en los dos idiomas: «¿Qué visores
+    necesitan los simuladores?», «¿Los simuladores funcionan sin internet en
+    planta?», «¿La empresa ve el puntaje de cada trabajador en los simuladores?».
+- «year-1» ya no se parte en el guion en los títulos («SAFETY VR year- /
+  1 projection»): va en un span `.sin-corte`.
+- Inversión en inglés: PASS. Las cuatro páginas públicas en **PASS**.
+
+Pruebas: 225/225 en verde, 141 de 141 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (7) — la sección de video espera el video real
 
 - **La sección «Los simuladores, en video» no se publica sin el id de YouTube.**
