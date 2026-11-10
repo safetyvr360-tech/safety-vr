@@ -128,6 +128,15 @@ test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones
   assert.ok(!/body\s*\{[^}]*user-select:\s*none/.test(css), 'el contenido debe seguir seleccionable');
 });
 
+test('la demo tiene salida: el logo lleva a la página comercial y menú y pie a los planes', () => {
+  const demo = readFileSync(`${raiz}plataforma/plantilla.html`, 'utf8');
+  assert.match(demo, /<a class="marca" href="\.\.\/"/);
+  assert.equal(demo.match(/href="\.\.\/#planes" data-t="plataforma\.nav\.planes"/g)?.length, 2);
+  // en el teléfono la barra es una sola fila: el menú se esconde y queda en el pie
+  assert.match(demo, /@media \(max-width: 640px\) \{ \.barra \.nav \{ display: none; \}/);
+  for (const cat of Object.values(CATALOGOS)) assert.ok(cat['plataforma.nav.planes']);
+});
+
 test('el sitemap enlaza las dos versiones entre sí y la demo', () => {
   const x = sitemap('2026-11-09');
   for (const u of [URLS['es-CO'], URLS.en, URLS_INVERSION['es-CO'], URLS_INVERSION.en, `${URLS['es-CO']}demo/`]) assert.ok(x.includes(`<loc>${u}</loc>`), u);

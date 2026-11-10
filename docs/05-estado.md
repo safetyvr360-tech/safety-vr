@@ -5,6 +5,38 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 — demo con salida y proyección sin deformar
+
+**Demo jugable (`/demo/`)**, a donde llegan clientes e inversionistas desde
+«Probar el escenario EC-01»:
+- En el teléfono la barra superior medía 188 px y quedaba fija tapando la
+  página (el menú se partía en tres filas). Ahora es una fila de 56 px (logo e
+  idioma); los enlaces del menú están en el pie.
+- No tenía salida: el logo apuntaba a la misma página y el pie solo al avance y
+  al código. Ahora el logo lleva a la página comercial y hay «Planes y precios»
+  en el menú y en el pie (`plataforma.nav.planes`).
+- Mismas fuentes que el resto del sitio (Reddit Sans y JetBrains Mono en vez de
+  Barlow Condensed e IBM Plex). El visor 3D dibuja con las fuentes del sistema:
+  no se afecta.
+- Prueba nueva y 3 rupturas (salida, planes, barra del teléfono).
+
+**Página de inversión, proyección:** en el teléfono el gráfico SVG se estiraba
+sin conservar la proporción y las barras eran bloques deformes. Ahora son
+barras HTML como las del uso de fondos (nombre, monto, barra); la tabla con
+las notas queda al lado en pantallas grandes y se oculta en el teléfono; el
+panel iguala la altura de la tabla; en la tableta las columnas van lado a lado.
+
+**Compuerta en la página de inversión: GATE: PASS**, con una exención nueva:
+`sparse` en `#proyeccion`. El momento `line-carries-colour` oculta cada bloque
+hasta que su línea pasa y el verificador cuenta solo la tinta visible en ese
+instante (46 % una vez, pasa otra); medido en el navegador con todo visible:
+75 % a 1440 y 65 % a 820.
+
+221/221, 117 de 117. `check.mjs` limpio salvo ese mismo efecto del momento en
+la tableta.
+
+---
+
 ## 9 de noviembre de 2026 (12) — revisión a ojo de la página comercial
 
 Capturas sección por sección a 1440 y 390 px. Tres fallas que ningún

@@ -408,5 +408,6 @@
   "inv.pie.producto": "Producto",
   "inv.pie.comercial": "Página comercial",
   "inv.proy.enlace": "Ver el uso del capital semilla",
-  "inv.fondos.grafico": "Uso del capital semilla por rubro: {lista}"
+  "inv.fondos.grafico": "Uso del capital semilla por rubro: {lista}",
+  "plataforma.nav.planes": "Planes y precios"
 }

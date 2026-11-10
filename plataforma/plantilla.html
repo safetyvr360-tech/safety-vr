@@ -5,7 +5,7 @@
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap">
 <style>
 /* Plataforma SAFETY VR — una sola apariencia oscura, de sala de control
    industrial: el visor 360° es el centro y todo lo demás lo acompaña. */
@@ -22,16 +22,17 @@
   --bien: #4cc38a;
   --mal: #ff6b5e;
   --medio: #e3a23b;
-  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --texto: "IBM Plex Sans", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* las mismas fuentes de la página comercial y la de inversión: un solo sitio */
+  --display: "Reddit Sans", system-ui, sans-serif;
+  --texto: "Reddit Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--texto); font-size: 16px; line-height: 1.55; }
 .ancho { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
 a { color: var(--seguridad); }
 button { font: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--seguridad); outline-offset: 2px; }
@@ -43,10 +44,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .barra .ancho { display: flex; align-items: center; gap: 16px 24px; padding-block: 12px; flex-wrap: wrap; }
 .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--tinta); }
 .marca .franja { width: 34px; height: 10px; background: repeating-linear-gradient(135deg, var(--seguridad) 0 7px, var(--fondo) 7px 14px); }
-.marca b { font-family: var(--display); font-size: 1.45rem; letter-spacing: .04em; }
+.marca b { font-family: var(--display); font-weight: 500; font-size: 1.25rem; letter-spacing: -0.01em; }
 .nav { display: flex; gap: 18px; margin-left: auto; flex-wrap: wrap; }
 .nav a { color: var(--tenue); text-decoration: none; font-size: .92rem; }
 .nav a:hover { color: var(--tinta); }
+/* en el teléfono la barra es una sola fila (logo e idioma): con el menú partido en tres filas medía 188 px y tapaba la página; sus enlaces están en el pie */
+@media (max-width: 640px) { .barra .nav { display: none; } .barra .idioma { margin-left: auto; } .barra .ancho { flex-wrap: nowrap; } }
 .idioma { display: flex; border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; }
 .idioma button { background: transparent; color: var(--tenue); border: 0; padding: 5px 10px; font-family: var(--mono); font-size: .78rem; }
 .idioma button[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); }
@@ -86,7 +89,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .resultado { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; padding-bottom: 36px; }
 @media (max-width: 860px) { .resultado { grid-template-columns: minmax(0, 1fr); } }
 .tarjeta { background: var(--panel); border: 1px solid var(--linea); border-radius: 12px; padding: 20px; display: grid; gap: 12px; align-content: start; }
-.sello { font-family: var(--display); font-weight: 700; font-size: 2.6rem; line-height: 1; letter-spacing: .03em; }
+.sello { font-family: var(--display); font-weight: 600; font-size: 2.6rem; line-height: 1; letter-spacing: .03em; }
 .sello.apto { color: var(--bien); } .sello.no_apto { color: var(--mal); } .sello.incompleta { color: var(--medio); }
 .criterios { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .criterios li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--linea); font-size: .94rem; }
@@ -114,8 +117,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 <header class="barra">
   <div class="ancho">
-    <a class="marca" href="#inicio" aria-label="SAFETY VR"><span class="franja" aria-hidden="true"></span><b>SAFETY VR</b></a>
+    <a class="marca" href="../" aria-label="SAFETY VR"><span class="franja" aria-hidden="true"></span><b>SAFETY VR</b></a>
     <nav class="nav">
+      <a href="../#planes" data-t="plataforma.nav.planes"></a>
       <a href="#capacitacion" data-t="plataforma.nav.capacitacion"></a>
       <a href="#verificar" data-t="plataforma.nav.verificar"></a>
       <a href="../avance/" data-t="plataforma.nav.avance"></a>
@@ -191,7 +195,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <footer class="pie">
   <div class="ancho">
     <span data-t="plataforma.pie"></span>
-    <span><a href="../avance/" data-t="plataforma.nav.avance"></a> · <a href="https://github.com/safetyvr360-tech/safety-vr" data-t="plataforma.codigo_fuente"></a></span>
+    <span><a href="../#planes" data-t="plataforma.nav.planes"></a> · <a href="#verificar" data-t="plataforma.nav.verificar"></a> · <a href="../avance/" data-t="plataforma.nav.avance"></a> · <a href="https://github.com/safetyvr360-tech/safety-vr" data-t="plataforma.codigo_fuente"></a></span>
   </div>
 </footer>
 

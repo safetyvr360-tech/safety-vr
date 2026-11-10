@@ -87,8 +87,17 @@
   /* el kit pone text-wrap: pretty solo en <p>: aquí tampoco queda una palabra sola al final */
   .cifras dd, .rubro small, .grafico ol li, .rows > li > p { text-wrap: pretty; }
   .rubro i { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--accent) var(--w), color-mix(in oklab, var(--ink) 12%, transparent) var(--w)); }
+  /* el panel de barras tan alto como la tabla de al lado, con las barras repartidas en ese alto */
+  #proyeccion .grid > .span-6 { display: flex; }
+  .grafico.grafico--ingresos { flex: 1; padding: var(--s-8); gap: var(--s-8); align-content: center; }
+  .grafico--ingresos .rubro i { height: 24px; border-radius: 6px; }
+  .rubro--1 i { --barra: var(--ink); } .rubro--2 i { --barra: var(--p-accent); } .rubro--3 i { --barra: color-mix(in oklab, var(--ink) 45%, transparent); }
+  .grafico--ingresos .rubro i { background: linear-gradient(90deg, var(--barra) var(--w), color-mix(in oklab, var(--ink) 10%, transparent) var(--w)); }
+  /* la tabla trae las notas; el gráfico, solo nombres, montos y barras. En el teléfono queda el gráfico solo */
+  .grafico--ingresos .rubro small { display: none; }
+  @media (max-width: 639px) { .grafico.grafico--ingresos { padding: var(--s-5); gap: var(--s-5); } .grafico--ingresos .rubro i { height: 20px; } .rows--proyeccion { display: none; } }
   .rubro small { grid-column: 1 / -1; color: var(--muted); font-size: var(--t-small); }
-  @media (max-width: 639px) { .rubro small { display: none; } #proyeccion .grafico-ingresos { height: 400px; } }
+  @media (max-width: 639px) { .rubro small { display: none; } }
   /* las filas con su cifra a la derecha */
   .rows > li > p { margin: 0; grid-column: 1; color: var(--ink); }
   /* el mercado: tres cifras grandes en filas */
@@ -98,15 +107,6 @@
   .cifras dd { margin: 0; color: var(--ink); }
   /* la proyección: el gráfico de ingresos por línea, en un marco */
   .grafico { display: grid; gap: var(--s-4); padding: var(--s-7); border-radius: var(--r-lg); background: var(--surface); }
-  .grafico-ingresos { width: 100%; height: 160px; display: block; }
-  .grafico-ingresos .barra { fill: var(--ink); }
-  .grafico-ingresos .barra--2 { fill: var(--p-accent); }
-  .grafico-ingresos .barra--3 { fill: color-mix(in oklab, var(--ink) 45%, transparent); }
-  .grafico ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
-  .grafico ol li { display: flex; align-items: center; gap: var(--s-3); }
-  .grafico ol li i { width: 14px; height: 14px; border-radius: 3px; background: var(--ink); flex: none; }
-  .grafico ol li:nth-child(2) i { background: var(--p-accent); }
-  .grafico ol li:nth-child(3) i { background: color-mix(in oklab, var(--ink) 45%, transparent); }
   /* el cronograma: la lista de lo ya construido sobre el fondo iluminado */
   .hecho { display: grid; place-items: center; padding: var(--s-7); border-radius: var(--r-lg); background:
       radial-gradient(70% 60% at 18% 12%, color-mix(in oklab, var(--ground-surface) 80%, white), transparent 70%), var(--ground-bg); }
@@ -116,7 +116,14 @@
   @media (max-width: 639px) { .card--plan > .anual { display: none; } }
   /* tableta: las secciones apiladas ocupan dos pantallas (layout-v4.md) */
   @media (min-width: 640px) and (max-width: 1023px) {
-    #modelo, #suscripciones, #mercado, #proyeccion { --h: 2; }
+    #modelo, #suscripciones, #mercado { --h: 2; }
+    /* la proyección cabe en una pantalla con sus dos columnas lado a lado */
+    #proyeccion .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #proyeccion .grid > * { grid-column: auto; }
+    /* en la tableta, de pie, la pantalla es alta: el panel muestra también las notas y barras más gruesas */
+    #proyeccion .grafico.grafico--ingresos { gap: var(--s-9); }
+    #proyeccion .grafico--ingresos .rubro small { display: block; }
+    #proyeccion .grafico--ingresos .rubro i { height: 40px; }
     #modelo .frame { --ratio: 120% !important; }
     #mercado .frame { --ratio: 120% !important; }
   }
@@ -266,30 +273,25 @@
   </section>
 
   <!-- dark-band + line-carries-colour (moments.md): la franja de otro fondo, con la línea que la descubre -->
-  <section class="section ground-inverse" id="proyeccion" style="--hm: 2" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}' aria-labelledby="proyeccion-h">
+  <section class="section ground-inverse" id="proyeccion" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}' aria-labelledby="proyeccion-h">
     <div class="wrap">
       <div class="grid grid--top">
         <div class="span-5 stack-4">
           <h2 id="proyeccion-h">{{inv.proyeccion.titulo}}</h2>
           <p>{{inv.proyeccion.texto}}</p>
-          <ul class="rows">
+          <dl class="cifras">
+            <div><dt>{{@ing_total}}</dt><dd>{{inv.proy.total}} · {{@ing_total_usd}}</dd></div>
+          </dl>
+          <ul class="rows rows--proyeccion">
             <li><span class="rows__name">{{inv.proy.medida}}</span><span class="rows__value">{{@ing_a_medida}}</span><p>{{inv.proy.medida.nota}}</p></li>
             <li><span class="rows__name">{{inv.proy.suscripcion}}</span><span class="rows__value">{{@ing_suscripcion}}</span><p>{{inv.proy.suscripcion.nota}}</p></li>
             <li><span class="rows__name">{{inv.proy.marca}}</span><span class="rows__value">{{@ing_marca_blanca}}</span><p>{{inv.proy.marca.nota}}</p></li>
-            <li><span class="rows__name">{{inv.proy.total}}</span><span class="rows__value">{{@ing_total}}</span><p>{{@ing_total_usd}}</p></li>
           </ul>
-        </div>
-        <div class="grafico span-6 start-7">
-          {{@grafico_ingresos}}
-          <ol>
-            <li><i aria-hidden="true"></i>{{inv.proy.medida}} · {{@ing_a_medida}}</li>
-            <li><i aria-hidden="true"></i>{{inv.proy.suscripcion}} · {{@ing_suscripcion}}</li>
-            <li><i aria-hidden="true"></i>{{inv.proy.marca}} · {{@ing_marca_blanca}}</li>
-          </ol>
           <p>{{inv.proy.fijo|mes=@mes_fijo}}</p>
           <p>{{inv.proy.ebitda|cop=@ebitda|pct=@ebitda_pct}}</p>
           <p><a class="link" href="#fondos">{{inv.proy.enlace}}</a></p>
         </div>
+        <div class="span-6 start-7">{{@grafico_ingresos}}</div>
       </div>
     </div>
   </section>

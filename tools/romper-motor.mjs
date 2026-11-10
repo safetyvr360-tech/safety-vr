@@ -237,6 +237,15 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'plataforma/plantilla.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el logo de la demo no sale de la demo', 'the demo logo stays on the demo', '<a class="marca" href="../"', '<a class="marca" href="#inicio"'],
+      ['la demo pierde el enlace a los planes', 'the demo loses its link to the plans', '      <a href="../#planes" data-t="plataforma.nav.planes"></a>\n', ''],
+      ['la barra de la demo vuelve a partirse en el teléfono', 'the demo bar wraps again on the phone', '@media (max-width: 640px) { .barra .nav { display: none; }', '@media (max-width: 1px) { .barra .nav { display: none; }'],
+    ],
+  },
+  {
     archivo: 'comercial/inversion.html',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [

@@ -408,5 +408,6 @@
   "inv.pie.producto": "Product",
   "inv.pie.comercial": "Sales page",
   "inv.proy.enlace": "See the use of the seed capital",
-  "inv.fondos.grafico": "Seed capital use by item: {lista}"
+  "inv.fondos.grafico": "Seed capital use by item: {lista}",
+  "plataforma.nav.planes": "Plans and pricing"
 }

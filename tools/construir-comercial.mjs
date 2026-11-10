@@ -108,15 +108,20 @@ export function barrasMRR(mrr) {
 }
 
 // Los ingresos del año 1 por línea: tres barras horizontales proporcionales.
+// Barras horizontales en HTML (como el uso de fondos): cada línea con su nombre,
+// su monto, su barra y su nota. No se deforman a ningún ancho, a diferencia de
+// un SVG estirado sin conservar la proporción.
+const LINEAS = { a_medida: 'medida', suscripcion: 'suscripcion', marca_blanca: 'marca' };
 export function graficoIngresos(t, d) {
   const lineas = Object.entries(INGRESOS_ANIO1);
   const max = Math.max(...lineas.map(([, v]) => v));
   const filas = lineas.map(([k, v], i) => {
     const ancho = ((v / max) * 100).toFixed(1);
-    return `<rect class="barra barra--${i + 1}" x="0" y="${i * 44}" width="${ancho}%" height="28" rx="4"/>`;
+    const clave = LINEAS[k];
+    return `<div class="rubro rubro--${i + 1}"><b>${escapar(t(`inv.proy.${clave}`))}</b><span>${d[`ing_${k}`]}</span><i style="--w: ${ancho}%"></i><small>${escapar(t(`inv.proy.${clave}.nota`))}</small></div>`;
   }).join('');
   const etiqueta = t('inv.proy.grafico', { a: d.ing_a_medida, b: d.ing_suscripcion, c: d.ing_marca_blanca });
-  return `<svg class="grafico-ingresos" viewBox="0 0 100 116" preserveAspectRatio="none" role="img" aria-label="${escapar(etiqueta)}">${filas}</svg>`;
+  return `<div class="grafico grafico--ingresos" role="img" aria-label="${escapar(etiqueta)}">${filas}</div>`;
 }
 
 // El uso del capital semilla: una barra por rubro, proporcional a su parte del total.
