@@ -5,6 +5,27 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (12) — revisión a ojo de la página comercial
+
+Capturas sección por sección a 1440 y 390 px. Tres fallas que ningún
+verificador marcaba:
+- **La ventana de matrices no mostraba los nombres de las áreas** (solo el
+  círculo y «Cubierta»): sin barra lateral, la columna principal quedaba en el
+  espacio de esa barra y los nombres medían 0 px. La receta del kit solo quita
+  esa columna bajo 1024 px; ahora se quita siempre.
+- **La nota «Escenario» tapaba el texto del documento**: en el panel ancho va
+  fuera de la página, a su derecha; en el teléfono, arriba del documento.
+- **El logo de Unity, negro, no se veía sobre el fondo oscuro**: los íconos van
+  en `ic-dark`, la clase del kit que invierte los logos de un solo tono.
+- La compuerta en la página comercial (nueva vuelta): una falla, la foto del
+  visor en preguntas se agrandaba 1,56× en el teléfono (faltaba su `sizes`).
+  Corregida: **GATE: PASS**.
+- 220/220, 114 de 114; `check.mjs` sin hallazgos en las cuatro páginas.
+- Nota: el puerto 4173 lo tomó otra sesión (otro proyecto); la vista previa de
+  SAFETY VR pasó al 4180 (`.claude/launch.json`, fuera del repositorio).
+
+---
+
 ## 9 de noviembre de 2026 (11) — pulido de detalles (skill emil-design-eng)
 
 Revisión con los criterios de la skill. El kit salió limpio: sin

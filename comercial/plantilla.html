@@ -89,6 +89,15 @@
   .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
   .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
   .app > .app__pane--open > .ui-doc { padding: var(--s-6); }
+  /* la lista de matrices no lleva barra lateral: su columna principal ocupa todo el panel (sin esto, los nombres de las áreas quedaban en 0 px) */
+  .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+  /* la nota del documento, fuera de la página y a su derecha: nunca tapa el texto que explica */
+  .app .ui-doc { width: min(100%, 700px); padding-right: 0; }
+  .app .ui-doc__page { width: min(100%, 420px); }
+  .app .ui-doc__note { width: 220px; }
+  @media (max-width: 639px) {
+    .app .ui-doc__note { position: relative; top: auto !important; width: auto; order: -1; margin-bottom: var(--s-4); }
+  }
   @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
   @media (max-width: 1023px) {
     .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
@@ -319,7 +328,7 @@
             <li><span class="rows__name">{{venta.sim.caliente.titulo}}</span><p>{{venta.sim.caliente.texto}}</p></li>
           </ul>
           <p>{{venta.simuladores.tambien}}</p>
-          <div class="motores">
+          <div class="motores ic-dark">
             <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unity.svg" alt="Unity" width="39" height="40">
             <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unrealengine.svg" alt="Unreal Engine" width="40" height="40">
           </div>
@@ -423,9 +432,9 @@
           <p class="muted">{{venta.faq.texto}}</p>
           <p><a class="link" href="{{@mailto_equipo}}">{{venta.faq.enlace}}</a></p>
           <div class="frame frame--photo">
-            <img class="frame__img" src="{{@raiz}}assets/img/photo-f140087302-960.jpg" srcset="{{@raiz}}assets/img/photo-f140087302-500.jpg 500w, {{@raiz}}assets/img/photo-f140087302-960.jpg 960w, {{@raiz}}assets/img/photo-f140087302.jpg 1280w" sizes="(max-width: 1023px) 100vw, 40vw" width="1280" height="901" alt="{{venta.equipos.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="Meta Quest 3">
+            <img class="frame__img" src="{{@raiz}}assets/img/photo-f140087302-960.jpg" srcset="{{@raiz}}assets/img/photo-f140087302-500.jpg 500w, {{@raiz}}assets/img/photo-f140087302-960.jpg 960w, {{@raiz}}assets/img/photo-f140087302.jpg 1280w" sizes="(max-width: 639px) 160vw, (max-width: 1023px) 100vw, 40vw" width="1280" height="901" alt="{{venta.equipos.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="Meta Quest 3">
           </div>
-          <div class="motores">
+          <div class="motores ic-dark">
             <img class="ic ic-40 ic-land" src="{{@raiz}}assets/icons/meta.svg" alt="Meta" width="40" height="27">
             <img class="ic ic-40" src="{{@raiz}}assets/icons/google-chrome.svg" alt="Chrome" width="40" height="40">
           </div>
