@@ -5,6 +5,18 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (9) — página de inversión publicada
+
+- Subido `569daed` (antes `ec879a8`). GitHub Actions, run 42726032719: en verde.
+- En línea (200, título nuevo): `/`, `/en/`, `/inversion/`, `/en/investors/`,
+  `/demo/`, `sitemap.xml`, `credits.html`. La página de inversión publicada
+  muestra USD 4.587 de capital semilla, $10,8 M de recurrente meta y USD 310 del
+  plan Planta.
+- El usuario autorizó publicar con el capital semilla de $20 M, la proyección y
+  el EBITDA a la vista.
+
+---
+
 ## 9 de noviembre de 2026 (8) — página de inversión y precios en pesos y dólares
 
 El usuario necesita mostrar la web para buscar financiamiento: que se vea como
