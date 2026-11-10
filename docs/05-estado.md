@@ -5,6 +5,31 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (2) — rendimiento de las páginas públicas
+
+**Peso y nitidez de las imágenes** (verificadores perf.mjs, consistency.mjs,
+check.mjs y el gate del kit design-taste-frontend):
+- perf.mjs pasó de 3 FAIL y 5 WARN a **0 y 0 en las cinco páginas** (comercial
+  es-CO y en, inversión es-CO y en, demo). La página comercial en el teléfono
+  baja de 1446 KiB a unos 708 KiB transferidos.
+- Variantes nuevas de 360 px de las fotos del muro y de 600 px de la captura
+  del visor EC-01 (`comercial/assets/img/*-360.jpg`, `ec01-visor-600.jpg`),
+  generadas con Chrome sin ventana porque en esta máquina no hay ffmpeg.
+- `srcset`/`sizes` correctos en el muro, los pasos, el póster del video
+  (500 y 960 px, el constructor solo pone la variante que existe) y las
+  imágenes del menú y los íconos con `loading="lazy"`.
+- En el teléfono el muro de simuladores es una columna de tres fotos 16:10
+  (antes 2 x 2 en 4:5, que agrandaba las fotos 1,8 veces); la cuarta se oculta
+  porque los cuatro riesgos siguen en la lista. Así la sección cabe en dos
+  pantallas. El video en el teléfono queda cuadrado (antes 4:5).
+- Gate de la página comercial: **PASS** (sin FAIL; 34 avisos no bloqueantes).
+
+Pruebas: 221/221 en verde, 117 de 117 rupturas detectadas.
+Pendiente del usuario: IDs de YouTube, fotos reales, ID de Google Analytics y
+token de Search Console, monto de la semilla, las 2 cuentas pares de Instagram.
+
+---
+
 ## 10 de noviembre de 2026 — demo con salida y proyección sin deformar
 
 **Demo jugable (`/demo/`)**, a donde llegan clientes e inversionistas desde

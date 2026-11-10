@@ -119,12 +119,13 @@
   #simuladores .rows > li { grid-template-columns: minmax(0, 1fr); }
   #simuladores .rows p { margin: 0; color: var(--ink); }
   @media (max-width: 1023px) { .wall { margin-top: var(--s-7); } }
-  @media (max-width: 639px) { .wall > img { aspect-ratio: 3 / 5; } }
+  /* en el teléfono, una columna en 16:10 (un recorte mínimo de las fotos 3:2 para que la sección quepa en dos pantallas): tres fotos; los cuatro riesgos siguen en la lista */
+  @media (max-width: 639px) { .wall { grid-template-columns: minmax(0, 1fr); } .wall > img { aspect-ratio: 16 / 10; } .wall > img:nth-child(4) { display: none; } }
   /* video: el marco 16:9 que cabe en una pantalla; en el teléfono, 4:5 para llenarla */
   #videos .frame { --ratio: 56.25%; }
   #videos .frame > .ly-play { left: auto; bottom: auto; }
   @media (max-width: 1023px) { #videos .frame { --ratio: 75%; } }
-  @media (max-width: 639px) { #videos .frame { --ratio: 125%; } }
+  @media (max-width: 639px) { #videos .frame { --ratio: 100%; } }
   /* tableta (640 a 1023): estas secciones apiladas ocupan dos pantallas (layout-v4.md) */
   @media (min-width: 640px) and (max-width: 1023px) { #simuladores, #planes, #preguntas { --h: 2; } }
   /* capítulos sin fijar (tableta y teléfono): exactamente dos pantallas, con las imágenes más altas en tableta para llenarlas */
@@ -167,17 +168,17 @@
         <div class="nav__menu">
           <div class="wrap grid">
             <a class="menu-card span-4" href="#planes">
-              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f39732179-500.jpg" alt="{{venta.menu.suscripcion.alt}}" data-source="stand-in" data-subject="trabajo en alturas"></div>
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f39732179-500.jpg" width="500" height="333" loading="lazy" decoding="async" alt="{{venta.menu.suscripcion.alt}}" data-source="stand-in" data-subject="trabajo en alturas"></div>
               <span class="t-card">{{venta.menu.suscripcion.titulo}}</span>
               <span class="t-small muted">{{venta.menu.suscripcion.linea}}</span>
             </a>
             <a class="menu-card span-4" href="#simuladores">
-              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f74518880-500.jpg" alt="{{venta.menu.medida.alt}}" data-source="stand-in" data-subject="izaje"></div>
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f74518880-500.jpg" width="500" height="333" loading="lazy" decoding="async" alt="{{venta.menu.medida.alt}}" data-source="stand-in" data-subject="izaje"></div>
               <span class="t-card">{{venta.menu.medida.titulo}}</span>
               <span class="t-small muted">{{venta.menu.medida.linea}}</span>
             </a>
             <a class="menu-card span-4" href="#planes">
-              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f114420573-500.jpg" alt="{{venta.menu.marca.alt}}" data-source="stand-in" data-subject="trabajo en caliente"></div>
+              <div class="panel"><img class="frame__img" src="{{@raiz}}assets/img/photo-f114420573-500.jpg" width="500" height="333" loading="lazy" decoding="async" alt="{{venta.menu.marca.alt}}" data-source="stand-in" data-subject="trabajo en caliente"></div>
               <span class="t-card">{{venta.menu.marca.titulo}}</span>
               <span class="t-small muted">{{venta.menu.marca.linea}}</span>
             </a>
@@ -329,15 +330,15 @@
           </ul>
           <p>{{venta.simuladores.tambien}}</p>
           <div class="motores ic-dark">
-            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unity.svg" alt="Unity" width="39" height="40">
-            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unrealengine.svg" alt="Unreal Engine" width="40" height="40">
+            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unity.svg" alt="Unity" width="39" height="40" loading="lazy" decoding="async">
+            <img class="ic ic-40 ic-ink" src="{{@raiz}}assets/icons/unrealengine.svg" alt="Unreal Engine" width="40" height="40" loading="lazy" decoding="async">
           </div>
         </div>
         <div class="wall span-6 start-7">
-          <img src="{{@raiz}}assets/img/photo-f39732179-960.jpg" width="960" height="640" alt="{{venta.sim.alturas.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en alturas">
-          <img src="{{@raiz}}assets/img/photo-f97315440-500.jpg" width="500" height="333" alt="{{venta.sim.confinado.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="espacio confinado">
-          <img src="{{@raiz}}assets/img/photo-f74518880-960.jpg" width="960" height="640" alt="{{venta.sim.izaje.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="izaje">
-          <img src="{{@raiz}}assets/img/photo-f114420573-960.jpg" width="960" height="640" alt="{{venta.sim.caliente.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en caliente">
+          <img src="{{@raiz}}assets/img/photo-f39732179-960.jpg" srcset="{{@raiz}}assets/img/photo-f39732179-360.jpg 360w, {{@raiz}}assets/img/photo-f39732179-500.jpg 500w, {{@raiz}}assets/img/photo-f39732179-960.jpg 960w" sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 314px" width="960" height="640" alt="{{venta.sim.alturas.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en alturas">
+          <img src="{{@raiz}}assets/img/photo-f97315440-500.jpg" srcset="{{@raiz}}assets/img/photo-f97315440-360.jpg 360w, {{@raiz}}assets/img/photo-f97315440-500.jpg 500w" sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 314px" width="500" height="333" alt="{{venta.sim.confinado.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="espacio confinado">
+          <img src="{{@raiz}}assets/img/photo-f74518880-960.jpg" srcset="{{@raiz}}assets/img/photo-f74518880-360.jpg 360w, {{@raiz}}assets/img/photo-f74518880-500.jpg 500w, {{@raiz}}assets/img/photo-f74518880-960.jpg 960w" sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 314px" width="960" height="640" alt="{{venta.sim.izaje.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="izaje">
+          <img src="{{@raiz}}assets/img/photo-f114420573-960.jpg" srcset="{{@raiz}}assets/img/photo-f114420573-360.jpg 360w, {{@raiz}}assets/img/photo-f114420573-500.jpg 500w, {{@raiz}}assets/img/photo-f114420573-960.jpg 960w" sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 314px" width="960" height="640" alt="{{venta.sim.caliente.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="trabajo en caliente">
         </div>
       </div>
     </div>
@@ -352,17 +353,17 @@
           <li class="mo-pc__step">
             <h3>{{venta.paso1.titulo}}</h3>
             <p>{{venta.paso1.texto}}</p>
-            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/photo-f39743637-960.jpg" alt="{{venta.paso1.alt}}" width="960" height="722" data-source="stand-in" data-subject="trabajo en alturas"></figure>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/photo-f39743637-960.jpg" srcset="{{@raiz}}assets/img/photo-f39743637-500.jpg 500w, {{@raiz}}assets/img/photo-f39743637-960.jpg 960w" sizes="(max-width: 1023px) 92vw, 870px" loading="lazy" decoding="async" alt="{{venta.paso1.alt}}" width="960" height="722" data-source="stand-in" data-subject="trabajo en alturas"></figure>
           </li>
           <li class="mo-pc__step">
             <h3>{{venta.paso2.titulo}}</h3>
             <p>{{venta.paso2.texto}}</p>
-            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-visor.jpg" alt="{{venta.paso2.alt}}" width="1146" height="624" data-source="client" data-subject="visor EC-01"></figure>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-visor.jpg" srcset="{{@raiz}}assets/img/ec01-visor-600.jpg 600w, {{@raiz}}assets/img/ec01-visor.jpg 1146w" sizes="(max-width: 1023px) 92vw, 870px" loading="lazy" decoding="async" alt="{{venta.paso2.alt}}" width="1146" height="624" data-source="client" data-subject="visor EC-01"></figure>
           </li>
           <li class="mo-pc__step">
             <h3>{{venta.paso3.titulo}}</h3>
             <p>{{venta.paso3.texto}}</p>
-            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-certificado.jpg" alt="{{venta.paso3.alt}}" width="564" height="452" data-source="client" data-subject="certificado EC-01"></figure>
+            <figure class="mo-pc__visual"><img src="{{@raiz}}assets/img/ec01-certificado.jpg" loading="lazy" decoding="async" alt="{{venta.paso3.alt}}" width="564" height="452" data-source="client" data-subject="certificado EC-01"></figure>
           </li>
         </ol>
       </div>
@@ -378,7 +379,7 @@
         <p>{{venta.videos.texto}}</p>
       </div>
       <figure class="frame frame--photo fit-screen">
-        <img class="frame__img" src="{{@video_poster}}" alt="{{venta.videos.alt}}" width="960" height="653" loading="lazy" decoding="async" data-source="{{@video_fuente}}" data-subject="video de las apps">
+        <img class="frame__img" src="{{@video_poster}}" srcset="{{@video_srcset}}" sizes="(max-width: 639px) 100vw, 1280px" alt="{{venta.videos.alt}}" width="960" height="653" loading="lazy" decoding="async" data-source="{{@video_fuente}}" data-subject="video de las apps">
         {{@video_play}}
       </figure>
     </div>
@@ -435,8 +436,8 @@
             <img class="frame__img" src="{{@raiz}}assets/img/photo-f140087302-960.jpg" srcset="{{@raiz}}assets/img/photo-f140087302-500.jpg 500w, {{@raiz}}assets/img/photo-f140087302-960.jpg 960w, {{@raiz}}assets/img/photo-f140087302.jpg 1280w" sizes="(max-width: 639px) 160vw, (max-width: 1023px) 100vw, 40vw" width="1280" height="901" alt="{{venta.equipos.alt}}" loading="lazy" decoding="async" data-source="stand-in" data-subject="Meta Quest 3">
           </div>
           <div class="motores ic-dark">
-            <img class="ic ic-40 ic-land" src="{{@raiz}}assets/icons/meta.svg" alt="Meta" width="40" height="27">
-            <img class="ic ic-40" src="{{@raiz}}assets/icons/google-chrome.svg" alt="Chrome" width="40" height="40">
+            <img class="ic ic-40 ic-land" src="{{@raiz}}assets/icons/meta.svg" alt="Meta" width="40" height="27" loading="lazy" decoding="async">
+            <img class="ic ic-40" src="{{@raiz}}assets/icons/google-chrome.svg" alt="Chrome" width="40" height="40" loading="lazy" decoding="async">
           </div>
         </div>
         <div class="faq span-6 start-7">

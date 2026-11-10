@@ -174,6 +174,9 @@ export function datosDe(idioma, t, extra, pagina = 'comercial') {
   // el marco queda con su póster y sin control (sections-library.md, client-slots).
   const v = extra.videos;
   datos.video_poster = `${raiz}${v.poster}`;
+  // si el póster tiene su variante de 500 px al lado, el teléfono la usa
+  const p500 = v.poster.replace(/-960\.jpg$/, '-500.jpg');
+  datos.video_srcset = p500 !== v.poster && extra.existe(p500) ? `${raiz}${p500} 500w, ${raiz}${v.poster} 960w` : `${raiz}${v.poster} 960w`;
   datos.video_fuente = v.youtube ? 'client' : 'stand-in';
   datos.video_comentario = v.youtube
     ? `YouTube ${escapar(v.youtube)}`
@@ -194,7 +197,7 @@ export function armarComercial(raiz, catalogos, traducir) {
     const plantilla = readFileSync(`${raiz}${pagina.plantilla}`, 'utf8');
     for (const idioma of ['es-CO', 'en']) {
       const t = (clave, vars) => traducir(catalogos[idioma], clave, vars);
-      const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config }, nombre));
+      const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config, existe: (p) => existsSync(`${raiz}comercial/${p}`) }, nombre));
       const dir = `${raiz}sitio/${pagina.rutas[idioma]}`;
       mkdirSync(dir, { recursive: true });
       writeFileSync(`${dir}index.html`, html);
