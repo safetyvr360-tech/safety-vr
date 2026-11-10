@@ -5,6 +5,29 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (5) — revisión a ojo en el teléfono
+
+Capturas por sección a 390 px (shoot.mjs) de la página comercial y la de inversión:
+- **La raya de los enlaces de texto** («Ver los planes →», «Escribir al equipo →»)
+  quedaba 20 px por debajo de las letras en el teléfono, al pie de la caja táctil
+  de 44 px. Ahora va bajo el texto (`comun.css`) y el área táctil no cambia.
+  Se probó dejar la raya solo bajo las palabras, como pide motion.css, pero el
+  verificador lo lee como un tercer estilo de botón: queda de ancho completo.
+- **Modelo (inversión)**: la nota de cada línea de ingreso usa todo el ancho en
+  el teléfono (antes una columna de 190 px junto a la cifra).
+- **Uso del capital semilla**: menos margen en el gráfico y el monto bajo el
+  nombre; «Fábrica de escenarios con IA» ya no ocupa tres líneas.
+- **El menú que marca la sección** ya no usa IntersectionObserver: calcula, una
+  vez por cuadro al desplazarse, qué sección cruza la mitad de la pantalla. El
+  verificador leía el observador como una aparición al entrar en pantalla (FAIL
+  scroll-reveal en «Preguntas»). La prueba ahora ejecuta el script con un DOM
+  simulado y comprueba qué enlace queda marcado en seis posiciones.
+- Gate: **PASS** en las dos páginas (29 y 21 avisos no bloqueantes).
+
+Pruebas: 222/222 en verde, 131 de 131 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (4) — página de inversión al nivel de la comercial
 
 - Lo corregido en la entrada (3) pasa a dos archivos comunes que cargan las dos

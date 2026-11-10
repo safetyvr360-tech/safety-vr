@@ -128,6 +128,38 @@ test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones
   assert.ok(!/body\s*\{[^}]*user-select:\s*none/.test(css), 'el contenido debe seguir seleccionable');
 });
 
+// Corre comercial/navegacion.js en un DOM mínimo: secciones con [arriba, abajo]
+// en la página, una pantalla de 800 px y una lista de posiciones de scroll.
+// Devuelve, para cada posición, los enlaces marcados y su valor.
+function recorrerMenu(js: string, secciones: [number, number][], posiciones: number[]): string[][] {
+  let scrollY = 0;
+  const oyentes: Record<string, () => void> = {};
+  const enlaces = secciones.map((_, i) => {
+    const attrs: Record<string, string> = { href: `#${'abc'[i]}` };
+    return {
+      attrs,
+      getAttribute: (k: string) => attrs[k] ?? null,
+      setAttribute: (k: string, v: string) => { attrs[k] = v; },
+      removeAttribute: (k: string) => { delete attrs[k]; },
+    };
+  });
+  const porId = Object.fromEntries(secciones.map(([arriba, abajo], i) => [`#${'abc'[i]}`, {
+    getBoundingClientRect: () => ({ top: arriba - scrollY, bottom: abajo - scrollY }),
+  }]));
+  const ventana = {
+    innerHeight: 800,
+    document: { querySelectorAll: () => enlaces, querySelector: (s: string) => porId[s] ?? null },
+    addEventListener: (tipo: string, f: () => void) => { oyentes[tipo] = f; },
+    requestAnimationFrame: (f: () => void) => f(),
+  };
+  new Function(...Object.keys(ventana), js)(...Object.values(ventana));
+  return posiciones.map((y) => {
+    scrollY = y;
+    oyentes.scroll!();
+    return enlaces.filter((a) => a.attrs['aria-current']).map((a) => `${a.attrs.href}=${a.attrs['aria-current']}`);
+  });
+}
+
 test('el menú marca la sección visible y el botón secundario se separa del fondo', () => {
   const html = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
   const js = readFileSync(`${raiz}comercial/navegacion.js`, 'utf8');
@@ -140,13 +172,18 @@ test('el menú marca la sección visible y el botón secundario se separa del fo
     assert.ok(h.includes('<script src="{{@raiz}}navegacion.js" defer></script>'), `${p} no carga navegacion.js`);
   }
   assert.match(armado, /'movil\.css', 'comun\.css', 'navegacion\.js'\]/);
-  // el script observa cada sección del menú y marca su enlace con aria-current="location"
-  assert.match(js, /for \(const \[, s\] of pares\) obs\.observe\(s\);/);
-  assert.match(js, /actual\[0\]\.setAttribute\('aria-current', 'location'\)/);
+  // el script marca con aria-current="location" el enlace de la sección que cruza la mitad de la pantalla
+  const marcados = recorrerMenu(js, [[0, 900], [900, 2000], [2000, 2600]], [0, 600, 1000, 1300, 1700, 5000]);
+  assert.deepEqual(marcados, [['#a=location'], ['#b=location'], ['#b=location'], ['#b=location'], ['#c=location'], []]);
   // y la marca se ve
   assert.match(css, /^\.nav__link\[aria-current="location"\]::after \{ content: ""/m);
   // el botón secundario (tonal) lleva borde: antes quedaba a 1,02:1 de la tarjeta
   assert.match(css, /html\[data-buttons="tonal"\] \.btn--secondary, html\[data-buttons="tonal"\] \.btn--secondary:hover \{ border-color: var\(--line-strong\); \}/);
+  // en el teléfono la raya del enlace va bajo el texto, no al pie de la caja táctil de 44 px
+  assert.match(css, /@media \(max-width: 639px\) \{\n[^}]*\.link\.link\.link:is\(:hover, :focus-visible\) \{ background-position: 0 calc\(100% - 10px\), 0 calc\(100% - 10px\); \}/);
+  // en la página de inversión, en el teléfono, la nota de cada fila usa todo el ancho y el gráfico de fondos apila nombre y monto
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  assert.match(inv, /@media \(max-width: 639px\) \{\n\s*\.rows > li > p \{ grid-column: 1 \/ -1; \}\n\s*\.grafico\.grafico--fondos \{ padding: var\(--s-5\); \}\n\s*\.grafico--fondos \.rubro \{ grid-template-columns: minmax\(0, 1fr\);/);
   // y «Pasos» termina con un enlace a los planes
   assert.match(html, /<a class="link" href="#planes">\{\{venta\.pasos\.cta\}\}<\/a>/);
   // la captura del visor (1146 x 624) va en un marco 16:9: en 4:3 se agrandaba 1,38 veces

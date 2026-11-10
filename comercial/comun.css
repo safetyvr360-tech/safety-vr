@@ -15,3 +15,12 @@ html[data-buttons="tonal"] .btn--secondary { background: color-mix(in oklab, var
 @media (min-width: 1024px) and (max-width: 1279px) { .nav__link[aria-current="location"]::after { left: var(--s-2); right: var(--s-2); } }
 /* en el menú abierto del teléfono, la raya corta a la izquierda, como la del enlace actual */
 .nav.is-open .nav__link[aria-current="location"]::after { left: 0; right: auto; width: 24px; bottom: 10px; }
+
+/* La raya de los enlaces de texto («Ver los planes →») en el teléfono: el
+   enlace mide 44 px para el dedo y la raya (motion.css) quedaba al pie de esa
+   caja, a unos 20 px de las letras. Sube bajo el texto; el área táctil no
+   cambia. .link.link.link porque la regla común de motion.css pesa (0,3,1). */
+@media (max-width: 639px) {
+  html:not([data-motion="off"]) .link.link.link,
+  html:not([data-motion="off"]) .link.link.link:is(:hover, :focus-visible) { background-position: 0 calc(100% - 10px), 0 calc(100% - 10px); }
+}

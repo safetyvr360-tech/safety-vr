@@ -101,6 +101,14 @@
   @media (max-width: 639px) { .rubro small { display: none; } }
   /* las filas con su cifra a la derecha */
   .rows > li > p { margin: 0; grid-column: 1; color: var(--ink); }
+  /* en el teléfono la nota usa todo el ancho, bajo el nombre y la cifra (antes quedaba en una columna de 190 px);
+     el gráfico de fondos con menos margen y el monto bajo el nombre, para que «Fábrica de escenarios con IA» no ocupe tres líneas */
+  @media (max-width: 639px) {
+    .rows > li > p { grid-column: 1 / -1; }
+    .grafico.grafico--fondos { padding: var(--s-5); }
+    .grafico--fondos .rubro { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); }
+    .grafico--fondos .rubro span { color: var(--muted); }
+  }
   /* el mercado: tres cifras grandes en filas */
   .cifras { display: grid; gap: var(--s-5); margin: var(--s-6) 0 0; }
   .cifras > div { display: grid; gap: var(--s-1); padding-bottom: var(--s-4); border-bottom: 1px solid var(--line); }

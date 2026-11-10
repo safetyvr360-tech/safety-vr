@@ -290,8 +290,10 @@ const GRUPOS = [
     archivo: 'comercial/navegacion.js',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
-      ['el menú no observa ninguna sección', 'the menu observes no section', 'for (const [, s] of pares) obs.observe(s);', 'for (const [, s] of []) obs.observe(s);'],
-      ['el menú marca otra cosa que la sección', 'the menu marks something other than the section', "actual[0].setAttribute('aria-current', 'location')", "actual[0].setAttribute('aria-current', 'page')"],
+      ['el menú no escucha el desplazamiento', 'the menu does not listen to scrolling', "addEventListener('scroll', pedir, { passive: true });", "addEventListener('scrollend', pedir, { passive: true });"],
+      ['el menú marca la sección antes de que llegue a la mitad', 'the menu marks the section before it reaches the middle', 'if (r.top <= mitad && r.bottom > mitad) nuevo = a;', 'if (r.top <= innerHeight && r.bottom > mitad) nuevo = a;'],
+      ['el menú deja marcada la sección anterior', 'the menu leaves the previous section marked', "    if (actual) actual.removeAttribute('aria-current');\n", ''],
+      ['el menú marca otra cosa que la sección', 'the menu marks something other than the section', "nuevo.setAttribute('aria-current', 'location')", "nuevo.setAttribute('aria-current', 'page')"],
     ],
   },
   {
@@ -300,6 +302,7 @@ const GRUPOS = [
     rupturas: [
       ['el menú marca la sección sin que se vea', 'the menu marks the section invisibly', '.nav__link[aria-current="location"]::after { content: ""', '.nav__link[aria-current="lugar"]::after { content: ""'],
       ['el botón secundario vuelve a fundirse con el fondo', 'the secondary button blends into the ground again', '.btn--secondary:hover { border-color: var(--line-strong); }', '.btn--secondary:hover { border-color: transparent; }'],
+      ['en el teléfono la raya vuelve al pie de la caja táctil', 'on the phone the line drops to the foot of the tap box', '{ background-position: 0 calc(100% - 10px), 0 calc(100% - 10px); }', '{ background-position: 0 100%, 0 100%; }'],
     ],
   },
   {
@@ -313,7 +316,9 @@ const GRUPOS = [
     archivo: 'comercial/inversion.html',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
-      ['la página de inversión deja de cargar los detalles comunes', 'the investor page stops loading the shared details', '<link rel="stylesheet" href="{{@raiz}}comun.css">', ''],
+      ['en el teléfono la nota de la fila vuelve a una columna angosta', 'on the phone the row note goes back to a narrow column', '    .rows > li > p { grid-column: 1 / -1; }', '    .rows > li > p { grid-column: 1; }'],
+      ['el gráfico de fondos vuelve a partir los nombres en tres líneas', 'the funds chart splits the names into three lines again', '    .grafico--fondos .rubro { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); }', '    .grafico--fondos .rubro { gap: var(--s-1); }'],
+      ['la página de inversión deja de cargar los detalles comunes','the investor page stops loading the shared details', '<link rel="stylesheet" href="{{@raiz}}comun.css">', ''],
       ['la captura del visor vuelve al marco 4:3', 'the viewer capture goes back to the 4:3 frame', 'style="--ratio: 56.25%">\n          <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg"', 'style="--ratio: 75%">\n          <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg"'],
     ],
   },
