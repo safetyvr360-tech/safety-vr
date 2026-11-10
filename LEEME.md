@@ -27,7 +27,7 @@ El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 - `comercial/sitio.json` — ids de Google Analytics y Search Console (`null`: no se carga nada)
 - `comercial/movil.css` — la capa móvil (sin destello al tocar, toque inmediato, hover que no se pega)
 - `comercial/comun.css` y `comercial/navegacion.js` — detalles comunes de las dos páginas (botón secundario con borde, menú que marca la sección visible)
-- `comercial/videos.json` — el id de YouTube del video del cliente (`null`: el marco queda con su póster y sin botón)
+- `comercial/videos.json` — el id de YouTube del video del cliente (`null`: la sección de video no se publica hasta que llegue el id)
 - `src/i18n/comercial.test.ts` — claves en los dos catálogos, sin texto crudo, texto escapado
 - La demo jugable quedó en `sitio/demo/`; el avance, en `sitio/avance/`
 
