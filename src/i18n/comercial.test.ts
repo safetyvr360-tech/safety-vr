@@ -112,7 +112,7 @@ test('la página de inversión encuentra sus recursos y enlaza su otro idioma y 
 test('el precio «desde» de la página es el del plan Piloto, en el formato del idioma', () => {
   const extra = { videos: { youtube: null, poster: 'p.jpg' }, config: { google_analytics: null, search_console: null } };
   assert.equal(datosDe('es-CO', tDe('es-CO'), extra).piloto_desde, '$450.000');
-  assert.equal(datosDe('en', tDe('en'), extra).piloto_desde, 'COP 450,000');
+  assert.equal(datosDe('en', tDe('en'), extra).piloto_desde, ['COP', '450,000'].join(String.fromCharCode(160)));
 });
 
 test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones', () => {

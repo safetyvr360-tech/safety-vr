@@ -5,6 +5,25 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (11) — pulido de detalles (skill emil-design-eng)
+
+Revisión con los criterios de la skill. El kit salió limpio: sin
+`transition: all`, sin `ease-in`, sin entradas desde `scale(0)`, botones con
+respuesta al presionar (90 ms) y movimiento reducido respetado. Lo corregido
+estaba en lo propio:
+- Las cifras y su unidad («USD 4.587», «$10,8 M», «32,9 %») se podían partir
+  en dos líneas: ahora llevan un espacio que no se parte (U+00A0), puesto por
+  los formatos de `src/negocio/precios.ts`. Prueba nueva: ninguna cifra con
+  unidad lleva un espacio normal; ruptura que lo devuelve.
+- Cifras tabulares en los precios de los planes, los montos del uso de fondos y
+  la leyenda de ingresos: los dígitos quedan alineados en columna.
+- `text-wrap: pretty` en notas y descripciones que no son `<p>` (el kit solo lo
+  pone en párrafos): sin palabras solas al final.
+- Se dejó a propósito: las barras de los gráficos no se animan al hacer scroll.
+- 220/220, 114 de 114. `check.mjs` y copy-lint sin hallazgos en las cuatro páginas.
+
+---
+
 ## 9 de noviembre de 2026 (10) — capa móvil (skill mobile-native)
 
 El usuario pidió seguir mejorando con las skills instaladas que se le

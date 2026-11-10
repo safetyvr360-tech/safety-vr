@@ -138,6 +138,8 @@
   .card--plan.is-featured { position: relative; }
   .badge--esquina { position: absolute; top: var(--s-6); right: var(--s-6); margin: 0; }
   .card--plan .price .t-stat { white-space: nowrap; }
+  /* cifras en columna: dígitos del mismo ancho, alineados como en un estado financiero */
+  .card--plan .price, .card--plan .t-small { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>

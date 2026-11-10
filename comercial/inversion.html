@@ -83,6 +83,9 @@
   .grafico--fondos { gap: var(--s-5); }
   .rubro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-1) var(--s-4); }
   .rubro b { font-weight: 500; }
+  .rubro span, .grafico ol li { font-variant-numeric: tabular-nums; }
+  /* el kit pone text-wrap: pretty solo en <p>: aquí tampoco queda una palabra sola al final */
+  .cifras dd, .rubro small, .grafico ol li, .rows > li > p { text-wrap: pretty; }
   .rubro i { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--accent) var(--w), color-mix(in oklab, var(--ink) 12%, transparent) var(--w)); }
   .rubro small { grid-column: 1 / -1; color: var(--muted); font-size: var(--t-small); }
   @media (max-width: 639px) { .rubro small { display: none; } #proyeccion .grafico-ingresos { height: 400px; } }
@@ -120,6 +123,8 @@
   .card--plan.is-featured { position: relative; }
   .badge--esquina { position: absolute; top: var(--s-6); right: var(--s-6); margin: 0; }
   .card--plan .price .t-stat { white-space: nowrap; }
+  /* cifras en columna: dígitos del mismo ancho, alineados como en un estado financiero */
+  .card--plan .price, .card--plan .t-small { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
