@@ -20,6 +20,9 @@ Primera vez que las páginas en inglés pasan por el gate (antes solo la españo
 - «year-1» ya no se parte en el guion en los títulos («SAFETY VR year- /
   1 projection»): va en un span `.sin-corte`.
 - Inversión en inglés: PASS. Las cuatro páginas públicas en **PASS**.
+- **Publicado**: las entradas (2) a (8) y los commits b21e222 y e42ce85 se
+  subieron a `main` (11 commits hasta ad5e197); GitHub Actions en verde y las
+  cuatro páginas responden 200 en GitHub Pages.
 
 Pruebas: 225/225 en verde, 141 de 141 rupturas detectadas.
 
