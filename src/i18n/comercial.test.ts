@@ -115,6 +115,19 @@ test('el precio «desde» de la página es el del plan Piloto, en el formato del
   assert.equal(datosDe('en', tDe('en'), extra).piloto_desde, 'COP 450,000');
 });
 
+test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones', () => {
+  for (const p of ['plantilla', 'inversion']) {
+    const html = readFileSync(`${raiz}comercial/${p}.html`, 'utf8');
+    assert.ok(html.includes('href="{{@raiz}}movil.css"'), `${p} no carga movil.css`);
+    assert.ok(!/user-scalable=no|maximum-scale=1/.test(html), `${p} desactiva el zoom`);
+  }
+  const css = readFileSync(`${raiz}comercial/movil.css`, 'utf8');
+  assert.match(css, /-webkit-tap-highlight-color:\s*transparent/);
+  assert.match(css, /touch-action:\s*manipulation/);
+  assert.match(css, /@media \(hover: none\)[\s\S]*\.btn--primary:hover\s*\{\s*background:\s*var\(--action\)/);
+  assert.ok(!/body\s*\{[^}]*user-select:\s*none/.test(css), 'el contenido debe seguir seleccionable');
+});
+
 test('el sitemap enlaza las dos versiones entre sí y la demo', () => {
   const x = sitemap('2026-11-09');
   for (const u of [URLS['es-CO'], URLS.en, URLS_INVERSION['es-CO'], URLS_INVERSION.en, `${URLS['es-CO']}demo/`]) assert.ok(x.includes(`<loc>${u}</loc>`), u);

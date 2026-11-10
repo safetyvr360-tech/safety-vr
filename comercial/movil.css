@@ -1,0 +1,32 @@
+/* Capa móvil de las páginas públicas de SAFETY VR (skill mobile-native).
+   Va después del kit de diseño y no lo edita: corrige lo que delata «una web»
+   en un teléfono. Cada regla con su porqué. */
+
+/* El destello gris o azul que iOS y Android pintan sobre lo que se toca. La
+   respuesta al toque ya la dan los botones con :active (motion.css). */
+html { -webkit-tap-highlight-color: transparent; }
+
+/* Sin la espera de 300 ms del doble toque: el clic sale apenas se levanta el dedo. */
+a, button, [role="button"] { touch-action: manipulation; }
+
+/* Mantener el dedo sobre un botón no debe seleccionar su texto ni abrir el menú
+   de copiar o compartir. Solo en controles: el contenido sigue seleccionable. */
+.btn, .nav__toggle, .nav__link, .pill, .badge, .menu-card {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Un dispositivo táctil «finge» el hover con el primer toque y lo deja pegado.
+   Los :hover del kit no están detrás de (hover: hover), así que aquí, en pantallas
+   sin hover real, vuelven al estado de reposo. Al volver de la app de correo,
+   el botón «Solicitar una demostración» ya no queda oscurecido. */
+@media (hover: none) {
+  .btn--primary:hover { background: var(--action); }
+  .btn--secondary:hover { background: var(--bg); border-color: var(--line-strong); }
+  html:is([data-buttons="pill"], [data-buttons="tonal"]) .btn--secondary:hover {
+    background: color-mix(in oklab, var(--ink) 8%, var(--bg));
+    border-color: transparent;
+  }
+  .menu-col a:hover, .footer ul a:hover, .footer__nav a:hover { color: inherit; }
+}

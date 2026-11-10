@@ -5,6 +5,29 @@ la entrada nueva arriba.
 
 ---
 
+## 9 de noviembre de 2026 (10) — capa móvil (skill mobile-native)
+
+El usuario pidió seguir mejorando con las skills instaladas que se le
+recomendaran: `mobile-native`, luego `emil-design-eng`, luego las de Instagram
+para el plan de marketing pendiente. Esta entrada es la primera.
+
+- `comercial/movil.css`, cargado después del kit en las dos páginas (el kit no
+  se edita): sin destello gris al tocar (`-webkit-tap-highlight-color`), sin
+  la espera de 300 ms (`touch-action: manipulation`), botones y menú no
+  seleccionables al mantener el dedo (el texto de contenido sí), y los `:hover`
+  del kit, que no estaban detrás de `(hover: hover)`, vuelven al reposo en
+  pantallas táctiles: el botón ya no queda oscurecido al volver del correo.
+- `<meta name="color-scheme" content="dark">`: la página solo tiene tema oscuro.
+- Ya estaban bien: hero en `100svh`, `viewport-fit=cover`, zonas seguras en la
+  barra móvil, zoom permitido. No hay formularios (no aplica el zoom de inputs).
+  El tirar para recargar se deja: es una página de documento.
+- Prueba nueva y 4 rupturas: 219/219, 113 de 113. `check.mjs` sin hallazgos.
+- Comprobado en el navegador integrado emulando teléfono (estilos calculados).
+  **Falta en un teléfono real:** el hover pegado, el destello y la espera del
+  toque no se reproducen en emulación.
+
+---
+
 ## 9 de noviembre de 2026 (9) — página de inversión publicada
 
 - Subido `569daed` (antes `ec879a8`). GitHub Actions, run 42726032719: en verde.

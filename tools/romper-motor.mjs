@@ -228,6 +228,22 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'comercial/movil.css',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['vuelve el destello al tocar', 'the tap flash comes back', 'html { -webkit-tap-highlight-color: transparent; }', ''],
+      ['vuelve la espera del doble toque', 'the double-tap delay comes back', 'a, button, [role="button"] { touch-action: manipulation; }', ''],
+      ['el hover queda pegado en el teléfono', 'hover sticks on the phone', '  .btn--primary:hover { background: var(--action); }\n', ''],
+    ],
+  },
+  {
+    archivo: 'comercial/inversion.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la página de inversión no carga la capa móvil', 'the investor page skips the mobile layer', '<link rel="stylesheet" href="{{@raiz}}movil.css">\n', ''],
+    ],
+  },
+  {
     archivo: 'src/negocio/precios.ts',
     prueba: 'src/negocio/precios.test.ts',
     rupturas: [
