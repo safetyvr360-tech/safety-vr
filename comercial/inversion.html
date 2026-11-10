@@ -77,6 +77,8 @@
       var(--ground-bg); }
   .hero--centred .hero__window > .ly-piece { width: min(620px, calc(100% - 2 * var(--s-4))); }
   .hero--centred .hero__window > .ly-piece > .ui-panel { width: 100%; }
+  /* el degradado inferior del marco, solo en los últimos 24 px: con el 18 % del kit tapaba «Mes 1 … Mes 12» del gráfico */
+  @media (min-width: 640px) { .hero--centred .hero__window { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent); } }
   /* el botón de pausa sobre el fondo claro: su foco en la tinta oscura, no en el amarillo */
   .hero__window .ui-pause:focus-visible { outline: 2px solid #0d1217; outline-offset: 2px; }
   /* el nombre del cierre con su interlineado completo, para que el recorte no corte las mayúsculas */

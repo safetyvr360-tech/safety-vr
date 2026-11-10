@@ -24,3 +24,13 @@ html[data-buttons="tonal"] .btn--secondary { background: color-mix(in oklab, var
   html:not([data-motion="off"]) .link.link.link,
   html:not([data-motion="off"]) .link.link.link:is(:hover, :focus-visible) { background-position: 0 calc(100% - 10px), 0 calc(100% - 10px); }
 }
+
+/* Maqueta del certificado emitido: un paso cumplido se marca con el chulo y se
+   lee entero. El tachado de la lista de tareas del kit dice «cancelado», que es
+   lo contrario de lo que certifica. Con .ui-checks delante, porque la hoja de
+   la lista carga después de esta. */
+.ui-checks .ui-check.is-done .ui-check__label { color: var(--u-ink); }
+.ui-checks .ui-check.is-done .ui-check__label::after { transform: scaleX(0); }
+
+/* Maqueta de vencimientos: «211 d» en una sola línea. */
+.ui-win__age { white-space: nowrap; }

@@ -51,7 +51,15 @@ export function llenar(plantilla, t, datos) {
     usadas.add(nombre);
     return escapar(t(nombre, vars));
   });
-  return { html, usadas: [...usadas] };
+  return { html: marcaSinCorte(html), usadas: [...usadas] };
+}
+
+// En los títulos (h1 a h3) la marca no se parte entre dos líneas: «SAFETY» al
+// final de una y «VR» al comienzo de la siguiente. Solo el texto de los títulos;
+// los atributos, el <title> y el JSON-LD quedan con el espacio normal.
+export function marcaSinCorte(html) {
+  return html.replace(/(<h[1-3][^>]*>)([\s\S]*?)(<\/h[1-3]>)/g, (_, abre, dentro, cierra) =>
+    abre + dentro.replace(/>([^<]*)</g, (m) => m.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR')).replace(/^([^<]*)/, (m) => m.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR')) + cierra);
 }
 
 const mailto = (asunto) => `mailto:${CORREO}?subject=${encodeURIComponent(asunto)}`;

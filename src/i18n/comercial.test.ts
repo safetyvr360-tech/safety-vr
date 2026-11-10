@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { llenar, escapar } from '../../tools/construir-comercial.mjs';
+import { llenar, escapar, marcaSinCorte } from '../../tools/construir-comercial.mjs';
 import { traducir } from '../motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('../..', import.meta.url));
@@ -188,6 +188,21 @@ test('el menú marca la sección visible y el botón secundario se separa del fo
   assert.match(html, /<a class="link" href="#planes">\{\{venta\.pasos\.cta\}\}<\/a>/);
   // la captura del visor (1146 x 624) va en un marco 16:9: en 4:3 se agrandaba 1,38 veces
   assert.match(readFileSync(`${raiz}comercial/inversion.html`, 'utf8'), /style="--ratio: 56\.25%">\n\s*<img class="frame__img" src="\{\{@raiz\}\}assets\/img\/ec01-visor\.jpg"/);
+});
+
+test('la marca no se parte entre líneas en los títulos, y solo en los títulos', () => {
+  const html = '<title>SAFETY VR</title><h2 id="m">Mercado de SAFETY VR en <em>SAFETY VR</em></h2><p>SAFETY VR</p><h3 aria-label="SAFETY VR">SAFETY VR</h3>';
+  assert.equal(marcaSinCorte(html), '<title>SAFETY VR</title><h2 id="m">Mercado de SAFETY&nbsp;VR en <em>SAFETY&nbsp;VR</em></h2><p>SAFETY VR</p><h3 aria-label="SAFETY VR">SAFETY&nbsp;VR</h3>');
+  const { html: lleno } = llenar('<h2>{{x}}</h2>', () => 'Uso del capital semilla de SAFETY VR', {});
+  assert.equal(lleno, '<h2>Uso del capital semilla de SAFETY&nbsp;VR</h2>');
+});
+
+test('las maquetas: el certificado no tacha sus pasos, los días no se parten y el gráfico del héroe deja ver su eje', () => {
+  const css = readFileSync(`${raiz}comercial/comun.css`, 'utf8');
+  assert.match(css, /^\.ui-checks \.ui-check\.is-done \.ui-check__label::after \{ transform: scaleX\(0\); \}/m);
+  assert.match(css, /^\.ui-win__age \{ white-space: nowrap; \}/m);
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  assert.match(inv, /@media \(min-width: 640px\) \{ \.hero--centred \.hero__window \{ -webkit-mask-image: linear-gradient\(to bottom, #000 calc\(100% - 24px\), transparent\); mask-image: linear-gradient\(to bottom, #000 calc\(100% - 24px\), transparent\); \} \}/);
 });
 
 test('la demo tiene salida: el logo lleva a la página comercial y menú y pie a los planes', () => {

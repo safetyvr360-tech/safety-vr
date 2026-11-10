@@ -5,6 +5,25 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (6) — revisión a ojo en escritorio
+
+Capturas por sección a 1440 px de las dos páginas:
+- **Certificado emitido** (héroe comercial): sus cuatro pasos salían tachados,
+  como una lista de tareas, y se leían como «cancelados». Ahora se marcan con el
+  chulo y se leen enteros (`comun.css`).
+- **Maqueta de vencimientos**: «211 d» se partía en dos líneas; ya no.
+- **«SAFETY VR» no se parte entre líneas en los títulos** («Mercado de SAFETY /
+  VR en Barranquilla»): el armado pone un espacio duro en la marca solo dentro de
+  h1 a h3 (`marcaSinCorte` en `tools/construir-comercial.mjs`); el `<title>`, los
+  atributos y el JSON-LD quedan igual.
+- **Héroe de inversión**: el degradado inferior del marco tapaba «Mes 1 … Mes 12»
+  del gráfico; ahora solo ocupa los últimos 24 px.
+- 2 pruebas nuevas y 5 rupturas. Gate: **PASS** en las dos páginas.
+
+Pruebas: 224/224 en verde, 136 de 136 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (5) — revisión a ojo en el teléfono
 
 Capturas por sección a 390 px (shoot.mjs) de la página comercial y la de inversión:
