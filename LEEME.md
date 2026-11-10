@@ -12,7 +12,7 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 10 de noviembre de 2026: **224/224 en verde, 136 de 136 rupturas detectadas.**
+Al 10 de noviembre de 2026: **225/225 en verde, 138 de 138 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 

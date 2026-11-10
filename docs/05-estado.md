@@ -5,6 +5,22 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (7) — la sección de video espera el video real
+
+- **La sección «Los simuladores, en video» no se publica sin el id de YouTube.**
+  Decía «grabaciones de las apps nativas dentro del visor» sobre un póster de
+  stock (un camión minero de Wikimedia), sin botón: prometía algo que la página
+  no tiene. `sinVideoProvisional` la quita al armar mientras
+  `comercial/videos.json` tenga `"youtube": null`; con el id vuelve sola, con su
+  disco de reproducción. Queda el comentario CLIENT FILE como recordatorio.
+- «año 1» ya no se parte en los títulos («Proyección del año / 1 de SAFETY VR»).
+- El pie de inversión enlaza «Cronograma» (antes «Trimestre 1», la primera fila).
+- Gate: **PASS** en las dos páginas.
+
+Pruebas: 225/225 en verde, 138 de 138 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (6) — revisión a ojo en escritorio
 
 Capturas por sección a 1440 px de las dos páginas:

@@ -312,6 +312,8 @@ const GRUPOS = [
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
       ['el armado no copia los detalles comunes', 'the build does not copy the shared details', "'movil.css', 'comun.css', 'navegacion.js']", "'movil.css']"],
+      ['«año 1» vuelve a partirse en los títulos', '"año 1" breaks across lines in headings again', ".replace(/\\baño (\\d)/g, 'año&nbsp;$1')", ''],
+      ['la sección de video se publica con el póster de stock', 'the video section ships with the stock poster', '  if (videos.youtube) return plantilla;', '  return plantilla;'],
       ['la marca vuelve a partirse en los títulos', 'the brand breaks across lines in headings again', 'return { html: marcaSinCorte(html), usadas: [...usadas] };', 'return { html, usadas: [...usadas] };'],
       ['la marca sin corte se aplica también fuera de los títulos', 'the unbreakable brand also applies outside headings', '/(<h[1-3][^>]*>)([\\s\\S]*?)(<\\/h[1-3]>)/g', '/(<[a-z][1-3]?[^>]*>)([\\s\\S]*?)(<\\/[a-z][1-3]?>)/g'],
     ],

@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { llenar, escapar, marcaSinCorte } from '../../tools/construir-comercial.mjs';
+import { llenar, escapar, marcaSinCorte, sinVideoProvisional } from '../../tools/construir-comercial.mjs';
 import { traducir } from '../motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('../..', import.meta.url));
@@ -195,6 +195,20 @@ test('la marca no se parte entre líneas en los títulos, y solo en los títulos
   assert.equal(marcaSinCorte(html), '<title>SAFETY VR</title><h2 id="m">Mercado de SAFETY&nbsp;VR en <em>SAFETY&nbsp;VR</em></h2><p>SAFETY VR</p><h3 aria-label="SAFETY VR">SAFETY&nbsp;VR</h3>');
   const { html: lleno } = llenar('<h2>{{x}}</h2>', () => 'Uso del capital semilla de SAFETY VR', {});
   assert.equal(lleno, '<h2>Uso del capital semilla de SAFETY&nbsp;VR</h2>');
+  // «año 1» tampoco se parte en un título, y fuera de los títulos queda igual
+  assert.equal(marcaSinCorte('<h2>Proyección del año 1</h2><p>el año 1</p>'), '<h2>Proyección del año&nbsp;1</h2><p>el año 1</p>');
+});
+
+test('sin el id de YouTube del cliente no se publica la sección de video con un póster de stock', () => {
+  const comercial = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+  assert.match(comercial, /id="videos"/);
+  const sin = sinVideoProvisional(comercial, { youtube: null });
+  assert.doesNotMatch(sin, /id="videos"/);
+  assert.match(sin, /id="pasos"[\s\S]*<\/section>\n\n[\s\S]*id="planes"/, 'las secciones vecinas quedan');
+  assert.match(sin, /CLIENT FILE video/, 'queda el recordatorio para el id');
+  assert.equal(sinVideoProvisional(comercial, { youtube: 'dQw4w9WgXcQ' }), comercial);
+  // el pie de inversión nombra la sección del cronograma, no su primera fila
+  assert.match(readFileSync(`${raiz}comercial/inversion.html`, 'utf8'), /<a href="#ruta">\{\{inv\.pie\.cronograma\}\}<\/a>/);
 });
 
 test('las maquetas: el certificado no tacha sus pasos, los días no se parten y el gráfico del héroe deja ver su eje', () => {

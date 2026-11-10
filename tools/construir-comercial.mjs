@@ -54,12 +54,14 @@ export function llenar(plantilla, t, datos) {
   return { html: marcaSinCorte(html), usadas: [...usadas] };
 }
 
-// En los títulos (h1 a h3) la marca no se parte entre dos líneas: «SAFETY» al
-// final de una y «VR» al comienzo de la siguiente. Solo el texto de los títulos;
-// los atributos, el <title> y el JSON-LD quedan con el espacio normal.
+// En los títulos (h1 a h3) no se parten entre dos líneas la marca («SAFETY» al
+// final de una y «VR» al comienzo de la siguiente) ni «año 1» («año» / «1 de…»).
+// Solo el texto de los títulos; los atributos, el <title> y el JSON-LD quedan
+// con el espacio normal.
+const juntar = (texto) => texto.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR').replace(/\baño (\d)/g, 'año&nbsp;$1');
 export function marcaSinCorte(html) {
   return html.replace(/(<h[1-3][^>]*>)([\s\S]*?)(<\/h[1-3]>)/g, (_, abre, dentro, cierra) =>
-    abre + dentro.replace(/>([^<]*)</g, (m) => m.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR')).replace(/^([^<]*)/, (m) => m.replaceAll('SAFETY VR', 'SAFETY&nbsp;VR')) + cierra);
+    abre + dentro.replace(/>([^<]*)</g, juntar).replace(/^([^<]*)/, juntar) + cierra);
 }
 
 const mailto = (asunto) => `mailto:${CORREO}?subject=${encodeURIComponent(asunto)}`;
@@ -195,6 +197,16 @@ export function datosDe(idioma, t, extra, pagina = 'comercial') {
   return datos;
 }
 
+// La sección de video dice «grabaciones de las apps dentro del visor». Sin el
+// id de YouTube del cliente solo hay un póster de stock (un camión minero), y
+// mostrarlo bajo ese texto promete algo que la página no tiene: hasta que llegue
+// el id, la sección no se publica. El comentario CLIENT FILE queda como recordatorio.
+export function sinVideoProvisional(plantilla, videos) {
+  if (videos.youtube) return plantilla;
+  const sin = plantilla.replace(/\n  <section class="section ground-surface" id="videos"[\s\S]*?<\/section>\n/, '\n');
+  return sin;
+}
+
 export function armarComercial(raiz, catalogos, traducir) {
   const videos = JSON.parse(readFileSync(`${raiz}comercial/videos.json`, 'utf8'));
   if (videos.youtube !== null && !/^[\w-]{11}$/.test(videos.youtube)) throw new Error(`id_de_youtube_invalido: ${videos.youtube}`);
@@ -202,7 +214,7 @@ export function armarComercial(raiz, catalogos, traducir) {
   const config = validarConfig(JSON.parse(readFileSync(`${raiz}comercial/sitio.json`, 'utf8')));
   const salida = {};
   for (const [nombre, pagina] of Object.entries(PAGINAS)) {
-    const plantilla = readFileSync(`${raiz}${pagina.plantilla}`, 'utf8');
+    const plantilla = sinVideoProvisional(readFileSync(`${raiz}${pagina.plantilla}`, 'utf8'), videos);
     for (const idioma of ['es-CO', 'en']) {
       const t = (clave, vars) => traducir(catalogos[idioma], clave, vars);
       const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config, existe: (p) => existsSync(`${raiz}comercial/${p}`) }, nombre));
