@@ -15,7 +15,9 @@ la entrada nueva arriba.
   con el fondo.
 - **Captura del visor EC-01 en la página de inversión**: estaba en un marco 4:3
   que la agrandaba 1,38 veces (FAIL photo-upscale); ahora va en 16:9, su
-  proporción (1146 x 624).
+  proporción (1146 x 624). En la tableta una regla la estiraba a 120 % para
+  llenar dos pantallas y cortaba el texto por los lados: ahora va en 16:9 y
+  «Modelo» ya no se fuerza a dos pantallas (check.mjs sin hallazgos a 820 y 768).
 - Gate: **PASS** en la página comercial y en la de inversión.
 
 Pruebas: 222/222 en verde, 126 de 126 rupturas detectadas.

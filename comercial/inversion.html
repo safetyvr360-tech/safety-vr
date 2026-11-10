@@ -117,7 +117,7 @@
   @media (max-width: 639px) { .card--plan > .anual { display: none; } }
   /* tableta: las secciones apiladas ocupan dos pantallas (layout-v4.md) */
   @media (min-width: 640px) and (max-width: 1023px) {
-    #modelo, #suscripciones, #mercado { --h: 2; }
+    #suscripciones, #mercado { --h: 2; }
     /* la proyección cabe en una pantalla con sus dos columnas lado a lado */
     #proyeccion .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #proyeccion .grid > * { grid-column: auto; }
@@ -125,7 +125,8 @@
     #proyeccion .grafico.grafico--ingresos { gap: var(--s-9); }
     #proyeccion .grafico--ingresos .rubro small { display: block; }
     #proyeccion .grafico--ingresos .rubro i { height: 40px; }
-    #modelo .frame { --ratio: 120% !important; }
+    /* la captura del visor no se estira en la tableta: cortaba el texto por los lados */
+    #modelo .frame { --ratio: 56.25% !important; }
     #mercado .frame { --ratio: 120% !important; }
   }
   .card--plan.is-featured { position: relative; }
