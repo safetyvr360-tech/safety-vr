@@ -5,6 +5,23 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (4) — página de inversión al nivel de la comercial
+
+- Lo corregido en la entrada (3) pasa a dos archivos comunes que cargan las dos
+  páginas: `comercial/comun.css` (botón secundario con borde, iniciales legibles,
+  raya del menú) y `comercial/navegacion.js` (el menú marca la sección visible).
+  La página de inversión los gana: su menú marca Modelo, Suscripciones, Mercado,
+  Proyección y Fondos al recorrerla, y «Ver la página comercial» ya no se funde
+  con el fondo.
+- **Captura del visor EC-01 en la página de inversión**: estaba en un marco 4:3
+  que la agrandaba 1,38 veces (FAIL photo-upscale); ahora va en 16:9, su
+  proporción (1146 x 624).
+- Gate: **PASS** en la página comercial y en la de inversión.
+
+Pruebas: 222/222 en verde, 126 de 126 rupturas detectadas.
+
+---
+
 ## 10 de noviembre de 2026 (3) — avisos del gate en la página comercial
 
 De los 34 avisos no bloqueantes del gate se corrigieron los que el visitante nota

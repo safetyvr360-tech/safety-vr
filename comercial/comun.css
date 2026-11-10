@@ -1,0 +1,17 @@
+/* Detalles comunes de las dos páginas públicas (comercial e inversión).
+   Va después del kit de diseño y no lo edita. */
+
+/* El botón secundario (tonal) con un borde que lo separa del fondo y de la
+   tarjeta de plan: sin él quedaba a 1,02–1,15:1 y parecía apagado. */
+html[data-buttons="tonal"] .btn--secondary, html[data-buttons="tonal"] .btn--secondary:hover { border-color: var(--line-strong); }
+html[data-buttons="tonal"] .btn--secondary { background: color-mix(in oklab, var(--ink) 11%, var(--bg)); }
+
+/* Las iniciales en las maquetas, más cerca de la tinta para leerse (antes 3:1). */
+.ui-avatar { color: color-mix(in oklab, oklch(0.5 0.09 var(--h)) 25%, var(--u-ink)); }
+
+/* El menú marca la sección en la que está el lector (navegacion.js), con la
+   misma raya que el enlace de la página actual. */
+.nav__link[aria-current="location"]::after { content: ""; position: absolute; left: var(--s-3); right: var(--s-3); bottom: -2px; height: 2px; border-radius: 2px; background: currentColor; }
+@media (min-width: 1024px) and (max-width: 1279px) { .nav__link[aria-current="location"]::after { left: var(--s-2); right: var(--s-2); } }
+/* en el menú abierto del teléfono, la raya corta a la izquierda, como la del enlace actual */
+.nav.is-open .nav__link[aria-current="location"]::after { left: 0; right: auto; width: 24px; bottom: 10px; }

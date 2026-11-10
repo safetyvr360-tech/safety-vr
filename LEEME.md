@@ -12,7 +12,7 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 10 de noviembre de 2026: **222/222 en verde, 121 de 121 rupturas detectadas.**
+Al 10 de noviembre de 2026: **222/222 en verde, 126 de 126 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 
@@ -26,6 +26,7 @@ El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 - `tools/seo-comercial.mjs` — canónica, hreflang, JSON-LD (servicio, planes, preguntas) y sitemap.xml
 - `comercial/sitio.json` — ids de Google Analytics y Search Console (`null`: no se carga nada)
 - `comercial/movil.css` — la capa móvil (sin destello al tocar, toque inmediato, hover que no se pega)
+- `comercial/comun.css` y `comercial/navegacion.js` — detalles comunes de las dos páginas (botón secundario con borde, menú que marca la sección visible)
 - `comercial/videos.json` — el id de YouTube del video del cliente (`null`: el marco queda con su póster y sin botón)
 - `src/i18n/comercial.test.ts` — claves en los dos catálogos, sin texto crudo, texto escapado
 - La demo jugable quedó en `sitio/demo/`; el avance, en `sitio/avance/`

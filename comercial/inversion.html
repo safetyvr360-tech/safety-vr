@@ -44,6 +44,7 @@
 <link rel="stylesheet" href="{{@raiz}}assets/layout/layout.css">
 <link rel="stylesheet" href="{{@raiz}}assets/icons/icon.css">
 <link rel="stylesheet" href="{{@raiz}}movil.css">
+<link rel="stylesheet" href="{{@raiz}}comun.css">
 <!-- los colores de la marca (start.mjs brand), los mismos de la página comercial -->
 <style>
 :root {
@@ -206,7 +207,7 @@
             <li><span class="rows__name">{{inv.linea.marca}}</span><span class="rows__value">{{inv.linea.marca.valor|base=@marca_base}}</span><p>{{inv.linea.marca.texto}}</p></li>
           </ul>
         </div>
-        <div class="frame frame--photo span-6 start-7" style="--ratio: 75%">
+        <div class="frame frame--photo span-6 start-7" style="--ratio: 56.25%">
           <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg" srcset="{{@raiz}}assets/img/ec01-visor-600.jpg 600w, {{@raiz}}assets/img/ec01-visor.jpg 1146w" sizes="(max-width: 1023px) 92vw, 628px" width="1146" height="624" alt="{{inv.modelo.alt}}" loading="lazy" decoding="async" data-source="client" data-subject="visor EC-01">
         </div>
       </div>
@@ -363,6 +364,7 @@
   <a class="btn btn--primary" href="{{@mailto_inversion}}">{{inv.accion}}</a>
 </nav>
 
+<script src="{{@raiz}}navegacion.js" defer></script>
 <script type="module" src="{{@raiz}}assets/system.js"></script>
 <script type="module" src="{{@raiz}}assets/motion/motion.js"></script>
 <script type="module" src="{{@raiz}}assets/layout/layout.js"></script>

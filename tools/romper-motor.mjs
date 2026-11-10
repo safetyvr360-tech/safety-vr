@@ -282,10 +282,39 @@ const GRUPOS = [
     rupturas: [
       ['la página comercial trae texto escrito a mano', 'the sales page has hand-written text', '<h2 id="planes-h">{{venta.planes.titulo}}</h2>', '<h2 id="planes-h">Planes y precios</h2>'],
       ['la página comercial usa una clave que no existe', 'the sales page uses a key that does not exist', '{{venta.planes.titulo}}', '{{venta.planes.titulos}}'],
+      ['«Pasos» pierde su enlace a los planes', 'Steps loses its link to the plans', '<a class="link" href="#planes">{{venta.pasos.cta}}</a>', '<span>{{venta.pasos.cta}}</span>'],
+      ['la página comercial deja de cargar el menú que marca la sección', 'the sales page stops loading the section-marking menu', '<script src="{{@raiz}}navegacion.js" defer></script>', ''],
+    ],
+  },
+  {
+    archivo: 'comercial/navegacion.js',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
       ['el menú no observa ninguna sección', 'the menu observes no section', 'for (const [, s] of pares) obs.observe(s);', 'for (const [, s] of []) obs.observe(s);'],
+      ['el menú marca otra cosa que la sección', 'the menu marks something other than the section', "actual[0].setAttribute('aria-current', 'location')", "actual[0].setAttribute('aria-current', 'page')"],
+    ],
+  },
+  {
+    archivo: 'comercial/comun.css',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
       ['el menú marca la sección sin que se vea', 'the menu marks the section invisibly', '.nav__link[aria-current="location"]::after { content: ""', '.nav__link[aria-current="lugar"]::after { content: ""'],
       ['el botón secundario vuelve a fundirse con el fondo', 'the secondary button blends into the ground again', '.btn--secondary:hover { border-color: var(--line-strong); }', '.btn--secondary:hover { border-color: transparent; }'],
-      ['«Pasos» pierde su enlace a los planes', 'Steps loses its link to the plans', '<a class="link" href="#planes">{{venta.pasos.cta}}</a>', '<span>{{venta.pasos.cta}}</span>'],
+    ],
+  },
+  {
+    archivo: 'tools/construir-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el armado no copia los detalles comunes', 'the build does not copy the shared details', "'movil.css', 'comun.css', 'navegacion.js']", "'movil.css']"],
+    ],
+  },
+  {
+    archivo: 'comercial/inversion.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la página de inversión deja de cargar los detalles comunes', 'the investor page stops loading the shared details', '<link rel="stylesheet" href="{{@raiz}}comun.css">', ''],
+      ['la captura del visor vuelve al marco 4:3', 'the viewer capture goes back to the 4:3 frame', 'style="--ratio: 56.25%">\n          <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg"', 'style="--ratio: 75%">\n          <img class="frame__img" src="{{@raiz}}assets/img/ec01-visor.jpg"'],
     ],
   },
   {

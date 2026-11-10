@@ -130,15 +130,27 @@ test('las dos páginas cargan la capa móvil y la capa mantiene sus correcciones
 
 test('el menú marca la sección visible y el botón secundario se separa del fondo', () => {
   const html = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+  const js = readFileSync(`${raiz}comercial/navegacion.js`, 'utf8');
+  const css = readFileSync(`${raiz}comercial/comun.css`, 'utf8');
+  const armado = readFileSync(`${raiz}tools/construir-comercial.mjs`, 'utf8');
+  // las dos páginas cargan los detalles comunes
+  for (const p of ['plantilla', 'inversion']) {
+    const h = readFileSync(`${raiz}comercial/${p}.html`, 'utf8');
+    assert.ok(h.includes('<link rel="stylesheet" href="{{@raiz}}comun.css">'), `${p} no carga comun.css`);
+    assert.ok(h.includes('<script src="{{@raiz}}navegacion.js" defer></script>'), `${p} no carga navegacion.js`);
+  }
+  assert.match(armado, /'movil\.css', 'comun\.css', 'navegacion\.js'\]/);
   // el script observa cada sección del menú y marca su enlace con aria-current="location"
-  assert.match(html, /for \(const \[, s\] of pares\) obs\.observe\(s\);/);
-  assert.match(html, /actual\[0\]\.setAttribute\('aria-current', 'location'\)/);
+  assert.match(js, /for \(const \[, s\] of pares\) obs\.observe\(s\);/);
+  assert.match(js, /actual\[0\]\.setAttribute\('aria-current', 'location'\)/);
   // y la marca se ve
-  assert.match(html, /\.nav__link\[aria-current="location"\]::after \{ content: ""/);
+  assert.match(css, /^\.nav__link\[aria-current="location"\]::after \{ content: ""/m);
   // el botón secundario (tonal) lleva borde: antes quedaba a 1,02:1 de la tarjeta
-  assert.match(html, /html\[data-buttons="tonal"\] \.btn--secondary, html\[data-buttons="tonal"\] \.btn--secondary:hover \{ border-color: var\(--line-strong\); \}/);
+  assert.match(css, /html\[data-buttons="tonal"\] \.btn--secondary, html\[data-buttons="tonal"\] \.btn--secondary:hover \{ border-color: var\(--line-strong\); \}/);
   // y «Pasos» termina con un enlace a los planes
   assert.match(html, /<a class="link" href="#planes">\{\{venta\.pasos\.cta\}\}<\/a>/);
+  // la captura del visor (1146 x 624) va en un marco 16:9: en 4:3 se agrandaba 1,38 veces
+  assert.match(readFileSync(`${raiz}comercial/inversion.html`, 'utf8'), /style="--ratio: 56\.25%">\n\s*<img class="frame__img" src="\{\{@raiz\}\}assets\/img\/ec01-visor\.jpg"/);
 });
 
 test('la demo tiene salida: el logo lleva a la página comercial y menú y pie a los planes', () => {

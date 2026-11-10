@@ -46,6 +46,7 @@
 <link rel="stylesheet" href="{{@raiz}}assets/layout/layout.css">
 <link rel="stylesheet" href="{{@raiz}}assets/icons/icon.css">
 <link rel="stylesheet" href="{{@raiz}}movil.css">
+<link rel="stylesheet" href="{{@raiz}}comun.css">
 <!-- colores propios de SAFETY VR (start.mjs brand): el fondo de sala de control y el amarillo de las señales de seguridad -->
 <style>
 :root {
@@ -121,13 +122,6 @@
   @media (max-width: 1023px) { .wall { margin-top: var(--s-7); } }
   /* en el teléfono, una columna en 16:10 (un recorte mínimo de las fotos 3:2 para que la sección quepa en dos pantallas): tres fotos; los cuatro riesgos siguen en la lista */
   @media (max-width: 639px) { .wall { grid-template-columns: minmax(0, 1fr); } .wall > img { aspect-ratio: 16 / 10; } .wall > img:nth-child(4) { display: none; } }
-  /* el botón secundario (tonal) con un borde que lo separa del fondo y de la tarjeta de plan; antes quedaba a 1,02:1 */
-  html[data-buttons="tonal"] .btn--secondary, html[data-buttons="tonal"] .btn--secondary:hover { border-color: var(--line-strong); }
-  html[data-buttons="tonal"] .btn--secondary { background: color-mix(in oklab, var(--ink) 11%, var(--bg)); }
-  /* las iniciales en la maqueta de la matriz: más cerca de la tinta para leerse (antes 3:1) */
-  .ui-avatar { color: color-mix(in oklab, oklch(0.5 0.09 var(--h)) 25%, var(--u-ink)); }
-  /* el menú marca la sección en la que está el lector */
-  .nav__link[aria-current="location"]::after { content: ""; position: absolute; left: var(--s-3); right: var(--s-3); bottom: -2px; height: 2px; border-radius: 2px; background: currentColor; }
   .pasos__cta { margin-top: var(--s-6); }
   /* video: el marco 16:9 que cabe en una pantalla; en el teléfono, 4:5 para llenarla */
   #videos .frame { --ratio: 56.25%; }
@@ -493,25 +487,7 @@
   <a class="btn btn--primary" href="{{@mailto}}">{{venta.accion}}</a>
 </nav>
 
-<script>
-/* el menú marca la sección visible (aria-current="location") */
-(() => {
-  const enlaces = [...document.querySelectorAll('.nav__links .nav__link[href^="#"]')];
-  const pares = enlaces.map((a) => [a, document.querySelector(a.getAttribute('href'))]).filter(([, s]) => s);
-  if (!pares.length || !('IntersectionObserver' in window)) return;
-  const visibles = new Set();
-  const marcar = () => {
-    const actual = pares.filter(([, s]) => visibles.has(s)).pop();
-    for (const [a] of pares) a.removeAttribute('aria-current');
-    if (actual) actual[0].setAttribute('aria-current', 'location');
-  };
-  const obs = new IntersectionObserver((entradas) => {
-    for (const e of entradas) e.isIntersecting ? visibles.add(e.target) : visibles.delete(e.target);
-    marcar();
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  for (const [, s] of pares) obs.observe(s);
-})();
-</script>
+<script src="{{@raiz}}navegacion.js" defer></script>
 <script type="module" src="{{@raiz}}assets/system.js"></script>
 <script type="module" src="{{@raiz}}assets/motion/motion.js"></script>
 <script type="module" src="{{@raiz}}assets/layout/layout.js"></script>
