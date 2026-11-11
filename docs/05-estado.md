@@ -5,6 +5,27 @@ la entrada nueva arriba.
 
 ---
 
+## 10 de noviembre de 2026 (9) — dominio propio: safetyvr.com.co
+
+- **En línea en https://safetyvr.com.co** (comercial es/en, inversión es/en,
+  demo, avance, robots.txt, sitemap.xml). Mismo hosting Namecheap que
+  neuralframe.art (cPanel premium44, usuario arialhkw), en su propia carpeta
+  `/home/arialhkw/safetyvr.com.co`; neuralframe.art no se tocó.
+- DNS: en Spaceship los nameservers pasaron a `dns1/dns2.namecheaphosting.com`
+  (cPanel no acepta el dominio antes). Agregado como dominio adicional.
+- SSL: Namecheap lo instaló solo a los ~17 min (SSL.com, safetyvr.com.co y www,
+  vence el 28 de mayo de 2027). El AutoSSL de cPanel no está en este plan.
+- Código: la dirección pública (`PUBLICA` en `tools/seo-comercial.mjs`,
+  `src/app/enlaces.ts`, la canónica de la demo y el hreflang de créditos) pasa
+  de GitHub Pages a `https://safetyvr.com.co/`. 225/225 y 141/141 rupturas.
+- Paquete: `entregas/safetyvr-com-co-sitio.zip` (sitio/ sin `.taste-skill`, más
+  robots.txt). **Ojo:** el `tar` de Git Bash no hace ZIP; usar
+  `C:\Windows\System32\tar.exe -a`. `respaldos/` y `entregas/` en .gitignore.
+- `.htaccess` en el servidor: http→https y www→sin www (301), sin listado de
+  carpetas, gzip. Verificado: todas las páginas 200 con certificado válido.
+- Pendiente: commit y push (GitHub Pages seguirá publicando, ahora con la canónica al
+  dominio propio); Search Console para el dominio nuevo.
+
 ## 10 de noviembre de 2026 (8) — la versión en inglés pasa el gate
 
 Primera vez que las páginas en inglés pasan por el gate (antes solo la española):

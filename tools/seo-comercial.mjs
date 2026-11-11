@@ -13,7 +13,7 @@
 import { PLANES as PRECIOS } from '../src/negocio/precios.ts';
 export { PRECIOS };
 
-export const PUBLICA = 'https://safetyvr360-tech.github.io/safety-vr/';
+export const PUBLICA = 'https://safetyvr.com.co/';
 export const URLS = { 'es-CO': PUBLICA, en: `${PUBLICA}en/` };
 export const URLS_INVERSION = { 'es-CO': `${PUBLICA}inversion/`, en: `${PUBLICA}en/investors/` };
 
