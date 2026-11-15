@@ -12,12 +12,13 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 10 de noviembre de 2026: **225/225 en verde, 141 de 141 rupturas detectadas.**
+Al 15 de noviembre de 2026: **232/232 en verde, 152 de 152 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 
 ## Página comercial (la raíz publicada)
 
+- `src/negocio/estudio.ts` — las cifras agregadas del estudio de viabilidad de Ultramedia360 (SENA, Fondo Emprender), sección «Respaldo» de la página de inversión; sin datos personales
 - `src/negocio/precios.ts`, `modelo.ts` — la única fuente de precios (COP y USD) y de las cifras del año 1; las pruebas exigen las del modelo financiero
 - `comercial/inversion.html` — la página para inversionistas (`/inversion/`, `/en/investors/`)
 - `comercial/plantilla.html` — la página de venta; sus textos son claves `venta.*` de `mensajes/*.json`

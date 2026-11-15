@@ -265,6 +265,35 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'src/negocio/estudio.ts',
+    prueba: 'src/negocio/estudio.test.ts',
+    rupturas: [
+      ['la financiación no suma el 100 %', 'the financing does not add up to 100%', 'aporte_equipos: 0.61', 'aporte_equipos: 0.6'],
+      ['otra cifra de ingresos de drones', 'another drone revenue figure', 'drones: [102_999_980', 'drones: [100_999_980'],
+      ['un año de simuladores no crece', 'a simulator year does not grow', '105_984_207, 115_289_620', '105_984_207, 105_000_000'],
+      ['el simulador cambia de precio', 'the simulator changes price', 'precio: 30_000_000', 'precio: 25_000_000'],
+      ['el VPN no cuadra con el valor actual', 'the NPV does not match the present value', 'VPN = 115_082_261', 'VPN = 125_082_261'],
+      ['los ingresos se suman del año equivocado', 'revenue is summed from the wrong year', 's + l[anio - 1]!', 's + l[anio]!'],
+    ],
+  },
+  {
+    archivo: 'tools/construir-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el VPN se muestra con la TIR', 'the NPV shows the IRR', 'd.est_vpn = formatoMillones(VPN, idioma);', 'd.est_vpn = formatoMillones(TIR, idioma);'],
+      ['el Fondo Emprender se muestra como la inversión total', 'Fondo Emprender shows as the whole investment', 'd.est_fondo = formatoMillones(fondoEmprender(), idioma);', 'd.est_fondo = formatoMillones(INVERSION_INICIAL, idioma);'],
+      ['la relación beneficio-costo pierde el decimal', 'the benefit-cost ratio loses its decimals', "{ minimumFractionDigits: 2 }).format(BENEFICIO_COSTO)", "{ maximumFractionDigits: 0 }).format(BENEFICIO_COSTO)"],
+    ],
+  },
+  {
+    archivo: 'comercial/inversion.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['los fondos ya no enlazan al respaldo', 'the funds no longer link to the backing', '<p><a class="link" href="#respaldo">{{inv.fondos.enlace}}</a></p>', ''],
+      ['el cronograma repite el fondo del respaldo', 'the timeline repeats the backing ground', '<section class="section" id="ruta"', '<section class="section ground-surface" id="ruta"'],
+    ],
+  },
+  {
     archivo: 'src/negocio/modelo.ts',
     prueba: 'src/negocio/modelo.test.ts',
     rupturas: [

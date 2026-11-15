@@ -5,6 +5,26 @@ la entrada nueva arriba.
 
 ---
 
+## 15 de noviembre de 2026 — respaldo del estudio de viabilidad de Ultramedia360
+
+- Fuente: `F:\saftyvr\Estudio viabilidad financiera Fernando Botero Zapata 2902032.xlsm`
+  (formato SENA GFPI-F-144, Fondo Emprender). Es el plan de Ultramedia360 con
+  4 líneas (fotografía 360°, drones, tours 3DVista, simuladores VR); SAFETY VR es
+  la de simuladores. El usuario eligió mostrarlo **como respaldo**, sin cambiar
+  el modelo de suscripción propio (modelo.ts sigue con el capital de $20 M).
+- `src/negocio/estudio.ts` + prueba: inversión $137,7 M (61 % equipos propios,
+  39 % Fondo Emprender = $53,7 M, sin crédito), ingresos por línea años 1–5
+  ($226,5 M → $316,2 M), simuladores 3 × $30 M = $90 M (39,7 %), TIR 34,8 %,
+  VPN $115,1 M al 12 %, B/C 1,19, recuperación año 3.
+- Inversión (es/en): sección nueva `#respaldo` entre Fondos y Cronograma, con 4
+  filas y un gráfico de los 5 años; Fondos enlaza a ella; el cronograma pasa a
+  fondo base para alternar. Prueba: ningún dato personal del estudio (cédula,
+  correos, teléfonos, dirección) llega a los catálogos.
+- 232/232 pruebas, 152/152 rupturas (11 nuevas; una no detectada al principio
+  —un año de simuladores sin crecer— obligó a probar cada línea, no solo el total).
+- Gate de inversión (es), 3 rondas: quedan abiertos `section-gaps`
+  modelo/suscripciones [1440] y `neighbour` en #respaldo [390].
+
 ## 10 de noviembre de 2026 (9) — dominio propio: safetyvr.com.co
 
 - **En línea en https://safetyvr.com.co** (comercial es/en, inversión es/en,

@@ -18,6 +18,7 @@ import {
   CAPITAL_SEMILLA, EBITDA_ANIO1, EMPRESAS_OBJETIVO_ESTIMADAS, INGRESOS_ANIO1, METAS, USO_DE_FONDOS,
   mercadoDireccionable, mesQueCubreElFijo, mrrPorMes, penetracionMeta, ticketAnual, totalIngresos,
 } from '../src/negocio/modelo.ts';
+import { ANIO_RECUPERACION, BENEFICIO_COSTO, FINANCIACION, INGRESOS, INVERSION_INICIAL, SIMULADORES, TIR, VPN, fondoEmprender, ingresosAnio } from '../src/negocio/estudio.ts';
 
 const CORREO = 'safetyvr360@gmail.com'; // contacto del proyecto (contrato/MEMORIA-DEL-PROYECTO.md)
 
@@ -104,7 +105,23 @@ export function datosNegocio(idioma, t) {
     d[`fondo_${k}`] = formatoMillones(v, idioma);
     d[`fondo_${k}_pct`] = formatoPorcentaje(v / CAPITAL_SEMILLA, idioma);
   }
+  // el estudio de viabilidad de Ultramedia360 (respaldo, src/negocio/estudio.ts)
+  d.est_tir = formatoPorcentaje(TIR, idioma);
+  d.est_vpn = formatoMillones(VPN, idioma);
+  d.est_bc = new Intl.NumberFormat(idioma === 'en' ? 'en-US' : 'es-CO', { minimumFractionDigits: 2 }).format(BENEFICIO_COSTO);
+  d.est_recuperacion = String(ANIO_RECUPERACION);
+  d.est_inversion = formatoMillones(INVERSION_INICIAL, idioma);
+  d.est_fondo = formatoMillones(fondoEmprender(), idioma);
+  d.est_fondo_pct = formatoPorcentaje(FINANCIACION.fondo_emprender, idioma);
+  d.est_aporte_pct = formatoPorcentaje(FINANCIACION.aporte_equipos, idioma);
+  d.est_ing1 = formatoMillones(ingresosAnio(1), idioma);
+  d.est_ing5 = formatoMillones(ingresosAnio(5), idioma);
+  d.est_sim_n = String(SIMULADORES.proyectos_anio);
+  d.est_sim_precio = formatoMillones(SIMULADORES.precio, idioma);
+  d.est_sim_total = formatoMillones(INGRESOS.simuladores[0], idioma);
+  d.est_sim_pct = formatoPorcentaje(INGRESOS.simuladores[0] / ingresosAnio(1), idioma);
   d.grafico_ingresos = graficoIngresos(t, d);
+  d.grafico_estudio = graficoEstudio(t, idioma);
   d.grafico_fondos = graficoFondos(t, d);
   return d;
 }
@@ -134,6 +151,19 @@ export function graficoIngresos(t, d) {
   }).join('');
   const etiqueta = t('inv.proy.grafico', { a: d.ing_a_medida, b: d.ing_suscripcion, c: d.ing_marca_blanca });
   return `<div class="grafico grafico--ingresos" role="img" aria-label="${escapar(etiqueta)}">${filas}</div>`;
+}
+
+// Los ingresos de Ultramedia360 a cinco años (estudio de viabilidad): una barra
+// por año, proporcional al mayor, con lo que aporta la línea de simuladores.
+export function graficoEstudio(t, idioma) {
+  const anios = [1, 2, 3, 4, 5].map((a) => ({ a, total: ingresosAnio(a), sim: INGRESOS.simuladores[a - 1] }));
+  const max = Math.max(...anios.map((x) => x.total));
+  const filas = anios.map(({ a, total, sim }) => {
+    const ancho = ((total / max) * 100).toFixed(1);
+    return `<div class="rubro"><b>${escapar(t('inv.respaldo.anio', { anio: a }))}</b><span>${formatoMillones(total, idioma)}</span><i style="--w: ${ancho}%"></i><small>${escapar(t('inv.respaldo.anio.nota', { cop: formatoMillones(sim, idioma) }))}</small></div>`;
+  }).join('');
+  const lista = anios.map(({ a, total }) => `${t('inv.respaldo.anio', { anio: a })} ${formatoMillones(total, idioma)}`).join(', ');
+  return `<div class="grafico grafico--estudio" role="img" aria-label="${escapar(t('inv.respaldo.grafico', { lista }))}"><p class="grafico__titulo">${escapar(t('inv.respaldo.grafico.titulo'))}</p>${filas}</div>`;
 }
 
 // El uso del capital semilla: una barra por rubro, proporcional a su parte del total.

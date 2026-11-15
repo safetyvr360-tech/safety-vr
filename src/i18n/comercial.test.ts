@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { llenar, escapar, marcaSinCorte, sinVideoProvisional } from '../../tools/construir-comercial.mjs';
+import { datosNegocio, llenar, escapar, marcaSinCorte, sinVideoProvisional } from '../../tools/construir-comercial.mjs';
 import { traducir } from '../motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('../..', import.meta.url));
@@ -250,4 +250,34 @@ test('un id de Google con forma rara revienta el armado', () => {
   assert.throws(() => validarConfig({ google_analytics: 'UA-123', search_console: null }), /id_de_analytics_invalido/);
   assert.throws(() => validarConfig({ google_analytics: null, search_console: '<x>' }), /token_de_search_console_invalido/);
   assert.doesNotThrow(() => validarConfig({ google_analytics: null, search_console: null }));
+});
+
+test('la página de inversión trae el respaldo del estudio de Ultramedia360, entre los fondos y el cronograma', () => {
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  const fondos = inv.indexOf('id="fondos"'), respaldo = inv.indexOf('id="respaldo"'), ruta = inv.indexOf('id="ruta"');
+  assert.ok(fondos > 0 && fondos < respaldo && respaldo < ruta, 'el orden es fondos, respaldo, cronograma');
+  assert.match(inv, /<a class="link" href="#respaldo">\{\{inv\.fondos\.enlace\}\}<\/a>/);
+  assert.match(inv, /<section class="section" id="ruta"/, 'el cronograma cambia de fondo para alternar con el respaldo');
+});
+
+test('las cifras del respaldo salen del estudio, en el formato de cada idioma', () => {
+  const es = datosNegocio('es-CO', (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS['es-CO'], k, v));
+  const en = datosNegocio('en', (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS.en, k, v));
+  assert.equal(es.est_tir, '34,8 %');
+  assert.equal(en.est_tir, '34.8%');
+  assert.equal(es.est_vpn, '$115,1 M');
+  assert.equal(es.est_inversion, '$137,7 M');
+  assert.equal(es.est_fondo, '$53,7 M');
+  assert.equal(es.est_ing1, '$226,5 M');
+  assert.equal(es.est_ing5, '$316,2 M');
+  assert.equal(es.est_sim_total, '$90 M');
+  assert.equal(es.est_bc, '1,19');
+  assert.equal(en.est_bc, '1.19');
+});
+
+test('ningún dato personal del estudio llega a los catálogos', () => {
+  const todo = JSON.stringify(CATALOGOS);
+  for (const dato of ['1140855966', '1.140.855.966', 'misena', 'ferbotdev', '3152003279', 'Carrera 2b', '3003756725', 'jaimechmisena']) {
+    assert.ok(!todo.includes(dato), `dato personal en los catálogos: ${dato}`);
+  }
 });
