@@ -1,0 +1,33 @@
+# SAFETY VR en safetyvr.com.co (hosting compartido Namecheap, LiteSpeed).
+# Lo sube el trabajo «hosting» de .github/workflows/verificar-y-publicar.yml.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# siempre la dirección segura y sin www
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/svg+xml .svg
+  AddType application/javascript .js .mjs
+  AddCharset utf-8 .html .css .js .mjs .json .txt .xml
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml text/plain application/xml
+</IfModule>
+
+# seguridad básica: el navegador no adivina tipos, no se incrusta en otros sitios
+# y no manda la dirección completa a otros dominios
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

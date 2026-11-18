@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://safetyvr.com.co/sitemap.xml

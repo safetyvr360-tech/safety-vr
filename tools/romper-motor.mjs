@@ -277,6 +277,25 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: '.github/workflows/verificar-y-publicar.yml',
+    prueba: 'src/publicacion/hosting.test.ts',
+    rupturas: [
+      ['el hosting sube sin cifrar', 'the hosting upload is unencrypted', 'set ftp:ssl-force true; ', 'set ftp:ssl-force false; '],
+      ['sin secretos el paso falla', 'with no secrets the step fails', '            exit 0\n          fi\n          sudo apt-get', '            exit 1\n          fi\n          sudo apt-get'],
+      ['la subida borra lo que no está en el paquete', 'the upload deletes what is not in the package', 'mirror -R --verbose=1', 'mirror -R --delete --verbose=1'],
+      ['el hosting se publica desde cualquier rama', 'hosting publishes from any branch', "  hosting:\n    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", "  hosting:\n    if: github.event_name != 'pull_request'"],
+      ['no se comprueba lo publicado', 'what is published is not checked', '            test "$local" = "$vivo"', '            true'],
+    ],
+  },
+  {
+    archivo: 'comercial/hosting/.htaccess',
+    prueba: 'src/publicacion/hosting.test.ts',
+    rupturas: [
+      ['el servidor deja entrar por http', 'the server allows plain http', '  RewriteCond %{HTTPS} !=on\n', ''],
+      ['el sitio se puede incrustar en otros', 'the site can be framed by others', 'X-Frame-Options "SAMEORIGIN"', 'X-Frame-Options "ALLOWALL"'],
+    ],
+  },
+  {
     archivo: 'tools/servir-sitio.mjs',
     prueba: 'src/publicacion/servir.test.ts',
     rupturas: [

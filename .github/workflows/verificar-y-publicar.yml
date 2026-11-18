@@ -1,6 +1,7 @@
 # En cada push: pruebas, Método de Ruptura, compilación de la app Next.js,
 # visor en navegador real y, si todo
-# está en verde en la rama main, publica la demo en GitHub Pages (https).
+# está en verde en la rama main, publica la demo en GitHub Pages (https) y, con los
+# secretos FTP, el mismo sitio en safetyvr.com.co (trabajo «hosting»).
 # La dirección de Pages sirve para abrir el visor en un Meta Quest.
 
 name: Verificar y publicar
@@ -45,6 +46,50 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: sitio
+
+  # El mismo sitio verificado, al hosting de safetyvr.com.co (Namecheap) por FTP cifrado.
+  # Necesita tres secretos del repositorio: FTP_SERVIDOR, FTP_USUARIO y FTP_CLAVE (una
+  # cuenta FTP de cPanel cuya carpeta sea /home/arialhkw/safetyvr.com.co). Sin ellos,
+  # el paso avisa y termina en verde. No borra nada del servidor: solo sube y reemplaza.
+  hosting:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verificar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: paquete
+      - name: Preparar la copia del hosting
+        run: |
+          mkdir hosting
+          tar -xf paquete/artifact.tar -C hosting
+          rm -rf hosting/.taste-skill hosting/en/.taste-skill hosting/*/.taste-skill hosting/en/*/.taste-skill hosting/.nojekyll
+          cp comercial/hosting/robots.txt comercial/hosting/.htaccess hosting/
+      - name: Subir a safetyvr.com.co
+        env:
+          FTP_SERVIDOR: ${{ secrets.FTP_SERVIDOR }}
+          FTP_USUARIO: ${{ secrets.FTP_USUARIO }}
+          FTP_CLAVE: ${{ secrets.FTP_CLAVE }}
+        run: |
+          if [ -z "$FTP_SERVIDOR" ] || [ -z "$FTP_USUARIO" ] || [ -z "$FTP_CLAVE" ]; then
+            echo "::notice::Sin los secretos FTP_SERVIDOR, FTP_USUARIO y FTP_CLAVE: safetyvr.com.co no se actualiza en este push."
+            exit 0
+          fi
+          sudo apt-get install -y lftp >/dev/null
+          lftp -u "$FTP_USUARIO","$FTP_CLAVE" "$FTP_SERVIDOR" -e "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate yes; mirror -R --verbose=1 --parallel=4 hosting/ ./; bye"
+      - name: Comprobar safetyvr.com.co
+        env:
+          FTP_SERVIDOR: ${{ secrets.FTP_SERVIDOR }}
+        run: |
+          if [ -z "$FTP_SERVIDOR" ]; then exit 0; fi
+          for ruta in "" inversion/ legal/ en/ en/investors/ en/legal/; do
+            local=$(md5sum < "hosting/${ruta}index.html" | cut -c1-32)
+            vivo=$(curl -fsS "https://safetyvr.com.co/${ruta}?v=${GITHUB_SHA}" | md5sum | cut -c1-32)
+            echo "/${ruta} ${local} ${vivo}"
+            test "$local" = "$vivo"
+          done
 
   publicar:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
