@@ -42,3 +42,12 @@ html[lang="en"] .hero--collage h1 { font-size: calc(var(--ly-h1-col) * 0.92); }
 
 /* Palabras que no se parten en los títulos («year-1»; ver marcaSinCorte en tools/construir-comercial.mjs). */
 .sin-corte { white-space: nowrap; }
+
+/* El aviso de analítica (seo-comercial.mjs, etiquetasGoogle): solo aparece si sitio.json trae un id
+   de Google Analytics y el visitante aún no ha respondido. Abajo, sobre el contenido, sin tapar el menú. */
+.consentimiento { position: fixed; z-index: 60; left: var(--s-4); right: var(--s-4); bottom: calc(var(--s-4) + env(safe-area-inset-bottom, 0px));
+  max-width: 560px; margin-inline: auto; display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: var(--r-md);
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); box-shadow: 0 12px 40px rgb(0 0 0 / 0.45); }
+.consentimiento p { margin: 0; }
+.consentimiento a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.consentimiento__botones { display: flex; flex-wrap: wrap; gap: var(--s-3); justify-content: flex-end; }

@@ -311,6 +311,16 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'tools/seo-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la analítica carga sin preguntar', 'analytics loads without asking', "if(r==='si'){medir();return}if(r==='no')return;", "medir();return;"],
+      ['rechazar también mide', 'declining also measures', "guardar(v);b.remove();if(v==='si')medir();", "guardar(v);b.remove();medir();"],
+      ['un texto del aviso puede cerrar el script', 'a notice text can close the script', "const t = JSON.stringify(textos).replace(/</g, '\\\\u003c');", 'const t = JSON.stringify(textos);'],
+      ['la IP llega completa a Google', 'the full IP reaches Google', "gtag('config','${id}',{anonymize_ip:true});", "gtag('config','${id}');"],
+    ],
+  },
+  {
     archivo: 'comercial/legal.html',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [

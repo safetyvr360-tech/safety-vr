@@ -476,12 +476,16 @@
   "legal.cookies.titulo": "Cookies",
   "legal.cookies.texto": "This website uses no first-party or advertising cookies. Fonts load from Google Fonts, which receives your IP address to display them.",
   "legal.cookies.analitica.no": "We do not measure visits today. If we turn on an analytics tool, we will say so in this section before using it.",
-  "legal.cookies.analitica.si": "We use Google Analytics to count visits in aggregate. You can block it in your browser settings without losing any feature of the site.",
+  "legal.cookies.analitica.si": "We use Google Analytics to count visits in aggregate, only if you accept it in the notice shown on your first visit. If you decline, it does not load. To change your answer, clear this site’s data in your browser.",
   "legal.terminos.titulo": "Terms of use",
   "legal.terminos.uso": "You may use this website to learn about SAFETY VR, try the demo and contact us. You may not use it for unlawful purposes, try to breach its security or copy its content in bulk.",
   "legal.terminos.precios": "Published prices are a reference for companies, in Colombian pesos and in US dollars at a reference exchange rate. Final terms, with taxes, are set in the quote and the contract.",
   "legal.terminos.certificados": "Anyone can verify a certificate with its code. Verification shows the certified competence and its validity, never the score or personal data.",
   "legal.terminos.propiedad": "The texts, software, scenarios and the SAFETY VR brand belong to their owners and are protected by copyright and industrial property law. Third-party photographs are used under licence and credited on the credits page.",
   "legal.terminos.mensajes": "Emails and electronic documents we exchange are valid under Colombian Law 527 of 1999.",
-  "legal.terminos.ley": "These terms are governed by the laws of Colombia. Any disagreement will first be handled directly with us."
+  "legal.terminos.ley": "These terms are governed by the laws of Colombia. Any disagreement will first be handled directly with us.",
+  "analitica.aviso": "We use Google Analytics to count visits, only if you agree.",
+  "analitica.aceptar": "Accept",
+  "analitica.rechazar": "Decline",
+  "analitica.mas": "Learn more"
 }

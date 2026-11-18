@@ -476,12 +476,16 @@
   "legal.cookies.titulo": "Cookies",
   "legal.cookies.texto": "Este sitio no usa cookies propias ni de publicidad. Las fuentes tipográficas se cargan desde Google Fonts, que recibe su dirección IP al mostrarlas.",
   "legal.cookies.analitica.no": "Hoy no medimos visitas. Si activamos una herramienta de analítica, lo diremos en esta sección antes de usarla.",
-  "legal.cookies.analitica.si": "Usamos Google Analytics para contar visitas de forma agregada. Puede bloquearlo con la configuración de su navegador sin perder ninguna función del sitio.",
+  "legal.cookies.analitica.si": "Usamos Google Analytics para contar visitas de forma agregada, solo si usted lo acepta en el aviso que aparece en su primera visita. Si lo rechaza, no se carga. Para cambiar su respuesta, borre los datos de este sitio en su navegador.",
   "legal.terminos.titulo": "Términos de uso",
   "legal.terminos.uso": "Puede usar este sitio para conocer SAFETY VR, probar la demostración y escribirnos. No está permitido usarlo para fines ilícitos, intentar vulnerar su seguridad ni copiar su contenido de forma masiva.",
   "legal.terminos.precios": "Los precios publicados son de referencia para empresas, en pesos colombianos y en dólares con una tasa de cambio de referencia. Las condiciones definitivas, con impuestos, quedan en la cotización y el contrato.",
   "legal.terminos.certificados": "Cualquier persona puede verificar un certificado con su código. La verificación muestra la competencia certificada y su vigencia, nunca el puntaje ni datos personales.",
   "legal.terminos.propiedad": "Los textos, el software, los escenarios y la marca SAFETY VR pertenecen a sus titulares y están protegidos por las normas de derecho de autor y propiedad industrial. Las fotografías de terceros se usan con licencia y se acreditan en la página de créditos.",
   "legal.terminos.mensajes": "Los mensajes de correo y los documentos electrónicos que intercambiemos tienen validez según la Ley 527 de 1999.",
-  "legal.terminos.ley": "Estos términos se rigen por las leyes de Colombia. Cualquier diferencia se tratará primero de forma directa con nosotros."
+  "legal.terminos.ley": "Estos términos se rigen por las leyes de Colombia. Cualquier diferencia se tratará primero de forma directa con nosotros.",
+  "analitica.aviso": "Usamos Google Analytics para contar visitas, solo si usted lo acepta.",
+  "analitica.aceptar": "Aceptar",
+  "analitica.rechazar": "Rechazar",
+  "analitica.mas": "Más información"
 }

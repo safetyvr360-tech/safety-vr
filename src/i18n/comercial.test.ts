@@ -243,8 +243,30 @@ test('el sitemap enlaza las dos versiones entre sí y la demo', () => {
 
 test('sin ids, la página no carga nada de Google; con ids, sí', () => {
   assert.equal(etiquetasGoogle({ google_analytics: null, search_console: null }), '');
-  const g = etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: 'abcDEF123_abcDEF123-xyz' });
+  const g = etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: 'abcDEF123_abcDEF123-xyz' }, TEXTOS_AVISO);
   assert.ok(g.includes('gtag/js?id=G-AB12CD34') && g.includes('google-site-verification'));
+});
+
+const TEXTOS_AVISO = { aviso: 'Usamos analítica.', aceptar: 'Aceptar', rechazar: 'Rechazar', mas: 'Más', legal: '../legal/' };
+
+test('Google Analytics no se descarga antes de que el visitante acepte', () => {
+  const g = etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: null }, TEXTOS_AVISO);
+  assert.ok(!/<script[^>]+src="https:\/\/www\.googletagmanager\.com/.test(g), 'gtag.js no va como etiqueta fija');
+  // la descarga está dentro de medir(), que solo corre con «si»
+  const cuerpo = g.slice(g.indexOf('function medir'), g.indexOf('var r=null'));
+  assert.match(cuerpo, /gtag\/js\?id=G-AB12CD34/);
+  assert.match(g, /if\(r==='si'\)\{medir\(\);return\}if\(r==='no'\)return;/);
+  assert.match(g, /guardar\(v\);b\.remove\(\);if\(v==='si'\)medir\(\);/);
+  assert.match(g, /anonymize_ip:true/);
+  assert.match(g, /data-v="no">'\+T\.rechazar/);
+  assert.throws(() => etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: null }), /faltan_textos/);
+});
+
+test('el aviso de analítica existe en los dos idiomas y enlaza a las cookies de la página legal', () => {
+  for (const cat of Object.values(CATALOGOS)) for (const k of ['analitica.aviso', 'analitica.aceptar', 'analitica.rechazar', 'analitica.mas']) assert.ok(cat[k], k);
+  assert.match(etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: null }, TEXTOS_AVISO), /href="'\+T\.legal\+'#cookies"/);
+  const g = etiquetasGoogle({ google_analytics: 'G-AB12CD34', search_console: null }, { ...TEXTOS_AVISO, aviso: '</script><b>' });
+  assert.ok(!g.includes('</script><b>'), 'un texto no puede cerrar el script');
 });
 
 test('un id de Google con forma rara revienta el armado', () => {

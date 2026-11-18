@@ -106,14 +106,26 @@ export function validarConfig(c) {
   return c;
 }
 
-export function etiquetasGoogle(c) {
+// Google Analytics solo con consentimiento (Ley 1581 de 2012: autorización previa).
+// Sin respuesta guardada, una barra con «Aceptar» y «Rechazar»; gtag.js se descarga
+// solo después de aceptar. La respuesta queda en localStorage (svr-analitica = si | no);
+// si el navegador no deja guardarla, se vuelve a preguntar y no se mide nada.
+// `textos` llega ya escapado: { aviso, aceptar, rechazar, mas, legal } (legal: la URL).
+export function etiquetasGoogle(c, textos = null) {
   const partes = [];
   if (c.search_console) partes.push(`<meta name="google-site-verification" content="${c.search_console}">`);
   if (c.google_analytics) {
-    partes.push(
-      `<script async src="https://www.googletagmanager.com/gtag/js?id=${c.google_analytics}"></script>`,
-      `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${c.google_analytics}');</script>`,
-    );
+    if (!textos) throw new Error('faltan_textos_del_aviso_de_analitica');
+    const id = c.google_analytics;
+    const t = JSON.stringify(textos).replace(/</g, '\\u003c');
+    partes.push(`<script>(function(){var K='svr-analitica',T=${t};
+function medir(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${id}';document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','${id}',{anonymize_ip:true});}
+var r=null;try{r=localStorage.getItem(K)}catch(e){}
+if(r==='si'){medir();return}if(r==='no')return;
+function guardar(v){try{localStorage.setItem(K,v)}catch(e){}}
+document.addEventListener('DOMContentLoaded',function(){var b=document.createElement('div');b.className='consentimiento';b.setAttribute('role','region');b.setAttribute('aria-label',T.aviso);
+b.innerHTML='<p>'+T.aviso+' <a href="'+T.legal+'#cookies">'+T.mas+'</a></p><div class="consentimiento__botones"><button type="button" class="btn btn--secondary" data-v="no">'+T.rechazar+'</button><button type="button" class="btn btn--primary" data-v="si">'+T.aceptar+'</button></div>';
+b.addEventListener('click',function(e){var v=e.target&&e.target.getAttribute('data-v');if(!v)return;guardar(v);b.remove();if(v==='si')medir();});document.body.appendChild(b);});})();</script>`);
   }
   return partes.join('\n');
 }

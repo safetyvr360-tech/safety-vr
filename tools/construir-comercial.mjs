@@ -200,7 +200,10 @@ export function datosDe(idioma, t, extra, pagina = 'comercial') {
     og_locale_otro: idioma === 'en' ? 'es_CO' : 'en_US',
     og_imagen: `${PUBLICA}share.jpg`,
     json_ld: jsonEnScript(pagina === 'comercial' ? datosEstructurados(idioma, t, formatoCOP(PLANES.piloto, idioma)) : pagina === 'legal' ? datosLegal(idioma, t, `${PUBLICA}${ruta}`) : datosInversion(idioma, t, `${PUBLICA}${ruta}`)),
-    google: etiquetasGoogle(extra.config),
+    google: etiquetasGoogle(extra.config, {
+      aviso: escapar(t('analitica.aviso')), aceptar: escapar(t('analitica.aceptar')), rechazar: escapar(t('analitica.rechazar')),
+      mas: escapar(t('analitica.mas')), legal: escapar(`${raiz}${PAGINAS.legal.rutas[idioma]}`),
+    }),
     anio: String(new Date().getFullYear()),
     mailto: escapar(mailto(t('venta.accion.asunto'))),
     mailto_equipo: escapar(mailto(t('venta.accion.asunto'))),
