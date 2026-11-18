@@ -277,6 +277,22 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'comercial/marca.css',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la superficie vuelve a confundirse con el fondo', 'the surface blends into the background again', '--p-surface: #1d2934;', '--p-surface: #18222b;'],
+      ['el gris de apoyo se apaga', 'the muted grey fades', '--p-muted: #a3b0bd;', '--p-muted: #5d6873;'],
+      ['el texto del botón principal pierde contraste', 'the primary button text loses contrast', '--p-action-ink: #0d1217;', '--p-action-ink: #8a7a40;'],
+    ],
+  },
+  {
+    archivo: 'comercial/inversion.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la página de inversión vuelve a copiar la paleta', 'the investor page copies the palette again', '<link rel="stylesheet" href="{{@raiz}}marca.css">', '<style>:root { --p-bg: #0d1217; }</style>'],
+    ],
+  },
+  {
     archivo: 'tools/seo-comercial.mjs',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
@@ -369,7 +385,7 @@ const GRUPOS = [
     archivo: 'tools/construir-comercial.mjs',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
-      ['el armado no copia los detalles comunes', 'the build does not copy the shared details', "'movil.css', 'comun.css', 'navegacion.js']", "'movil.css']"],
+      ['el armado no copia los detalles comunes', 'the build does not copy the shared details', "'movil.css', 'comun.css', 'marca.css', 'navegacion.js']", "'movil.css']"],
       ['«año 1» vuelve a partirse en los títulos', '"año 1" breaks across lines in headings again', ".replace(/\\baño (\\d)/g, 'año&nbsp;$1')", ''],
       ['«year-1» vuelve a partirse en el guion', '"year-1" breaks at the hyphen again', `\n  .replace(/\\b(year)-(\\d)/gi, '<span class="sin-corte">$1-$2</span>');`, ';'],
       ['la sección de video se publica con el póster de stock', 'the video section ships with the stock poster', '  if (videos.youtube) return plantilla;', '  return plantilla;'],

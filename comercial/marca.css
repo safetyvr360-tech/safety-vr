@@ -1,0 +1,17 @@
+/* Los colores y las fuentes de SAFETY VR, en un solo lugar para las cuatro páginas
+   (comercial, inversión, legal y créditos). Va antes de assets/ui/base.css, que los lee.
+   El fondo de sala de control y el amarillo de las señales de seguridad.
+   src/i18n/comercial.test.ts mide los contrastes: texto 7:1 o más sobre el fondo,
+   gris de apoyo 4,5:1 sobre la superficie, y superficie distinguible del fondo (1,25:1). */
+:root {
+  --p-bg: #0d1217; --p-surface: #1d2934; --p-ink: #eef2f5; --p-muted: #a3b0bd;
+  --p-accent: #f2bb1d; --p-accent-ink: #0d1217; --p-action: #f2bb1d; --p-action-ink: #0d1217;
+  --p-inv-bg: #eef2f5; --p-inv-surface: #dce0e3; --p-inv-ink: #0d1217; --p-inv-muted: #585d62;
+  --p-inv-accent: #0d1217; --p-inv-accent-ink: #eef2f5; --p-inv-action: #0d1217; --p-inv-action-ink: #eef2f5;
+  --font-display: "Reddit Sans", system-ui, sans-serif;
+  --font-text: "Reddit Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}

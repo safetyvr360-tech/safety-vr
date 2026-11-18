@@ -171,7 +171,7 @@ test('el menú marca la sección visible y el botón secundario se separa del fo
     assert.ok(h.includes('<link rel="stylesheet" href="{{@raiz}}comun.css">'), `${p} no carga comun.css`);
     assert.ok(h.includes('<script src="{{@raiz}}navegacion.js" defer></script>'), `${p} no carga navegacion.js`);
   }
-  assert.match(armado, /'movil\.css', 'comun\.css', 'navegacion\.js'\]/);
+  assert.match(armado, /'movil\.css', 'comun\.css', 'marca\.css', 'navegacion\.js'\]/);
   // el script marca con aria-current="location" el enlace de la sección que cruza la mitad de la pantalla
   const marcados = recorrerMenu(js, [[0, 900], [900, 2000], [2000, 2600]], [0, 600, 1000, 1300, 1700, 5000]);
   assert.deepEqual(marcados, [['#a=location'], ['#b=location'], ['#b=location'], ['#b=location'], ['#c=location'], []]);
@@ -316,4 +316,36 @@ test('las dos páginas enlazan a la legal desde el pie y avisan la autorización
     assert.match(h, /<p class="footer__aviso">\{\{venta\.pie\.autorizacion\}\}<\/p>/, p);
   }
   for (const cat of Object.values(CATALOGOS)) assert.match(cat['venta.pie.autorizacion']!, /1581/);
+});
+
+// Contraste WCAG entre dos colores #rrggbb.
+function contraste(a: string, b: string): number {
+  const lum = (h: string) => {
+    const [r, g, bl] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * bl!;
+  };
+  const [x, y] = [lum(a), lum(b)];
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+
+test('la paleta vive en marca.css, la cargan las cuatro páginas y nadie la repite', () => {
+  for (const p of ['plantilla.html', 'inversion.html', 'legal.html', 'credits.html']) {
+    const h = readFileSync(`${raiz}comercial/${p}`, 'utf8');
+    assert.match(h, /<link rel="stylesheet" href="(\{\{@raiz\}\})?marca\.css">/, p);
+    assert.ok(!/--p-bg:\s*#/.test(h), `${p} repite la paleta`);
+    const base = h.indexOf('assets/ui/base.css'); // la página legal no la carga
+    if (base >= 0) assert.ok(h.indexOf('marca.css') < base, `${p}: marca.css va antes de base.css`);
+  }
+  assert.match(readFileSync(`${raiz}tools/construir-comercial.mjs`, 'utf8'), /'marca\.css'/);
+});
+
+test('los colores de la marca se leen: texto, gris de apoyo, botón y superficie', () => {
+  const css = readFileSync(`${raiz}comercial/marca.css`, 'utf8');
+  const c = (n: string) => css.match(new RegExp(`--p-${n}: (#[0-9a-f]{6})`))![1]!;
+  assert.ok(contraste(c('ink'), c('bg')) >= 7, 'texto sobre el fondo');
+  assert.ok(contraste(c('ink'), c('surface')) >= 7, 'texto sobre la superficie');
+  assert.ok(contraste(c('muted'), c('surface')) >= 4.5, 'gris de apoyo sobre la superficie');
+  assert.ok(contraste(c('action-ink'), c('action')) >= 4.5, 'texto del botón principal');
+  assert.ok(contraste(c('inv-muted'), c('inv-bg')) >= 4.5, 'gris de apoyo en la franja clara');
+  assert.ok(contraste(c('surface'), c('bg')) >= 1.25, 'la superficie se distingue del fondo');
 });

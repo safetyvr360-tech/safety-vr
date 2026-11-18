@@ -289,7 +289,7 @@ export function armarComercial(raiz, catalogos, traducir) {
     }
   }
   cpSync(`${raiz}comercial/assets`, `${raiz}sitio/assets`, { recursive: true });
-  for (const f of ['credits.html', 'favicon.svg', 'share.jpg', 'movil.css', 'comun.css', 'navegacion.js']) {
+  for (const f of ['credits.html', 'favicon.svg', 'share.jpg', 'movil.css', 'comun.css', 'marca.css', 'navegacion.js']) {
     if (existsSync(`${raiz}comercial/${f}`)) cpSync(`${raiz}comercial/${f}`, `${raiz}sitio/${f}`);
   }
   writeFileSync(`${raiz}sitio/sitemap.xml`, sitemap(new Date().toISOString().slice(0, 10)));
