@@ -399,3 +399,9 @@ test('inversión, teléfono: el respaldo reparte sus dos pantallas (cifras arrib
   const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
   assert.match(inv, /#respaldo > \.wrap > \.grid \{ flex: 1 1 auto; align-content: space-between; \}/);
 });
+
+test('la demo jugable también enlaza a la página legal desde su pie', () => {
+  const demo = readFileSync(`${raiz}plataforma/plantilla.html`, 'utf8');
+  assert.match(demo, /<a href="\.\.\/legal\/" data-t="plataforma\.nav\.legal"><\/a>/);
+  for (const cat of Object.values(CATALOGOS)) assert.ok(cat['plataforma.nav.legal']);
+});

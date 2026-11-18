@@ -330,6 +330,13 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'plataforma/plantilla.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['la demo pierde el enlace legal', 'the demo loses the legal link', ' · <a href="../legal/" data-t="plataforma.nav.legal"></a>', ''],
+    ],
+  },
+  {
     archivo: 'comercial/legal.html',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
