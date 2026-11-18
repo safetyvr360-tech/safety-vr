@@ -31,6 +31,17 @@ en navegador. **Sin publicar** (falta la confirmación del usuario).
    carga tras «Aceptar» (barra bilingüe, anonymize_ip); probado con un id de prueba.
 - 249/249 pruebas, 181/181 rupturas. Gate de la página comercial: PASS.
 
+Segunda parte del ciclo (03:28 a 04:00):
+7. `cadb19c` y `952c9e0` **Inversión**: el modelo centrado en escritorio (385 px de
+   separación con suscripciones, contra 240) y el respaldo en dos pantallas en el
+   teléfono, con las cifras arriba y el gráfico al pie. **Gate de inversión: PASS**
+   (antes 2 FAIL abiertos).
+8. Gate en inglés: inversionistas PASS (una excepción en `.taste-skill/waivers.json`:
+   contraste del enlace «See the feasibility study behind it», falso positivo por el
+   subrayado animado; medido 16,7:1) y comercial PASS. **Las cuatro páginas en PASS.**
+9. La demo jugable enlaza a «Legal y privacidad» desde su pie.
+- 252/252 pruebas, 185/185 rupturas. Nada publicado todavía.
+
 ## 15 de noviembre de 2026 — respaldo del estudio de viabilidad de Ultramedia360
 
 - Fuente: `F:\saftyvr\Estudio viabilidad financiera Fernando Botero Zapata 2902032.xlsm`
