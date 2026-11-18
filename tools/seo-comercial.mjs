@@ -16,6 +16,7 @@ export { PRECIOS };
 export const PUBLICA = 'https://safetyvr.com.co/';
 export const URLS = { 'es-CO': PUBLICA, en: `${PUBLICA}en/` };
 export const URLS_INVERSION = { 'es-CO': `${PUBLICA}inversion/`, en: `${PUBLICA}en/investors/` };
+export const URLS_LEGAL = { 'es-CO': `${PUBLICA}legal/`, en: `${PUBLICA}en/legal/` };
 
 const PREGUNTAS = [1, 2, 3, 4, 6]; // las que muestra la página comercial
 
@@ -71,6 +72,16 @@ export function datosInversion(idioma, t, url) {
   };
 }
 
+export function datosLegal(idioma, t, url) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      organizacion(),
+      { '@type': 'WebPage', '@id': `${url}#pagina`, url, name: t('legal.meta.titulo'), description: t('legal.meta.descripcion'), inLanguage: idioma, about: { '@id': `${PUBLICA}#organizacion` } },
+    ],
+  };
+}
+
 export function sitemap(fecha) {
   const alternos = (urls) => Object.entries(urls)
     .map(([lang, href]) => `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`)
@@ -80,7 +91,7 @@ export function sitemap(fecha) {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
-    ...[URLS, URLS_INVERSION].flatMap((u) => [url(u['es-CO'], `${alternos(u)}\n`), url(u.en, `${alternos(u)}\n`)]),
+    ...[URLS, URLS_INVERSION, URLS_LEGAL].flatMap((u) => [url(u['es-CO'], `${alternos(u)}\n`), url(u.en, `${alternos(u)}\n`)]),
     url(`${PUBLICA}demo/`),
     '</urlset>',
     '',

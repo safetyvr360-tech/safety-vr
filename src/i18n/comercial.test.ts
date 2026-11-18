@@ -6,11 +6,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { datosNegocio, llenar, escapar, marcaSinCorte, sinVideoProvisional } from '../../tools/construir-comercial.mjs';
+import { datosLegales, datosNegocio, llenar, validarLegal, escapar, marcaSinCorte, sinVideoProvisional } from '../../tools/construir-comercial.mjs';
 import { traducir } from '../motor/presentador.ts';
 
 const raiz = fileURLToPath(new URL('../..', import.meta.url));
-const plantilla = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8') + readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+const plantilla = ['plantilla', 'inversion', 'legal'].map((p) => readFileSync(`${raiz}comercial/${p}.html`, 'utf8')).join('');
 const leer = (i: string): Record<string, string> => JSON.parse(readFileSync(`${raiz}mensajes/${i}.json`, 'utf8'));
 const CATALOGOS = { 'es-CO': leer('es-CO'), en: leer('en') };
 
@@ -63,7 +63,7 @@ test('las variables llegan al texto, también las que toma del armador', () => {
 });
 
 // ---- SEO (tools/seo-comercial.mjs)
-import { PRECIOS, URLS, URLS_INVERSION, datosEstructurados, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from '../../tools/seo-comercial.mjs';
+import { PRECIOS, URLS, URLS_INVERSION, URLS_LEGAL, datosEstructurados, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from '../../tools/seo-comercial.mjs';
 import { datosDe } from '../../tools/construir-comercial.mjs';
 
 const tDe = (i: 'es-CO' | 'en') => (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS[i], k, v);
@@ -236,7 +236,8 @@ test('la demo tiene salida: el logo lleva a la página comercial y menú y pie a
 test('el sitemap enlaza las dos versiones entre sí y la demo', () => {
   const x = sitemap('2026-11-09');
   for (const u of [URLS['es-CO'], URLS.en, URLS_INVERSION['es-CO'], URLS_INVERSION.en, `${URLS['es-CO']}demo/`]) assert.ok(x.includes(`<loc>${u}</loc>`), u);
-  assert.equal(x.match(/hreflang="x-default"/g)?.length, 4);
+  for (const u of [URLS_LEGAL["es-CO"], URLS_LEGAL.en]) assert.ok(x.includes(`<loc>${u}</loc>`), u);
+  assert.equal(x.match(/hreflang="x-default"/g)?.length, 6);
   assert.ok(x.includes('<lastmod>2026-11-09</lastmod>'));
 });
 
@@ -280,4 +281,39 @@ test('ningún dato personal del estudio llega a los catálogos', () => {
   for (const dato of ['1140855966', '1.140.855.966', 'misena', 'ferbotdev', '3152003279', 'Carrera 2b', '3003756725', 'jaimechmisena']) {
     assert.ok(!todo.includes(dato), `dato personal en los catálogos: ${dato}`);
   }
+});
+
+test('la página legal: sin razón social ni NIT dice que están pendientes; con ellos, los muestra', () => {
+  const t = (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS['es-CO'], k, v);
+  const base = { actualizado: '2026-11-18', razon_social: null, nit: null, direccion: null, telefono: null, correo: 'safetyvr360@gmail.com', ciudad: 'Barranquilla, Atlántico, Colombia' };
+  const sin = datosLegales('es-CO', t, base);
+  assert.match(sin.legal_titular, /proceso de constitución/);
+  assert.equal(sin.legal_telefono, '', 'sin teléfono no se publica la fila');
+  assert.equal(sin.legal_domicilio, 'Barranquilla, Atlántico, Colombia');
+  assert.equal(sin.legal_fecha, '18 de noviembre de 2026');
+  const con = datosLegales('es-CO', t, { ...base, razon_social: 'Ejemplo S.A.S.', nit: '901234567-8', telefono: '+57 300 000 0000', direccion: 'Calle 1 # 2-3' });
+  assert.equal(con.legal_titular, 'Ejemplo S.A.S., NIT 901234567-8');
+  assert.match(con.legal_telefono, /<dd>\+57 300 000 0000<\/dd>/);
+  assert.equal(con.legal_domicilio, 'Calle 1 # 2-3, Barranquilla, Atlántico, Colombia');
+  assert.equal(datosLegales('en', (k: string, v?: Record<string, string | number>) => traducir(CATALOGOS.en, k, v), base).legal_fecha, 'November 18, 2026');
+  assert.match(datosLegales('es-CO', t, base, { google_analytics: 'G-AB12CD34' }).legal_analitica, /Google Analytics/);
+  assert.match(sin.legal_analitica, /no medimos visitas/);
+});
+
+test('un NIT, una fecha o un correo con forma rara en legal.json revientan el armado', () => {
+  const base = { actualizado: '2026-11-18', razon_social: null, nit: null, direccion: null, telefono: null, correo: 'a@b.co', ciudad: 'X' };
+  assert.throws(() => validarLegal({ ...base, nit: 'abc' }), /nit_invalido/);
+  assert.throws(() => validarLegal({ ...base, actualizado: '18/11/2026' }), /fecha_legal_invalida/);
+  assert.throws(() => validarLegal({ ...base, correo: 'sin-arroba' }), /correo_legal_invalido/);
+  assert.doesNotThrow(() => validarLegal({ ...base, nit: '901.234.567-8' }));
+  assert.doesNotThrow(() => validarLegal(JSON.parse(readFileSync(`${raiz}comercial/legal.json`, 'utf8'))));
+});
+
+test('las dos páginas enlazan a la legal desde el pie y avisan la autorización del tratamiento de datos', () => {
+  for (const p of ['plantilla', 'inversion']) {
+    const h = readFileSync(`${raiz}comercial/${p}.html`, 'utf8');
+    assert.match(h, /<a class="credits" href="\{\{@url_legal\}\}">\{\{venta\.pie\.legal\}\}<\/a>/, p);
+    assert.match(h, /<p class="footer__aviso">\{\{venta\.pie\.autorizacion\}\}<\/p>/, p);
+  }
+  for (const cat of Object.values(CATALOGOS)) assert.match(cat['venta.pie.autorizacion']!, /1581/);
 });

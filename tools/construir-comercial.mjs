@@ -12,7 +12,7 @@
 //   {{@dato}}              un valor del armador (rutas, enlaces, HTML ya armado)
 
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { PUBLICA, URLS, datosEstructurados, datosInversion, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from './seo-comercial.mjs';
+import { PUBLICA, URLS, datosEstructurados, datosInversion, datosLegal, etiquetasGoogle, jsonEnScript, sitemap, validarConfig } from './seo-comercial.mjs';
 import { MARCA_BLANCA_BASE, PLANES, TRM_REFERENCIA, aUSD, formatoCOP, formatoMillones, formatoPorcentaje, formatoUSD, formatoUSDMillones, preciosDe } from '../src/negocio/precios.ts';
 import {
   CAPITAL_SEMILLA, EBITDA_ANIO1, EMPRESAS_OBJETIVO_ESTIMADAS, INGRESOS_ANIO1, METAS, USO_DE_FONDOS,
@@ -26,6 +26,7 @@ const CORREO = 'safetyvr360@gmail.com'; // contacto del proyecto (contrato/MEMOR
 export const PAGINAS = {
   comercial: { plantilla: 'comercial/plantilla.html', rutas: { 'es-CO': '', en: 'en/' } },
   inversion: { plantilla: 'comercial/inversion.html', rutas: { 'es-CO': 'inversion/', en: 'en/investors/' } },
+  legal: { plantilla: 'comercial/legal.html', rutas: { 'es-CO': 'legal/', en: 'en/legal/' } },
 };
 
 export const escapar = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -194,15 +195,18 @@ export function datosDe(idioma, t, extra, pagina = 'comercial') {
     // los enlaces entre páginas del mismo idioma
     url_comercial: `${raiz}${PAGINAS.comercial.rutas[idioma]}`,
     url_inversion: `${raiz}${PAGINAS.inversion.rutas[idioma]}`,
+    url_legal: `${raiz}${PAGINAS.legal.rutas[idioma]}`,
     og_locale: idioma === 'en' ? 'en_US' : 'es_CO',
     og_locale_otro: idioma === 'en' ? 'es_CO' : 'en_US',
     og_imagen: `${PUBLICA}share.jpg`,
-    json_ld: jsonEnScript(pagina === 'comercial' ? datosEstructurados(idioma, t, formatoCOP(PLANES.piloto, idioma)) : datosInversion(idioma, t, `${PUBLICA}${ruta}`)),
+    json_ld: jsonEnScript(pagina === 'comercial' ? datosEstructurados(idioma, t, formatoCOP(PLANES.piloto, idioma)) : pagina === 'legal' ? datosLegal(idioma, t, `${PUBLICA}${ruta}`) : datosInversion(idioma, t, `${PUBLICA}${ruta}`)),
     google: etiquetasGoogle(extra.config),
     anio: String(new Date().getFullYear()),
     mailto: escapar(mailto(t('venta.accion.asunto'))),
     mailto_equipo: escapar(mailto(t('venta.accion.asunto'))),
     mailto_inversion: escapar(mailto(t('inv.accion.asunto'))),
+    mailto_datos: escapar(mailto(t('legal.asunto'))),
+    ...datosLegales(idioma, t, extra.legal ?? LEGAL_VACIO, extra.config),
     piloto: t('venta.plan.piloto'),
     planta: t('venta.plan.planta'),
     corporativo: t('venta.plan.corporativo'),
@@ -229,6 +233,33 @@ export function datosDe(idioma, t, extra, pagina = 'comercial') {
   return datos;
 }
 
+// Los datos del responsable (comercial/legal.json). Lo que el cliente no ha dado
+// (razón social, NIT, dirección, teléfono) no se inventa: la página dice que
+// está pendiente, y una fila sin dato (el teléfono) no se publica.
+export const LEGAL_VACIO = { actualizado: '2026-11-18', razon_social: null, nit: null, direccion: null, telefono: null, correo: CORREO, ciudad: 'Barranquilla, Atlántico, Colombia' };
+export function validarLegal(l) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(l.actualizado)) throw new Error(`fecha_legal_invalida: ${l.actualizado}`);
+  if (l.nit !== null && !/^\d{9,10}(-\d)?$/.test(l.nit.replace(/\./g, ''))) throw new Error(`nit_invalido: ${l.nit}`);
+  if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(l.correo)) throw new Error(`correo_legal_invalido: ${l.correo}`);
+  return l;
+}
+export function datosLegales(idioma, t, l, config = {}) {
+  const [a, mes, dia] = l.actualizado.split('-').map(Number);
+  const fecha = new Intl.DateTimeFormat(idioma === 'en' ? 'en-US' : 'es-CO', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(a, mes - 1, dia)));
+  const titular = l.razon_social
+    ? (l.nit ? t('legal.ficha.titular.con_nit', { nombre: l.razon_social, nit: l.nit }) : l.razon_social)
+    : t('legal.ficha.titular.pendiente');
+  const domicilio = l.direccion ? `${l.direccion}, ${l.ciudad}` : l.ciudad;
+  return {
+    legal_fecha: escapar(fecha),
+    legal_titular: escapar(titular),
+    legal_domicilio: escapar(domicilio),
+    legal_correo: escapar(l.correo),
+    legal_telefono: l.telefono ? `<div><dt>${escapar(t('legal.ficha.telefono'))}</dt><dd>${escapar(l.telefono)}</dd></div>` : '',
+    legal_analitica: escapar(t(config.google_analytics ? 'legal.cookies.analitica.si' : 'legal.cookies.analitica.no')),
+  };
+}
+
 // La sección de video dice «grabaciones de las apps dentro del visor». Sin el
 // id de YouTube del cliente solo hay un póster de stock (un camión minero), y
 // mostrarlo bajo ese texto promete algo que la página no tiene: hasta que llegue
@@ -244,12 +275,13 @@ export function armarComercial(raiz, catalogos, traducir) {
   if (videos.youtube !== null && !/^[\w-]{11}$/.test(videos.youtube)) throw new Error(`id_de_youtube_invalido: ${videos.youtube}`);
   // Google Analytics y Search Console: los ids que da el cliente (null: no se carga nada)
   const config = validarConfig(JSON.parse(readFileSync(`${raiz}comercial/sitio.json`, 'utf8')));
+  const legal = validarLegal(JSON.parse(readFileSync(`${raiz}comercial/legal.json`, 'utf8')));
   const salida = {};
   for (const [nombre, pagina] of Object.entries(PAGINAS)) {
     const plantilla = sinVideoProvisional(readFileSync(`${raiz}${pagina.plantilla}`, 'utf8'), videos);
     for (const idioma of ['es-CO', 'en']) {
       const t = (clave, vars) => traducir(catalogos[idioma], clave, vars);
-      const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config, existe: (p) => existsSync(`${raiz}comercial/${p}`) }, nombre));
+      const { html } = llenar(plantilla, t, datosDe(idioma, t, { videos, config, legal, existe: (p) => existsSync(`${raiz}comercial/${p}`) }, nombre));
       const dir = `${raiz}sitio/${pagina.rutas[idioma]}`;
       mkdirSync(dir, { recursive: true });
       writeFileSync(`${dir}index.html`, html);

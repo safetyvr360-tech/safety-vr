@@ -382,6 +382,7 @@
       <div class="grid">
         <div class="span-6 stack-4">
           <p class="footer__lede">{{inv.pie.lema}}</p>
+          <p class="footer__aviso">{{venta.pie.autorizacion}}</p>
         </div>
         <div class="span-2 footer__col"><h3>{{inv.pie.inversion}}</h3><ul><li><a href="#modelo">{{inv.nav.modelo}}</a></li><li><a href="#suscripciones">{{inv.nav.suscripciones}}</a></li><li><a href="#proyeccion">{{inv.nav.proyeccion}}</a></li></ul></div>
         <div class="span-2 footer__col"><h3>{{inv.nav.fondos}}</h3><ul><li><a href="#mercado">{{inv.nav.mercado}}</a></li><li><a href="#fondos">{{inv.nav.fondos}}</a></li><li><a href="#ruta">{{inv.pie.cronograma}}</a></li></ul></div>
@@ -390,6 +391,7 @@
       <div class="footer__legal">
         <span>{{venta.pie.derechos|anio=@anio}}</span>
         <div class="socials"></div>
+        <a class="credits" href="{{@url_legal}}">{{venta.pie.legal}}</a>
         {{@creditos}}
       </div>
     </div>

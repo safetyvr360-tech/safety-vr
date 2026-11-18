@@ -468,6 +468,7 @@
       <div class="grid">
         <div class="span-6 stack-4">
           <p class="footer__lede">{{venta.pie.lema}}</p>
+          <p class="footer__aviso">{{venta.pie.autorizacion}}</p>
         </div>
         <div class="span-2 footer__col"><h3>{{venta.pie.producto}}</h3><ul><li><a href="#plataforma">{{venta.pie.plataforma}}</a></li><li><a href="#simuladores">{{venta.nav.simuladores}}</a></li><li><a href="#pasos">{{venta.pie.como}}</a></li></ul></div>
         <div class="span-2 footer__col"><h3>{{venta.pie.precios}}</h3><ul><li><a href="#planes">{{venta.nav.planes}}</a></li><li><a href="#preguntas">{{venta.nav.preguntas}}</a></li><li><a href="{{@url_inversion}}">{{venta.nav.inversion}}</a></li></ul></div>
@@ -477,6 +478,7 @@
         <span>{{venta.pie.derechos|anio=@anio}}</span>
         <div class="socials"></div>
         <span>{{venta.equipos.marcas}}</span>
+        <a class="credits" href="{{@url_legal}}">{{venta.pie.legal}}</a>
         {{@creditos}}
       </div>
     </div>

@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- Información legal de SAFETY VR (sitio/legal/ y sitio/en/legal/): aviso legal, política de
+     tratamiento de datos personales (Ley 1581 de 2012, Decreto 1074 de 2015), cookies y términos de uso.
+     tools/construir-comercial.mjs la arma una vez por idioma; cada marcador entre llaves dobles es una
+     clave de mensajes/<idioma>.json, o un dato del armador si empieza por «@». Los datos del responsable
+     (razón social, NIT, dirección, teléfono) salen de comercial/legal.json: ninguno se escribe aquí. -->
+<html lang="{{@lang}}" data-type="software" data-radius="soft" data-ground="sky" data-buttons="tonal" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{legal.meta.titulo}}</title>
+<meta name="description" content="{{legal.meta.descripcion}}">
+<link rel="canonical" href="{{@canonica}}">
+<link rel="alternate" hreflang="es-CO" href="{{@url_es}}">
+<link rel="alternate" hreflang="en" href="{{@url_en}}">
+<link rel="alternate" hreflang="x-default" href="{{@url_es}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SAFETY VR">
+<meta property="og:url" content="{{@canonica}}">
+<meta property="og:locale" content="{{@og_locale}}">
+<meta property="og:title" content="{{legal.meta.titulo}}">
+<meta property="og:description" content="{{legal.meta.descripcion}}">
+<meta property="og:image" content="{{@og_imagen}}">
+<link rel="icon" href="{{@raiz}}favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1217">
+<meta name="color-scheme" content="dark">
+<script type="application/ld+json">{{@json_ld}}</script>
+{{@google}}
+<meta name="site-kind" content="software">
+<meta name="page-type" content="legal">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{@raiz}}assets/system.css">
+<link rel="stylesheet" href="{{@raiz}}assets/motion/motion.css">
+<link rel="stylesheet" href="{{@raiz}}assets/layout/layout.css">
+<link rel="stylesheet" href="{{@raiz}}movil.css">
+<link rel="stylesheet" href="{{@raiz}}comun.css">
+<!-- los colores de la marca, los mismos de las otras páginas -->
+<style>
+:root {
+  --p-bg: #0d1217; --p-surface: #18222b; --p-ink: #eef2f5; --p-muted: #9aa7b4;
+  --p-accent: #f2bb1d; --p-accent-ink: #0d1217; --p-action: #f2bb1d; --p-action-ink: #0d1217;
+  --p-inv-bg: #eef2f5; --p-inv-surface: #dce0e3; --p-inv-ink: #0d1217; --p-inv-muted: #585d62;
+  --p-inv-accent: #0d1217; --p-inv-accent-ink: #eef2f5; --p-inv-action: #0d1217; --p-inv-action-ink: #eef2f5;
+  --font-display: "Reddit Sans", system-ui, sans-serif;
+  --font-text: "Reddit Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<!-- la página es un documento: una columna de lectura de 68 caracteres, el índice al lado en escritorio -->
+<style>
+  .legal { padding-block: calc(var(--s-9) + 72px) var(--s-9); }
+  .legal__grid { display: grid; gap: var(--s-8); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1024px) { .legal__grid { grid-template-columns: 220px minmax(0, 68ch); justify-content: start; gap: var(--s-9); } }
+  .legal__indice { display: none; }
+  @media (min-width: 1024px) {
+    .legal__indice { display: block; position: sticky; top: calc(72px + var(--s-6)); align-self: start; }
+    .legal__indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-3); }
+    .legal__indice a { color: var(--muted); text-decoration: none; }
+    @media (hover: hover) and (pointer: fine) { .legal__indice a:hover { color: var(--ink); } }
+  }
+  .prosa { display: grid; gap: var(--s-4); }
+  .prosa h1 { margin: 0; }
+  /* un documento: los títulos de sección a tamaño de lectura, no de cartel */
+  .prosa h2 { margin: var(--s-8) 0 0; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); scroll-margin-top: calc(72px + var(--s-5)); }
+  .prosa p, .prosa li { text-wrap: pretty; }
+  .prosa ul { margin: 0; padding-left: 1.2em; display: grid; gap: var(--s-2); list-style: disc; }
+  .prosa li::marker { color: var(--accent); }
+  .ficha a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .prosa .fecha { color: var(--muted); }
+  .ficha { display: grid; gap: var(--s-2); margin: 0; padding: var(--s-6); border-radius: var(--r-md); background: var(--surface); }
+  .ficha div { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: var(--s-3); }
+  @media (max-width: 639px) { .ficha div { grid-template-columns: minmax(0, 1fr); gap: 0; } .ficha div + div { margin-top: var(--s-2); } }
+  .ficha dt { color: var(--muted); }
+  .ficha dd { margin: 0; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">{{venta.saltar}}</a>
+    <a class="nav__logo" href="{{@url_comercial}}">SAFETY VR</a>
+    <nav class="nav__links" aria-label="{{venta.nav.principal}}">
+      <div class="nav__item"><a class="nav__link" href="{{@url_comercial}}">{{legal.nav.inicio}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{@url_inversion}}">{{venta.nav.inversion}}</a></div>
+      <div class="nav__item"><a class="nav__link" href="{{@url_otro}}" hreflang="{{@otro_lang}}" lang="{{@otro_lang}}" aria-label="{{venta.nav.otro_idioma.nombre}}">{{venta.nav.otro_idioma}}</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="{{@mailto_datos}}">{{legal.accion}}</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="{{venta.nav.menu}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</header>
+
+<main id="top" class="legal">
+  <div class="wrap legal__grid">
+    <nav class="legal__indice" aria-label="{{legal.indice}}">
+      <ol>
+        <li><a href="#aviso">{{legal.aviso.titulo}}</a></li>
+        <li><a href="#datos">{{legal.datos.titulo}}</a></li>
+        <li><a href="#derechos">{{legal.derechos.titulo}}</a></li>
+        <li><a href="#cookies">{{legal.cookies.titulo}}</a></li>
+        <li><a href="#terminos">{{legal.terminos.titulo}}</a></li>
+      </ol>
+    </nav>
+    <article class="prosa">
+      <h1>{{legal.titulo}}</h1>
+      <p class="t-lead">{{legal.intro}}</p>
+      <p class="fecha">{{legal.actualizado|fecha=@legal_fecha}}</p>
+
+      <h2 id="aviso">{{legal.aviso.titulo}}</h2>
+      <p>{{legal.aviso.texto}}</p>
+      <dl class="ficha">
+        <div><dt>{{legal.ficha.marca}}</dt><dd>{{legal.ficha.marca.valor}}</dd></div>
+        <div><dt>{{legal.ficha.titular}}</dt><dd>{{@legal_titular}}</dd></div>
+        <div><dt>{{legal.ficha.domicilio}}</dt><dd>{{@legal_domicilio}}</dd></div>
+        <div><dt>{{legal.ficha.correo}}</dt><dd><a href="{{@mailto_datos}}">{{@legal_correo}}</a></dd></div>
+        {{@legal_telefono}}
+      </dl>
+
+      <h2 id="datos">{{legal.datos.titulo}}</h2>
+      <p>{{legal.datos.intro}}</p>
+      <ul>
+        <li>{{legal.datos.que.1}}</li>
+        <li>{{legal.datos.que.2}}</li>
+        <li>{{legal.datos.que.3}}</li>
+      </ul>
+      <p>{{legal.datos.para}}</p>
+      <ul>
+        <li>{{legal.datos.para.1}}</li>
+        <li>{{legal.datos.para.2}}</li>
+        <li>{{legal.datos.para.3}}</li>
+        <li>{{legal.datos.para.4}}</li>
+      </ul>
+      <p>{{legal.datos.sensibles}}</p>
+      <p>{{legal.datos.encargados}}</p>
+      <p>{{legal.datos.conservacion}}</p>
+
+      <h2 id="derechos">{{legal.derechos.titulo}}</h2>
+      <p>{{legal.derechos.intro}}</p>
+      <ul>
+        <li>{{legal.derechos.1}}</li>
+        <li>{{legal.derechos.2}}</li>
+        <li>{{legal.derechos.3}}</li>
+        <li>{{legal.derechos.4}}</li>
+        <li>{{legal.derechos.5}}</li>
+      </ul>
+      <p>{{legal.derechos.como}}</p>
+      <p>{{legal.derechos.plazos}}</p>
+      <p>{{legal.derechos.sic}}</p>
+
+      <h2 id="cookies">{{legal.cookies.titulo}}</h2>
+      <p>{{legal.cookies.texto}}</p>
+      <p>{{@legal_analitica}}</p>
+
+      <h2 id="terminos">{{legal.terminos.titulo}}</h2>
+      <p>{{legal.terminos.uso}}</p>
+      <p>{{legal.terminos.precios}}</p>
+      <p>{{legal.terminos.certificados}}</p>
+      <p>{{legal.terminos.propiedad}}</p>
+      <p>{{legal.terminos.mensajes}}</p>
+      <p>{{legal.terminos.ley}}</p>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__legal">
+      <span>{{venta.pie.derechos|anio=@anio}}</span>
+      <div class="socials"></div>
+      {{@creditos}}
+    </div>
+  </div>
+</footer>
+
+<script src="{{@raiz}}navegacion.js" defer></script>
+<script type="module" src="{{@raiz}}assets/system.js"></script>
+<script type="module" src="{{@raiz}}assets/motion/motion.js"></script>
+<script type="module" src="{{@raiz}}assets/layout/layout.js"></script>
+</body>
+</html>

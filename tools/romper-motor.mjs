@@ -212,7 +212,7 @@ const GRUPOS = [
       ['Google ve los planes en otra moneda', 'Google sees the plans in another currency', "price: String(precio), priceCurrency: 'COP',\n", "price: String(precio), priceCurrency: 'USD',\n"],
       ['el JSON-LD puede cerrar su etiqueta', 'the JSON-LD can close its tag', ".replace(/</g, '\\\\u003c')", ''],
       ['el sitemap pierde la versión por omisión', 'the sitemap drops the default version', "    .concat(`    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"${urls['es-CO']}\"/>`)\n", ''],
-      ['el sitemap olvida la página de inversión', 'the sitemap forgets the investor page', '...[URLS, URLS_INVERSION].flatMap', '...[URLS].flatMap'],
+      ['el sitemap olvida la página de inversión', 'the sitemap forgets the investor page', '...[URLS, URLS_INVERSION, URLS_LEGAL].flatMap', '...[URLS, URLS_LEGAL].flatMap'],
       ['Analytics carga sin id', 'Analytics loads with no id', '  if (c.google_analytics) {', '  if (true) {'],
       ['se acepta un id de Analytics inválido', 'an invalid Analytics id is accepted', "if (c.google_analytics !== null && !/^G-[A-Z0-9]{6,12}$/.test(c.google_analytics))", 'if (false)'],
       ['las preguntas no llegan a Google', 'the questions do not reach Google', 'const PREGUNTAS = [1, 2, 3, 4, 6];', 'const PREGUNTAS = [];'],
@@ -262,6 +262,33 @@ const GRUPOS = [
       ['en inglés los pesos llevan «$»', 'in English pesos carry a «$»', "idioma === 'en' ? `COP${NB}${miles(cop, idioma)}` : `$${miles(cop, idioma)}`", '`$${miles(cop, idioma)}`'],
       ['la cifra se puede partir de su unidad', 'the figure can break from its unit', 'const NB = String.fromCharCode(160);', "const NB = ' ';"],
       ['el año no son doce meses', 'a year is not twelve months', 'anio = mes * 12;', 'anio = mes * 10;'],
+    ],
+  },
+  {
+    archivo: 'tools/construir-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['sin razón social se publica «null» como titular', 'with no legal name «null» is published as owner', "    : t('legal.ficha.titular.pendiente');", '    : String(l.razon_social);'],
+      ['el NIT no se muestra aunque exista', 'the tax ID is hidden even when present', "(l.nit ? t('legal.ficha.titular.con_nit', { nombre: l.razon_social, nit: l.nit }) : l.razon_social)", 'l.razon_social'],
+      ['la fila del teléfono se publica vacía', 'the phone row is published empty', "legal_telefono: l.telefono ? `<div>", "legal_telefono: true ? `<div>"],
+      ['la página legal dice que no hay analítica aunque la haya', 'the legal page says no analytics even when there is', "t(config.google_analytics ? 'legal.cookies.analitica.si' : 'legal.cookies.analitica.no')", "t('legal.cookies.analitica.no')"],
+      ['un NIT con letras pasa', 'a tax ID with letters passes', "if (l.nit !== null && !/^\\d{9,10}(-\\d)?$/.test(", "if (l.nit !== null && !/^\\w{3,10}(-\\d)?$/.test("],
+      ['la fecha legal sale un día antes', 'the legal date shows a day early', "timeZone: 'UTC' }).format(new Date(Date.UTC(a, mes - 1, dia)))", "timeZone: 'UTC' }).format(new Date(Date.UTC(a, mes - 1, dia - 1)))"],
+    ],
+  },
+  {
+    archivo: 'tools/seo-comercial.mjs',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el sitemap olvida la página legal', 'the sitemap leaves out the legal page', '...[URLS, URLS_INVERSION, URLS_LEGAL].flatMap(', '...[URLS, URLS_INVERSION].flatMap('],
+    ],
+  },
+  {
+    archivo: 'comercial/plantilla.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el pie de la página comercial pierde el enlace legal', 'the commercial footer loses the legal link', '        <a class="credits" href="{{@url_legal}}">{{venta.pie.legal}}</a>\n', ''],
+      ['el pie no avisa la autorización de datos', 'the footer does not state the data consent', '<p class="footer__aviso">{{venta.pie.autorizacion}}</p>', ''],
     ],
   },
   {
