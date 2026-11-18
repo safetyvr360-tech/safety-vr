@@ -117,7 +117,8 @@
   @media (max-width: 639px) { .card--plan > .anual { display: none; } }
   /* tableta: las secciones apiladas ocupan dos pantallas (layout-v4.md) */
   @media (min-width: 640px) and (max-width: 1023px) {
-    #suscripciones, #mercado { --h: 2; }
+    /* suscripciones y mercado: al menos una pantalla, crecen con el contenido (con --h: 2 quedaban
+       674 y 943 px vacíos en una tableta de pie de 820 × 1180) */
     /* la proyección cabe en una pantalla con sus dos columnas lado a lado */
     #proyeccion .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #proyeccion .grid > * { grid-column: auto; }

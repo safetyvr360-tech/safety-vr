@@ -115,8 +115,9 @@
   #videos .frame > .ly-play { left: auto; bottom: auto; }
   @media (max-width: 1023px) { #videos .frame { --ratio: 75%; } }
   @media (max-width: 639px) { #videos .frame { --ratio: 100%; } }
-  /* tableta (640 a 1023): estas secciones apiladas ocupan dos pantallas (layout-v4.md) */
-  @media (min-width: 640px) and (max-width: 1023px) { #simuladores, #planes, #preguntas { --h: 2; } }
+  /* tableta (640 a 1023): simuladores, planes y preguntas miden al menos una pantalla y crecen con su
+     contenido. Con exactamente dos (--h: 2, layout-v4.md) una tableta de pie (820 × 1180) dejaba
+     700 px vacíos al pie de cada una: el contenido apilado ocupa cerca de 1,3 pantallas. */
   /* capítulos sin fijar (tableta y teléfono): exactamente dos pantallas, con las imágenes más altas en tableta para llenarlas */
   @media (min-width: 640px) and (max-width: 1023px) {
     main > #pasos[data-moment]:not(.is-live) { height: calc(2 * 100svh); }
@@ -398,7 +399,7 @@
           <p class="price"><span class="t-stat">{{@planta_mes_cop}}</span><span class="muted">{{venta.planes.mes}}</span></p>
           <p class="t-small muted">{{venta.planes.usd_mes|usd=@planta_mes_usd}}</p>
           <p class="t-small muted anual">{{venta.planes.anual|cop=@planta_anio_cop|usd=@planta_anio_usd}}</p>
-          <a class="btn btn--secondary" href="{{@mailto_planta}}">{{venta.planes.pedir|plan=@planta}}</a>
+          <a class="btn btn--primary" href="{{@mailto_planta}}">{{venta.planes.pedir|plan=@planta}}</a>
           <ul class="checks"><li>{{venta.plan.planta.1}}</li><li>{{venta.plan.planta.2}}</li></ul>
         </article>
         <article class="card card--plan span-4">

@@ -49,6 +49,8 @@ const motor = sumar(
   ...['codigo', 'vigencia', 'cadena', 'verificacion'].map((n) => correrPruebas(`src/certificados/${n}.test.ts`)),
   // el modelo de negocio y los precios (página comercial y de inversión)
   ...readdirSync(`${raiz}src/negocio`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/negocio/${n}`)),
+  // las herramientas del sitio publicado (servidor local, publicación)
+  ...readdirSync(`${raiz}src/publicacion`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/publicacion/${n}`)),
 );
 // Todas las suites de idioma (catálogos, negociación, textos crudos), sin lista a mano.
 const idiomas = sumar(...readdirSync(`${raiz}src/i18n`).filter((n) => n.endsWith('.test.ts')).map((n) => correrPruebas(`src/i18n/${n}`)));

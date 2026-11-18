@@ -277,6 +277,21 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'tools/servir-sitio.mjs',
+    prueba: 'src/publicacion/servir.test.ts',
+    rupturas: [
+      ['el servidor deja salir de la carpeta', 'the server lets requests leave the folder', "return destino === raiz || destino.startsWith(raiz + sep) ? destino : null;", 'return destino;'],
+      ['el servidor no quita la consulta de la ruta', 'the server keeps the query in the path', "url.split(/[?#]/)[0]", 'url'],
+    ],
+  },
+  {
+    archivo: 'comercial/plantilla.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['en tableta las secciones vuelven a forzar dos pantallas', 'on tablets the sections force two screens again', '     700 px vacíos al pie de cada una: el contenido apilado ocupa cerca de 1,3 pantallas. */', '     700 px vacíos al pie de cada una: el contenido apilado ocupa cerca de 1,3 pantallas. */\n  @media (min-width: 640px) and (max-width: 1023px) { #simuladores, #planes, #preguntas { --h: 2; } }'],
+    ],
+  },
+  {
     archivo: 'comercial/marca.css',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
@@ -304,6 +319,7 @@ const GRUPOS = [
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
       ['el pie de la página comercial pierde el enlace legal', 'the commercial footer loses the legal link', '        <a class="credits" href="{{@url_legal}}">{{venta.pie.legal}}</a>\n', ''],
+      ['el plan recomendado vuelve al botón gris', 'the recommended plan goes back to the grey button', '<a class="btn btn--primary" href="{{@mailto_planta}}">', '<a class="btn btn--secondary" href="{{@mailto_planta}}">'],
       ['el pie no avisa la autorización de datos', 'the footer does not state the data consent', '<p class="footer__aviso">{{venta.pie.autorizacion}}</p>', ''],
     ],
   },

@@ -15,7 +15,8 @@
     "verificar": "npm test && npm run romper && npm run previsualizacion",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "servir": "node tools/servir-sitio.mjs"
   },
   "dependencies": {
     "next": "15.5.29",

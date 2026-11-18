@@ -349,3 +349,16 @@ test('los colores de la marca se leen: texto, gris de apoyo, botón y superficie
   assert.ok(contraste(c('inv-muted'), c('inv-bg')) >= 4.5, 'gris de apoyo en la franja clara');
   assert.ok(contraste(c('surface'), c('bg')) >= 1.25, 'la superficie se distingue del fondo');
 });
+
+test('en la página comercial, el plan recomendado lleva el botón principal y los otros el secundario', () => {
+  const h = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+  assert.match(h, /<a class="btn btn--primary" href="\{\{@mailto_planta\}\}">/);
+  for (const p of ['piloto', 'corporativo']) assert.match(h, new RegExp(`<a class="btn btn--secondary" href="\{\{@mailto_${p}\}\}">`));
+});
+
+test('en tableta, las secciones apiladas crecen con su contenido en vez de forzar dos pantallas vacías', () => {
+  const com = readFileSync(`${raiz}comercial/plantilla.html`, 'utf8');
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  assert.ok(!/#simuladores, #planes, #preguntas \{ --h: 2; \}/.test(com));
+  assert.ok(!/#suscripciones, #mercado \{ --h: 2; \}/.test(inv));
+});
