@@ -405,3 +405,13 @@ test('la demo jugable también enlaza a la página legal desde su pie', () => {
   assert.match(demo, /<a href="\.\.\/legal\/" data-t="plataforma\.nav\.legal"><\/a>/);
   for (const cat of Object.values(CATALOGOS)) assert.ok(cat['plataforma.nav.legal']);
 });
+
+test('el cierre crece con su contenido: «SAFETY VR» nunca queda encima de los enlaces del pie', () => {
+  const css = readFileSync(`${raiz}comercial/comun.css`, 'utf8');
+  assert.match(css, /footer\.closing \{ height: auto; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; \}/);
+  assert.match(css, /footer\.closing > \.wrap \{ flex: 1 0 auto; height: auto; grid-template-rows: minmax\(min-content, 1fr\) auto; \}/);
+});
+
+test('en escritorio, la fila legal del pie va en una sola línea', () => {
+  assert.match(readFileSync(`${raiz}comercial/comun.css`, 'utf8'), /@media \(min-width: 1024px\) \{ \.footer__legal > a\.credits \{ flex-basis: auto; \} \}/);
+});

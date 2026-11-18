@@ -346,6 +346,15 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'comercial/comun.css',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el cierre vuelve a medir una pantalla exacta', 'the close goes back to exactly one screen', 'footer.closing { height: auto; min-height: 100vh; min-height: 100svh;', 'footer.closing { height: 100svh; min-height: 100vh; min-height: 100svh;'],
+      ['la fila legal del pie vuelve a apilarse', 'the footer legal row stacks again', '@media (min-width: 1024px) { .footer__legal > a.credits { flex-basis: auto; } }', ''],
+      ['la fila de la palabra se encoge bajo su contenido', 'the word row shrinks below its content', 'grid-template-rows: minmax(min-content, 1fr) auto;', 'grid-template-rows: minmax(0, 1fr) auto;'],
+    ],
+  },
+  {
     archivo: 'comercial/marca.css',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [

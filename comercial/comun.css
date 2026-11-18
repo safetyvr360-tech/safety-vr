@@ -51,3 +51,14 @@ html[lang="en"] .hero--collage h1 { font-size: calc(var(--ly-h1-col) * 0.92); }
 .consentimiento p { margin: 0; }
 .consentimiento a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .consentimiento__botones { display: flex; flex-wrap: wrap; gap: var(--s-3); justify-content: flex-end; }
+
+/* El cierre (footer.closing) en escritorio: el kit lo fija a una pantalla exacta (height: 100svh) y
+   reparte la cabecera y la palabra arriba y los enlaces abajo. En una pantalla ancha y baja
+   (1670 × 770) no cabía desde que el pie lleva el aviso de datos, y «SAFETY VR» quedaba encima de
+   los enlaces. Ahora mide al menos una pantalla y crece con su contenido; en una pantalla alta se
+   ve igual que antes. */
+footer.closing { height: auto; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+footer.closing > .wrap { flex: 1 0 auto; height: auto; grid-template-rows: minmax(min-content, 1fr) auto; }
+/* La fila legal del pie en una sola línea en escritorio: «Legal y privacidad» y «Fotografías» usan
+   .credits, que en el kit ocupa todo el ancho (flex-basis: 100%) y apilaba tres renglones. */
+@media (min-width: 1024px) { .footer__legal > a.credits { flex-basis: auto; } }
