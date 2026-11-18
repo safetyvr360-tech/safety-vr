@@ -299,7 +299,9 @@ const GRUPOS = [
     archivo: 'tools/servir-sitio.mjs',
     prueba: 'src/publicacion/servir.test.ts',
     rupturas: [
-      ['el servidor deja salir de la carpeta', 'the server lets requests leave the folder', "return destino === raiz || destino.startsWith(raiz + sep) ? destino : null;", 'return destino;'],
+      // las dos defensas a la vez: en Linux la ruta normalizada desde «/» ya no sale, y quitar solo
+      // la comprobación final no se nota (Actions lo marcó sin detectar)
+      ['el servidor deja salir de la carpeta', 'the server lets requests leave the folder', "const destino = resolve(raiz, '.' + normalize('/' + limpia));\n  return destino === raiz || destino.startsWith(raiz + sep) ? destino : null;", "return resolve(raiz, limpia.replace(/^\\//, ''));"],
       ['el servidor no quita la consulta de la ruta', 'the server keeps the query in the path', "url.split(/[?#]/)[0]", 'url'],
     ],
   },
