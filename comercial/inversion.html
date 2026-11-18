@@ -108,6 +108,12 @@
   /* escritorio: el modelo (texto y captura del visor) centrado en su pantalla; arriba dejaba 270 px vacíos
      al pie y 385 px hasta las suscripciones, contra 240 entre las demás secciones */
   @media (min-width: 1024px) { #modelo > .wrap { display: flex; flex-direction: column; justify-content: center; } }
+  /* teléfono: el respaldo ocupa dos pantallas exactas (--hm: 2); la explicación y las cifras arriba y el
+     gráfico con su nota al pie, en vez de un hueco de 230 px antes del cronograma */
+  @media (max-width: 639px) {
+    #respaldo > .wrap { display: flex; flex-direction: column; }
+    #respaldo > .wrap > .grid { flex: 1 1 auto; align-content: space-between; }
+  }
   /* el respaldo: los cinco años del estudio en un marco del color de la página, sobre la franja iluminada */
   #respaldo .grafico { gap: var(--s-6); background: color-mix(in oklab, var(--ink) 6%, var(--surface)); }
   .grafico__titulo { margin: 0; font-weight: 500; }

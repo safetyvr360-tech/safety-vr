@@ -394,3 +394,8 @@ test('inversión: el modelo centrado en escritorio y el respaldo en dos pantalla
   assert.match(inv, /@media \(min-width: 1024px\) \{ #modelo > \.wrap \{ display: flex; flex-direction: column; justify-content: center; \} \}/);
   assert.match(inv, /id="respaldo" style="--hm: 2"/);
 });
+
+test('inversión, teléfono: el respaldo reparte sus dos pantallas (cifras arriba, gráfico al pie)', () => {
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  assert.match(inv, /#respaldo > \.wrap > \.grid \{ flex: 1 1 auto; align-content: space-between; \}/);
+});

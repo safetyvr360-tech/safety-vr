@@ -325,6 +325,7 @@ const GRUPOS = [
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [
       ['el modelo vuelve arriba con su hueco al pie', 'the model goes back to the top with its gap below', '  @media (min-width: 1024px) { #modelo > .wrap { display: flex; flex-direction: column; justify-content: center; } }\n', ''],
+      ['en el teléfono el respaldo vuelve a dejar el hueco al pie', 'on the phone the backing leaves the gap below again', '#respaldo > .wrap > .grid { flex: 1 1 auto; align-content: space-between; }', '#respaldo > .wrap > .grid { }'],
       ['en el teléfono el respaldo deja ver el cronograma', 'on the phone the backing shows the timeline', 'id="respaldo" style="--hm: 2"', 'id="respaldo"'],
     ],
   },
