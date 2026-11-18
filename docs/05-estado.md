@@ -5,6 +5,32 @@ la entrada nueva arriba.
 
 ---
 
+## 18 de noviembre de 2026 — ciclo de mejoras de una hora (02:27 a 03:27)
+
+Seis vueltas, un commit cada una, todas con pruebas, Método de Ruptura y revisión
+en navegador. **Sin publicar** (falta la confirmación del usuario).
+1. `73c6f4d` **Legal y privacidad** (`/legal/`, `/en/legal/`): aviso legal, política
+   de datos (Ley 1581 de 2012, Decreto 1074 de 2015), derechos y plazos (arts. 14
+   y 15), cookies y términos (Ley 527, precios de referencia). Responsable desde
+   `comercial/legal.json`: **razón social, NIT, dirección y teléfono pendientes**
+   (la página dice «en proceso de constitución»; no se inventan). Pie con enlace y
+   aviso de autorización en comercial e inversión. Sitemap con la página.
+2. `4b6b110` **Colores**: paleta en `comercial/marca.css` (antes cuatro copias);
+   superficie #1d2934 (1,27:1 contra el fondo), gris #a3b0bd; prueba de contraste.
+3. `fa23bb0` **Tableta**: sin `--h: 2` forzado (674–943 px vacíos a 820 × 1180);
+   plan Planta con el botón principal; `tools/servir-sitio.mjs` (`npm run servir`).
+   Ojo: `.gitignore` ignora toda carpeta `sitio/`; las pruebas van en `src/publicacion/`.
+4. `864e2fa` **Publicación automática**: trabajo `hosting` en Actions (FTP cifrado,
+   sin borrar, compara lo publicado). Falta crear en cPanel una cuenta FTP de
+   `/home/arialhkw/safetyvr.com.co` y los secretos FTP_SERVIDOR, FTP_USUARIO y
+   FTP_CLAVE. `robots.txt` y `.htaccess` (https, sin www, cabeceras de seguridad)
+   en `comercial/hosting/`.
+5. `8f46bdb` **Teléfono y accesibilidad**: auditoría a 390 px sin hallazgos salvo el
+   correo de la ficha legal (21 → 49 px de alto).
+6. `43ebbdb` **Analítica con consentimiento**: con un id en `sitio.json`, Google solo
+   carga tras «Aceptar» (barra bilingüe, anonymize_ip); probado con un id de prueba.
+- 249/249 pruebas, 181/181 rupturas. Gate de la página comercial: PASS.
+
 ## 15 de noviembre de 2026 — respaldo del estudio de viabilidad de Ultramedia360
 
 - Fuente: `F:\saftyvr\Estudio viabilidad financiera Fernando Botero Zapata 2902032.xlsm`

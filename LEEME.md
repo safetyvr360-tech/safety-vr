@@ -12,7 +12,7 @@ node tools/romper-motor.mjs
 node tools/construir-previsualizacion.mjs && node tools/probar-visor.mjs   # necesita Playwright
 ```
 
-Al 15 de noviembre de 2026: **232/232 en verde, 152 de 152 rupturas detectadas.**
+Al 18 de noviembre de 2026: **249/249 en verde, 181 de 181 rupturas detectadas.**
 El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 (dos nuevas de la plataforma), pendientes de correr en GitHub Actions.
 
@@ -27,6 +27,10 @@ El navegador: 27 de 27 comprobaciones la última vez que corrió; ahora son 29
 - `tools/seo-comercial.mjs` — canónica, hreflang, JSON-LD (servicio, planes, preguntas) y sitemap.xml
 - `comercial/sitio.json` — ids de Google Analytics y Search Console (`null`: no se carga nada)
 - `comercial/movil.css` — la capa móvil (sin destello al tocar, toque inmediato, hover que no se pega)
+- `comercial/legal.html` + `legal.json` — Legal y privacidad (`/legal/`, `/en/legal/`): aviso legal, Ley 1581, cookies, términos; razón social y NIT van en `legal.json` (null: «en proceso de constitución»)
+- `comercial/marca.css` — la paleta y las fuentes de todas las páginas (una prueba mide los contrastes)
+- `comercial/hosting/` — `robots.txt` y `.htaccess` de safetyvr.com.co; el trabajo `hosting` de Actions los sube con el sitio (secretos FTP_SERVIDOR, FTP_USUARIO, FTP_CLAVE)
+- `tools/servir-sitio.mjs` — `npm run servir`: sitio/ en http://localhost:4180
 - `comercial/comun.css` y `comercial/navegacion.js` — detalles comunes de las dos páginas (botón secundario con borde, menú que marca la sección visible)
 - `comercial/videos.json` — el id de YouTube del video del cliente (`null`: la sección de video no se publica hasta que llegue el id)
 - `src/i18n/comercial.test.ts` — claves en los dos catálogos, sin texto crudo, texto escapado
