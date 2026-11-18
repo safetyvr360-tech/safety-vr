@@ -105,6 +105,9 @@
   .cifras dd { margin: 0; color: var(--ink); }
   /* la proyección: el gráfico de ingresos por línea, en un marco */
   .grafico { display: grid; gap: var(--s-4); padding: var(--s-7); border-radius: var(--r-lg); background: var(--surface); }
+  /* escritorio: el modelo (texto y captura del visor) centrado en su pantalla; arriba dejaba 270 px vacíos
+     al pie y 385 px hasta las suscripciones, contra 240 entre las demás secciones */
+  @media (min-width: 1024px) { #modelo > .wrap { display: flex; flex-direction: column; justify-content: center; } }
   /* el respaldo: los cinco años del estudio en un marco del color de la página, sobre la franja iluminada */
   #respaldo .grafico { gap: var(--s-6); background: color-mix(in oklab, var(--ink) 6%, var(--surface)); }
   .grafico__titulo { margin: 0; font-weight: 500; }
@@ -312,7 +315,7 @@
     </div>
   </section>
 
-  <section class="section ground-surface" id="respaldo" aria-labelledby="respaldo-h">
+  <section class="section ground-surface" id="respaldo" style="--hm: 2" aria-labelledby="respaldo-h">
     <div class="wrap">
       <div class="grid grid--top">
         <div class="span-5 stack-4">

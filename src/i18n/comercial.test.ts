@@ -388,3 +388,9 @@ test('en tableta, las secciones apiladas crecen con su contenido en vez de forza
 test('el correo de la ficha legal es un blanco de 44 px para el dedo', () => {
   assert.match(readFileSync(`${raiz}comercial/legal.html`, 'utf8'), /\.ficha a \{ display: inline-block; padding-block: 12px; margin-block: -12px; \}/);
 });
+
+test('inversión: el modelo centrado en escritorio y el respaldo en dos pantallas exactas en el teléfono', () => {
+  const inv = readFileSync(`${raiz}comercial/inversion.html`, 'utf8');
+  assert.match(inv, /@media \(min-width: 1024px\) \{ #modelo > \.wrap \{ display: flex; flex-direction: column; justify-content: center; \} \}/);
+  assert.match(inv, /id="respaldo" style="--hm: 2"/);
+});
