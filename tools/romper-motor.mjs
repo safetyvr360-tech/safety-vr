@@ -311,6 +311,13 @@ const GRUPOS = [
     ],
   },
   {
+    archivo: 'comercial/legal.html',
+    prueba: 'src/i18n/comercial.test.ts',
+    rupturas: [
+      ['el correo legal vuelve a ser un blanco de 21 px', 'the legal email goes back to a 21 px target', '  .ficha a { display: inline-block; padding-block: 12px; margin-block: -12px; }', ''],
+    ],
+  },
+  {
     archivo: 'comercial/marca.css',
     prueba: 'src/i18n/comercial.test.ts',
     rupturas: [

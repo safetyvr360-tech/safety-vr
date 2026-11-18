@@ -58,6 +58,8 @@
   .prosa ul { margin: 0; padding-left: 1.2em; display: grid; gap: var(--s-2); list-style: disc; }
   .prosa li::marker { color: var(--accent); }
   .ficha a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  /* el correo, un blanco de 44 px para el dedo sin mover el texto (antes 21 px de alto) */
+  .ficha a { display: inline-block; padding-block: 12px; margin-block: -12px; }
   .prosa .fecha { color: var(--muted); }
   .ficha { display: grid; gap: var(--s-2); margin: 0; padding: var(--s-6); border-radius: var(--r-md); background: var(--surface); }
   .ficha div { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: var(--s-3); }

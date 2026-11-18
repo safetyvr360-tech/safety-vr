@@ -362,3 +362,7 @@ test('en tableta, las secciones apiladas crecen con su contenido en vez de forza
   assert.ok(!/#simuladores, #planes, #preguntas \{ --h: 2; \}/.test(com));
   assert.ok(!/#suscripciones, #mercado \{ --h: 2; \}/.test(inv));
 });
+
+test('el correo de la ficha legal es un blanco de 44 px para el dedo', () => {
+  assert.match(readFileSync(`${raiz}comercial/legal.html`, 'utf8'), /\.ficha a \{ display: inline-block; padding-block: 12px; margin-block: -12px; \}/);
+});
